@@ -13,20 +13,22 @@ export default function Register() {
   const [user, setUser] = useState({ username: "", password: "", email: "", db_name: "", db_host:"", db_port:"" });
 
   useEffect(() => {
-    console.log('aqui')
     getParameters();
   }, []);
 
   const getParameters = async () => {
     try {
       const p = await getParams();
-      console.log('params', p)
       const config = {
         "aws_project_region": "us-east-1",
-        "aws_cognito_identity_pool_id": p.data.identity_pool_id,
+        // "aws_cognito_identity_pool_id": p.data.identity_pool_id,
+        // "aws_cognito_region": "us-east-1",
+        // "aws_user_pools_id": p.data.user_pools_id,
+        // "aws_user_pools_web_client_id": p.data.web_client_id,
+        "aws_cognito_identity_pool_id": 'us-east-1:f1f25452-aa26-4dec-92d6-d28071f7d052',
         "aws_cognito_region": "us-east-1",
-        "aws_user_pools_id": p.data.user_pools_id,
-        "aws_user_pools_web_client_id": p.data.web_client_id,
+        "aws_user_pools_id": 'us-east-1_33vySxqM9',
+        "aws_user_pools_web_client_id": '2nklsjq8odvmumr52fo3d81fiv',
         "oauth": {},
         "aws_cognito_username_attributes": [],
         "aws_cognito_social_providers": [],
@@ -45,7 +47,6 @@ export default function Register() {
           "EMAIL"
         ]
       }
-      console.log(config)
       Amplify.configure(config);
     } catch (error) {
       console.log('error getting params: ', error);

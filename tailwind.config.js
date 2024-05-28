@@ -8,6 +8,16 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
+      },
+      fontSize: {
+        'h7': ['12px', { lineHeight: '14.4px' }],
+      },
+      fontWeight: {
+        'semi-bold': 600,
+      },
       aspectRatio: {
         '3': '3',
         '4': '4',
@@ -24,6 +34,9 @@ module.exports = {
           100: '#EFEFEF',
           900: "#FF5956",
         },
+        customBlue: '#074678',
+        customGreen: '#00ACA5',
+        customYellow: '#EF9B39',
       },
     },
   },

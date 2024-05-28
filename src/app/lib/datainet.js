@@ -41,17 +41,17 @@ export const cardsInet = [
       name: 'Aprobaciones / OC',
       category: 'Sistema de aprobaciones de ordenes de compra',
       href: 'dashboard/ordenes',
-      imageSrc: '/images/oc.png',
+      imageSrc: '/images/edificio.png',
       status: 'Ver Producto',
       imageAlt:
         'Payment application dashboard screenshot with transaction table, financial highlights, and main clients on colorful purple background.',
     },
     {
-      id: 4,
+      id: 2,
       name: 'Iproperty',
       category: 'Sistema de Control de activos',
       href: 'http://demoarrendador.iproperty.cl/login/?next=/',
-      imageSrc: '/images/iproperty.png',
+      imageSrc: '/images/edificio.png',
       status: 'Ver Producto',
       imageAlt:
         'Payment application dashboard screenshot with transaction table, financial highlights, and main clients on colorful purple background.',
@@ -61,7 +61,7 @@ export const cardsInet = [
       name: 'Portal de RRHH',
       category: 'Gestión del capital humano',
       href: 'http://verticales.inetcloud.cl:8081/rrhh/login.aspx',
-      imageSrc: '/images/portal.png',
+      imageSrc: '/images/edificio.png',
       status: 'Ver Producto',
       imageAlt:
         'Payment application dashboard screenshot with transaction table, financial highlights, and main clients on colorful purple background.',
@@ -71,7 +71,8 @@ export const cardsInet = [
       name: 'Match Financiero',
       category: 'Matchs automático para que ahorres tiempo y esfuerzos',
       href: '#',
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-05-related-product-01.jpg',
+      // imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-05-related-product-01.jpg',
+      imageSrc: '/images/edificio.png',
       status: 'Próximamente',
       imageAlt:
         'Payment application dashboard screenshot with transaction table, financial highlights, and main clients on colorful purple background.',

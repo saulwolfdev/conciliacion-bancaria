@@ -23,6 +23,7 @@ export default function Home() {
 
   const getParameters = async () => {
     try {
+      //prueba
       // const p = await getParams();
       const config = {
         "aws_project_region": "us-east-1",

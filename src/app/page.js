@@ -23,6 +23,7 @@ export default function Home() {
 
   const getParameters = async () => {
     try {
+      // const p = await getParams();
       const config = {
         "aws_project_region": "us-east-1",
         // "aws_cognito_identity_pool_id": p.data.identity_pool_id,

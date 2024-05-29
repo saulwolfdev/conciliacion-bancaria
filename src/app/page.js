@@ -89,7 +89,7 @@ export default function Home() {
               Bienvenido
             </h2>
             <h2 className="mt-5 text-left text-1xl leading-9 tracking-tight text-gray-400 text-gray-500 mb-6">
-              Tu gestión empresarial empieza aquí
+              Tu gestión empresarial empieza aquí !
             </h2>
             <div className="mt-20">
               <Input

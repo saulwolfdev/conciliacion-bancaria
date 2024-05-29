@@ -80,7 +80,7 @@ function Dashboard() {
                   key={tab.name}
                   href={tab.href}
                   className={classNames(
-                    tab.current ? 'bg-customGreen text-gray-700' : 'text-customGreen hover:text-customGreen',
+                    tab.current ? 'bg-customGreen text-white' : 'text-customGreen hover:text-customGreen',
                     'rounded-md px-3 py-2 text-sm font-medium'
                   )}
                   aria-current={tab.current ? 'page' : undefined}
@@ -91,7 +91,7 @@ function Dashboard() {
             </nav>
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {products.map((product) => (
           <div key={product.id} className="group relative" >
             <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100 relative">

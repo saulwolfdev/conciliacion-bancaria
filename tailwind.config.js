@@ -35,9 +35,9 @@ module.exports = {
           900: "#FF5956",
         },
         customBlue: '#074678',
-        customGreen: '#00ACA5',
+        customGreen: '#00aca5',
         customYellow: '#EF9B39',
-        customLightBlue: '#00ACA5'
+        customLightBlue: '#00aca5'
       },
     },
   },

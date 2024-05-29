@@ -13,13 +13,13 @@ import {
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Image from 'next/image';
 import { signOut, getCurrentUser } from 'aws-amplify/auth';
-import config from '../../../../amplifyconfiguration.json';
-import { Amplify } from 'aws-amplify';
+// import config from '../../../../amplifyconfiguration.json';
+// import { Amplify } from 'aws-amplify';
 import { useRouter } from 'next/navigation';
 import { Suspense } from "react";
 import Loading from '@/app/dashboard/loading';
 
-Amplify.configure(config);
+// Amplify.configure(config);
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },

@@ -14,6 +14,7 @@ import {createColumnHelper} from "@tanstack/react-table";
 import React from 'react';
 import Image from 'next/image';
 import { format } from 'date-fns';
+import { datos_prueba } from '@/app/layout';
 
 const ProductsPage = ({ searchParams }) => {
 const [open, setOpen] = useState(false)
@@ -148,11 +149,15 @@ useEffect(() => {
 
 const loadProduct = async (numero, anio, mes, sucursal) => {
   try {
-    const res = await getProduct({sucursal: sucursal, numero: numero, anio: anio, mes: mes});
-    setDataOcR(res.data);
-    var usuario = res.data.aprobadores.find(item => item.usuario === 1);
-    // setDataOcR(res);
-    // var usuario = res.aprobadores.find(item => item.usuario === 1);
+    if(datos_prueba){
+      setDataOcR(res);
+      var usuario = res.aprobadores.find(item => item.usuario === 1);
+
+    }else{
+      const res = await getProduct({sucursal: sucursal, numero: numero, anio: anio, mes: mes});
+      setDataOcR(res.data);
+      var usuario = res.data.aprobadores.find(item => item.usuario === 1)
+    }
     setComentario(usuario.AdqOAGl3)
     setOpen(true)
   } catch (error) {
@@ -162,11 +167,14 @@ const loadProduct = async (numero, anio, mes, sucursal) => {
 
 const loadDetail = async (numero, anio, mes, sucursal) => {
   try {
-    const res = await getProduct({sucursal: sucursal, numero: numero, anio: anio, mes: mes});
-    setDataOcR(res.data);
-    var usuario = res.data.aprobadores.find(item => item.usuario === 1);
-    // setDataOcR(res);
-    // var usuario = res.aprobadores.find(item => item.usuario === 1);
+    if(datos_prueba){
+      setDataOcR(res);
+      var usuario = res.aprobadores.find(item => item.usuario === 1);
+    } else{
+      const res = await getProduct({sucursal: sucursal, numero: numero, anio: anio, mes: mes});
+      setDataOcR(res.data);
+      var usuario = res.data.aprobadores.find(item => item.usuario === 1);
+    }    
     setComentario(usuario.AdqOAGl3)
     setOpenOcD(true)
   } catch (error) {

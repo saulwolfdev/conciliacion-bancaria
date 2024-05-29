@@ -2,12 +2,11 @@
 import { Inter } from "next/font/google";
 import "./ui/globals.css";
 import { setupTokenRefresh } from '../utils/auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const prueba = true
+export const datos_prueba = true;
 
 // export const metadata = {
 //   title: "Create Next App",

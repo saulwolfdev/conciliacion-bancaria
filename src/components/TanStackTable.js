@@ -9,6 +9,7 @@ import { useState } from "react";
 import DebouncedInput from "./DebouncedInput";
 import { dataOcD, res} from "@/app/lib/dataoc";
 import { format } from 'date-fns';
+import { datos_prueba } from "@/app/layout";
 import Link from 'next/link';
 // import DownloadBtn from "./DownloadBtn";
 
@@ -20,18 +21,33 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
   //enviar data
   const [data] = useState(() => [...dataOcD]);
   const [globalFilter, setGlobalFilter] = useState("");
+  let table;
+  if(datos_prueba){
+    table = useReactTable({
+      data: dataOcD,
+      columns,
+      state: { 
+        globalFilter,
+      },
+      getFilteredRowModel: getFilteredRowModel(),
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+    });
 
- 
-  const table = useReactTable({
-    data: dataOc,
-    columns,
-    state: { 
-      globalFilter,
-    },
-    getFilteredRowModel: getFilteredRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
+  }else{
+    table = useReactTable({
+      data: dataOc,
+      columns,
+      state: { 
+        globalFilter,
+      },
+      getFilteredRowModel: getFilteredRowModel(),
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+    });
+
+  }
+  
 
   return (
     <div className="mt-5 overflow-x-auto shadow-md sm:rounded-lg ">

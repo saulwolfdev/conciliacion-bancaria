@@ -66,7 +66,8 @@ export const dataOcD =
             "ADQODEMUS": "JPULGAR",
             "AdqOdCCApC": 0,
             "AdqOdUsIn": "",
-            "AdqOdFin": 0
+            "AdqOdFin": 0,
+            "AdqOdTot": 10000
         },
         
         {
@@ -134,7 +135,8 @@ export const dataOcD =
           "ADQODEMUS": "JPULGAR",
           "AdqOdCCApC": 0,
           "AdqOdUsIn": "",
-          "AdqOdFin": 0
+          "AdqOdFin": 0,
+          "AdqOdTot": 25000
       }
 ];
 

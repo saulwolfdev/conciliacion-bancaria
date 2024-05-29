@@ -5,7 +5,6 @@ import { signIn, signOut } from 'aws-amplify/auth';
 import { Amplify } from "aws-amplify";
 import { useRouter } from 'next/navigation';
 import Input from '../common/Input';
-import config from '../amplifyconfiguration.json';
 import Cookies from 'js-cookie';
 import 'swiper/css';
 import 'swiper/css/navigation';

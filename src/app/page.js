@@ -91,7 +91,7 @@ export default function Home() {
           </div>
           <div className="w-full md:w-8/12">
             <h2 className="mt-10 font-heading text-4xl text-gray-900 font-semibold mb-4">
-              Bienvenido a tu Portal !!!!
+              Bienvenido
             </h2>
             <h2 className="mt-5 text-left text-1xl leading-9 tracking-tight text-gray-400 text-gray-500 mb-6">
               Tu gestión empresarial empieza aquí !

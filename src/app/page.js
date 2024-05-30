@@ -47,9 +47,9 @@ export default function Home() {
     <div className="container-fluid">
       <div className="min-h-screen flex flex-col sm:flex-row">
         <div className="w-full sm:w-5/12 bg-white flex justify-center items-center relative p-4">
-          <div className="absolute top-8 left-12">
+          <div className="absolute top-8 left-10">
             <img
-              className="w-36 h-10"
+              className="w-50 h-50"
               src="/images/informat.png"
               alt="Informat Logo"
             />

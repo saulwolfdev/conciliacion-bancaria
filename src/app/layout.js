@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./ui/globals.css";
 import { setupTokenRefresh } from '../utils/auth';
 import { useEffect } from 'react';
-import { getParams } from "@/api/params.api";
-import { Amplify } from "aws-amplify";
 import Cookies from 'js-cookie';
 
 

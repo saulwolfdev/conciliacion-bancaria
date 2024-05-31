@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { signIn, signOut } from 'aws-amplify/auth';
 import { useRouter } from 'next/navigation';
@@ -46,21 +46,22 @@ export default function Home() {
   return (
     <div className="container-fluid">
       <div className="min-h-screen flex flex-col sm:flex-row">
-        <div className="w-full sm:w-5/12 bg-white flex justify-center items-center relative p-4">
-          <div className="absolute top-8 left-10">
+        <div className="w-full sm:w-5/12 bg-white flex flex-col justify-center items-center relative p-4">
+          <div className="flex flex-col items-center">
             <img
-              className="w-50 h-50"
+              className="mb-6"
               src="/images/informat.png"
               alt="Informat Logo"
+              style={{ maxWidth: '100%', height: 'auto' }} // Mantener tamaño original
             />
-          </div>
-          <div className="w-full md:w-8/12 mt-10 sm:mt-0">
-            <h2 className="font-heading text-4xl text-gray-900 font-semibold mb-4">
+            <h2 className="font-heading text-4xl text-gray-900 font-semibold mb-4 text-center">
               Bienvenido
             </h2>
-            <h2 className="text-1xl leading-9 tracking-tight text-gray-400 mb-6">
+            <h2 className="text-1xl leading-9 tracking-tight text-gray-400 mb-6 text-center">
               Tu gestión empresarial empieza aquí.
             </h2>
+          </div>
+          <div className="w-full md:w-8/12 mt-10 sm:mt-0">
             <div className="mt-10">
               <Input
                 labelName="Usuario"

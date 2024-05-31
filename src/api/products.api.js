@@ -4,31 +4,12 @@ import { Amplify } from 'aws-amplify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// let productsApi;
-// const configAmplify = async () => {
-//     try{
-//       const config = await getAmplifyConfig()
-//       Amplify.configure(config)
-//       const token = await getToken();
-//         productsApi = axios.create({
-//             baseURL: 'http://localhost:8000/oc/',
-//             headers: {
-//                 'Authorization': 'Bearer ' + token,
-//             }
-//         })
-      
-//     }catch(error){
-//       console.error('User not logged in:', error);
-//     }
-    
-//   };
-
-//   configAmplify(); 
 const token = Cookies.get('authToken');
 const productsApi = axios.create({
     baseURL: 'http://localhost:8000/oc/',
     headers: {
         'Authorization': 'Bearer '+token,
+        'Tenant': window.location.hostname
     }
 })
 

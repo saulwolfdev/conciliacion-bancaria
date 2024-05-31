@@ -3,6 +3,10 @@ import axios from 'axios';
 
 const paramsApi = axios.create({
     baseURL: 'http://localhost:8000/users/',
+    headers: {
+        'Tenant': window.location.hostname
+    }
+    
     
 })
 

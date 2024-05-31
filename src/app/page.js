@@ -10,10 +10,24 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { removeAllCookies } from './layout';
+
+import { Amplify } from "aws-amplify";
+import { getAmplifyConfig } from '@/utils/amplify_config';
+
+// Amplify.configure(getAmplifyConfig());
 
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState({ username: '', password: '' });
+
+  useEffect(() => {
+    const configAmplify = async () => {
+        const config = await getAmplifyConfig();
+        Amplify.configure(config);
+    };
+    configAmplify();
+  }, []);
   
 
   const handleInputChange = (event, keyName) => {
@@ -26,9 +40,13 @@ export default function Home() {
   const logIn = async () => {
     try {
       await signOut();
+      removeAllCookies();
       await signIn({ username: user.username, password: user.password });
       const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
-      Cookies.set('authToken', authToken);
+      Cookies.set('authToken', authToken);    
+      Cookies.set('username', user.username);
+      Cookies.set('avatar', user.username.substring(0, 2));
+      
       router.push('/dashboard');
     } catch (error) {
       console.log('error signing in', error);

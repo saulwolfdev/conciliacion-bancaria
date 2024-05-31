@@ -15,6 +15,10 @@ import React from 'react';
 import Image from 'next/image';
 import { format } from 'date-fns';
 import { datos_prueba } from '@/app/layout';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { Amplify } from "aws-amplify";
+import { getAmplifyConfig } from '@/utils/amplify_config';
+import { useRouter } from 'next/navigation'
 
 const ProductsPage = ({ searchParams }) => {
 const [open, setOpen] = useState(false)
@@ -37,7 +41,11 @@ const [idOC, setIdOC] = useState({numero:'', anio: '', mes: '', estado:''});
 const columnHelper = createColumnHelper();
 const [openOcD, setOpenOcD] = useState(false)
 const [tamano, setTamano] = useState(7)
+const navigate = useRouter();
+
 // const [columns, setColums] = []
+
+
 
 function currencyFormatter({ currency, value}) {
   return new Intl.NumberFormat('es-CL', {currency: currency, style: 'currency'}).format(value);
@@ -142,9 +150,23 @@ const loadCards = async () => {
 };
 
 useEffect(() => {
-  loadProducts(null);
-  loadCards();
-  setValorTamano();
+  const configAmplify = async () => {
+    try{
+      const config = await getAmplifyConfig()
+      Amplify.configure(config)
+      const user = await getCurrentUser();
+      loadProducts(null);
+      loadCards();
+      setValorTamano();
+    }catch(error){
+      console.error('User not logged in:', error);
+      navigate.push('/');
+    }
+    
+  };
+
+  configAmplify(); 
+  
 }, []);
 
 const loadProduct = async (numero, anio, mes, sucursal) => {

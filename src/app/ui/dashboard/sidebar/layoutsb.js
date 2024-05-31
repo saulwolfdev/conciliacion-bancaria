@@ -17,6 +17,9 @@ import { useRouter } from 'next/navigation';
 import { Suspense } from "react";
 import Loading from '@/app/dashboard/loading';
 
+import Cookies from 'js-cookie';
+import { removeAllCookies } from '@/app/layout';
+
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
@@ -33,25 +36,28 @@ function classNames(...classes) {
 
 export default function HomeLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [username, setUsername] = useState(null);
   const navigate = useRouter();
+  const [username, setUsername] = useState(null);
 
   useEffect(() => {
-    const currentAuthenticatedUser = async () => {
-      try {
-        const user = await getCurrentUser();
-        setUsername(user.username);
-      } catch (error) {
-        console.log('error getting user: ', error);
-      }
-    };
+    setUsername( Cookies.get('username'));
+    // const currentAuthenticatedUser = async () => {
+    //   try {
+    //     // const user = await getCurrentUser();
+    //     // setUsername(user.username);
+        
+    //   } catch (error) {
+    //     console.log('error getting user: ', error);
+    //   }
+    // };
 
-    currentAuthenticatedUser();
+    // currentAuthenticatedUser();
   }, []);
 
   async function handleSignOut() {
     try {
       await signOut();
+      removeAllCookies();
       navigate.push('/');
     } catch (error) {
       console.log('error signing out: ', error);

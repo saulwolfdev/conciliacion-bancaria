@@ -14,6 +14,9 @@ import Image from 'next/image';
 import { signOut, getCurrentUser } from 'aws-amplify/auth';
 import { useRouter } from 'next/navigation'
 
+import Cookies from 'js-cookie';
+import { removeAllCookies } from '@/app/layout';
+
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
@@ -35,21 +38,13 @@ export default function Home() {
   const navigate = useRouter();
 
   useEffect(() => {
-      const currentAuthenticatedUser = async () => {
-        try {
-          const user = await getCurrentUser();
-          setUsername(user.username);
-        } catch (error) {
-          console.log('error getting user: ', error);
-        }
-      };
-  
-      currentAuthenticatedUser();
+    setUsername( Cookies.get('username'));
     }, []);
 
   async function handleSignOut() {
       try {
           await signOut();
+          removeAllCookies();
           navigate.push('/');
       } catch (error) {
           console.log('error signing out: ', error);

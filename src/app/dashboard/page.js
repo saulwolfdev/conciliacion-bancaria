@@ -3,38 +3,58 @@ import SummaryBox from "@/components/SummaryBox";
 import { cardsInet, products } from "../lib/datainet";
 import { useEffect } from 'react';
 import BreadCrumbs from "@/components/BreadCrumbs";
+import { getAmplifyConfig } from "@/utils/amplify_config";
+import { Amplify } from "aws-amplify";
+import { useRouter } from 'next/navigation'
+import { getCurrentUser } from "aws-amplify/auth";
 
 function Dashboard() {
-
+  const navigate = useRouter();
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
   useEffect(() => {
-    // Create a new script element
-    const scriptElement = document.createElement("script");
-    scriptElement.type = "text/javascript";
-    scriptElement.defer = true; // or use scriptElement.setAttribute("defer", "true");
+    const configAmplify = async () => {
+      try{
+        const config = await getAmplifyConfig()
+        Amplify.configure(config)
+        const user = await getCurrentUser();
+        // Create a new script element
+        const scriptElement = document.createElement("script");
+        scriptElement.type = "text/javascript";
+        scriptElement.defer = true; // or use scriptElement.setAttribute("defer", "true");
 
-    // Add user information to the script content
-    scriptElement.innerHTML = `
-      var beamer_config = {
-        product_id: 'TBYVjWVI65518',
-        button_position: 'bottom-right',
-      };
-    `;
+        // Add user information to the script content
+        scriptElement.innerHTML = `
+          var beamer_config = {
+            product_id: 'TBYVjWVI65518',
+            button_position: 'bottom-right',
+          };
+        `;
 
-    // Append the script element to the document
-    document.head.appendChild(scriptElement);
+        // Append the script element to the document
+        document.head.appendChild(scriptElement);
 
-    // Create another script element for the Beamer embed script
-    const beamerScriptElement = document.createElement("script");
-    beamerScriptElement.type = "text/javascript";
-    beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
-    beamerScriptElement.defer = true; 
+        // Create another script element for the Beamer embed script
+        const beamerScriptElement = document.createElement("script");
+        beamerScriptElement.type = "text/javascript";
+        beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
+        beamerScriptElement.defer = true; 
+
+        
+        document.head.appendChild(beamerScriptElement);
+
+      }catch(error){
+        console.error('User not logged in:', error);
+        navigate.push('/');
+      }
+      
+    };
+  
+    configAmplify(); 
 
     
-    document.head.appendChild(beamerScriptElement);
   }, []);
 
   const pages = [

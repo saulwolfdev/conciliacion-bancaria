@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { signIn, signOut } from 'aws-amplify/auth';
 import { useRouter } from 'next/navigation';
@@ -33,7 +33,7 @@ export default function Home() {
   const handleInputChange = (event, keyName) => {
     event.persist();
     setUser((user) => {
-      return { ...user, [keyName]: event.target.value }
+      return { ...user, [keyName]: event.target.value };
     });
   };
 
@@ -64,23 +64,24 @@ export default function Home() {
 
   return (
     <div className="container-fluid">
-      <div className="min-h-screen flex">
-        <div className="w-full sm:w-5/12 bg-white flex justify-center items-center">
-          <div className="absolute" style={{ top: '33px', left: '48px' }}>
+      <div className="min-h-screen flex flex-col sm:flex-row">
+        <div className="w-full sm:w-5/12 bg-white flex flex-col justify-center items-center relative p-4">
+          <div className="flex flex-col items-center">
             <img
-              style={{ width: '143.18px', height: '43px', opacity: 1 }}
+              className="mb-6"
               src="/images/informat.png"
               alt="Informat Logo"
+              style={{ maxWidth: '100%', height: 'auto' }} // Mantener tamaño original
             />
-          </div>
-          <div className="w-full md:w-8/12">
-            <h2 className="mt-10 font-heading text-4xl text-gray-900 font-semibold mb-4">
+            <h2 className="font-heading text-4xl text-gray-900 font-semibold mb-4 text-center">
               Bienvenido
             </h2>
-            <h2 className="mt-5 text-left text-1xl leading-9 tracking-tight text-gray-400 text-gray-500 mb-6">
+            <h2 className="text-1xl leading-9 tracking-tight text-gray-400 mb-6 text-center">
               Tu gestión empresarial empieza aquí.
             </h2>
-            <div className="mt-20">
+          </div>
+          <div className="w-full md:w-8/12 mt-10 sm:mt-0">
+            <div className="mt-10">
               <Input
                 labelName="Usuario"
                 value={user.username}
@@ -99,7 +100,7 @@ export default function Home() {
             </div>
             <button
               type="button"
-              className="mt-20 flex w-full justify-center rounded-md bg-customGreen px-3 py-1.5 text-sm leading-6 text-white shadow-sm hover:bg-customBlue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="mt-10 flex w-full justify-center rounded-md bg-customGreen px-3 py-1.5 text-sm leading-6 text-white shadow-sm hover:bg-customBlue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={() => logIn()}
             >
               Iniciar sesión
@@ -113,17 +114,15 @@ export default function Home() {
             </button> */}
           </div>
         </div>
-        <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <div
             className="rounded-lg shadow-lg p-4 flex items-center justify-center relative"
             style={{
-              // backgroundImage: 'linear-gradient(to top, rgba(153, 153, 153, 0.7), rgba(153, 153, 153, 0))',
               backgroundColor: 'rgba(55, 54, 54, 0.7)',
-              height: '200px',
+              height: 'auto',
               width: '70%',
               maxWidth: '90%',
-              // backgroundColor: '#e5e6e6',
-              top: '300px' // Adjust this value to move the Swiper down
+              margin: '20% auto' // Center vertically and adjust margin as needed
             }}
           >
             <Swiper
@@ -133,15 +132,15 @@ export default function Home() {
               autoplay={{ delay: 3000 }}
             >
               <SwiperSlide>
-              <div className="text-white flex flex-col items-center justify-center h-full">
-                <p className="max-w-2xl  text-lg text-white mb-15 font-light">
-                  "Nuestro compromiso es con la adaptabilidad, la orientación experta y la satisfacción del cliente."
-                </p>
-              </div>
+                <div className="text-white flex flex-col items-center justify-center h-full">
+                  <p className="max-w-2xl text-lg text-white mb-15 font-light">
+                    "Nuestro compromiso es con la adaptabilidad, la orientación experta y la satisfacción del cliente."
+                  </p>
+                </div>
               </SwiperSlide>
               <SwiperSlide>
                 <div className="text-white flex flex-col items-center justify-center h-full">
-                  <p className="max-w-2xl  text-lg text-white mb-15 font-light">
+                  <p className="max-w-2xl text-lg text-white mb-15 font-light">
                     "Con más de 45 años de experiencia en el mercado, ofrecemos soluciones ERP personalizadas para empresas de todos los tamaños."
                   </p>
                 </div>
@@ -149,7 +148,7 @@ export default function Home() {
               <SwiperSlide>
                 <div className="text-white flex flex-col items-center justify-center h-full">
                   <p className="max-w-2xl text-lg text-white mb-15 font-light">
-                     "Nos especializamos en la consultoría, personalización y soporte continuo para garantizar una integración y operación sin problemas de nuestros sistemas."
+                    "Nos especializamos en la consultoría, personalización y soporte continuo para garantizar una integración y operación sin problemas de nuestros sistemas."
                   </p>
                 </div>
               </SwiperSlide>

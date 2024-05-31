@@ -116,7 +116,7 @@ function Dashboard() {
           <div key={product.id} className="group relative" >
             <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100 relative">
               <div className="absolute top-3 left-3  flex items-center justify-center bg-customLightBlue bg-opacity-75 w-24 h-8 px-8 py-4 text-sm font-medium text-gray-900 z-10 rounded-tl-md rounded-br-md">
-                Soluciones
+                Productos
               </div>
               <img src={product.imageSrc} alt={product.imageAlt} className="object-cover object-center w-full h-full" />
               <div className="flex items-end p-2 opacity-0 group-hover:opacity-100" aria-hidden="true">

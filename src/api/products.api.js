@@ -9,7 +9,7 @@ const productsApi = axios.create({
     baseURL: 'http://localhost:8000/oc/',
     headers: {
         'Authorization': 'Bearer '+token,
-        'Tenant': window.location.hostname
+        'Tenant': typeof window !== 'undefined' ? window.location.hostname : 'localhost'
     }
 })
 

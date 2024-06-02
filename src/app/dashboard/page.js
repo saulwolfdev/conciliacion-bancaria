@@ -1,7 +1,7 @@
 "use client";
 import SummaryBox from "@/components/SummaryBox";
 import { cardsInet, products } from "../lib/datainet";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import BreadCrumbs from "@/components/BreadCrumbs";
 import { getAmplifyConfig } from "@/utils/amplify_config";
 import { Amplify } from "aws-amplify";
@@ -63,12 +63,26 @@ function Dashboard() {
   ]
 
   const tabs = [
-    { name: 'Todas', href: '#', current: false },
-    { name: 'Soluciones', href: '#', current: true },
-    { name: 'Productos', href: '#', current: false },
-    { name: 'Aplicaciones', href: '#', current: false },
+    { name: 'Todas', href: '#', current: true },
+    { name: 'Ventas y Compras', href: '#', current: false },
+    { name: 'Adquisiciones', href: '#', current: false },
+    { name: 'Gestión de Activos', href: '#', current: false },
+    { name: 'RRHH', href: '#', current: false },
+    { name: 'Analítica', href: '#', current: false },
     { name: 'Integraciones', href: '#', current: false },
   ]
+
+  const [selectedTab, setSelectedTab] = useState('Todas');
+
+  const handleTabClick = (tabName) => {
+    console.log(tabName)
+    setSelectedTab(tabName);
+  };
+
+
+  const filteredProducts = selectedTab === 'Todas' 
+  ? products 
+  : products.filter(product => product.categoria === selectedTab);
 
   return (
     <>
@@ -87,6 +101,7 @@ function Dashboard() {
               name="tabs"
               className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
               defaultValue={tabs.find((tab) => tab.current).name}
+              onChange={(e) => handleTabClick(e.target.value)} // Añadir el manejador onChange
             >
               {tabs.map((tab) => (
                 <option key={tab.name}>{tab.name}</option>
@@ -96,27 +111,28 @@ function Dashboard() {
           <div className="hidden sm:block">
             <nav className="flex space-x-4" aria-label="Tabs">
               {tabs.map((tab) => (
-                <a
+                  <button
                   key={tab.name}
-                  href={tab.href}
+                  onClick={() => handleTabClick(tab.name)}
                   className={classNames(
-                    tab.current ? 'bg-customGreen text-white' : 'text-customGreen hover:text-customGreen',
+                    selectedTab === tab.name ? 'bg-customGreen text-white' : 'text-customGreen hover:text-customGreen',
                     'rounded-md px-3 py-2 text-sm font-medium'
                   )}
-                  aria-current={tab.current ? 'page' : undefined}
+                  aria-current={selectedTab === tab.name ? 'page' : undefined}
                 >
                   {tab.name}
-                </a>
+                </button>
               ))}
             </nav>
           </div>
         </div>
+        
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
           <div key={product.id} className="group relative" >
             <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100 relative">
-              <div className="absolute top-3 left-3  flex items-center justify-center bg-customLightBlue bg-opacity-75 w-24 h-8 px-8 py-4 text-sm font-medium text-gray-900 z-10 rounded-tl-md rounded-br-md">
-                Productos
+              <div className="absolute top-3 left-3 flex items-center justify-center bg-customLightBlue bg-opacity-75 w-48 h-8 px-8 py-4 text-xs font-small text-gray-900 z-10 rounded-tl-md rounded-br-md">
+                {product.categoria}
               </div>
               <img src={product.imageSrc} alt={product.imageAlt} className="object-cover object-center w-full h-full" />
               <div className="flex items-end p-2 opacity-0 group-hover:opacity-100" aria-hidden="true">

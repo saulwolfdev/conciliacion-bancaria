@@ -57,8 +57,13 @@ export default function Home() {
       if (error.name === 'UserNotFoundException') {
         setErrors({ username: 'Usuario no existe' });
       } else if (error.name === 'NotAuthorizedException') {
+        setErrors({ password: 'Contraseña incorrecta' });
+      } else if (error.name === 'EmptySignInUsername') {
+        setErrors({ password: 'Usuario requerido' });
+      } else if (error.name === 'EmptySignInPassword') {
         setErrors({ password: 'Password incorrecta' });
-      } else {
+      }
+       else {
         setErrors({ general: errorMessage });
       }
     }

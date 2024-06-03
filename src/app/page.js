@@ -61,7 +61,7 @@ export default function Home() {
       } else if (error.name === 'EmptySignInUsername') {
         setErrors({ username: 'Usuario requerido' });
       } else if (error.name === 'EmptySignInPassword') {
-        setErrors({ password: 'Password incorrecta' });
+        setErrors({ password: 'Contraseña requerida' });
       }
        else {
         setErrors({ general: errorMessage });

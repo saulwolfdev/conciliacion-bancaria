@@ -100,7 +100,7 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                       })()
                     ) : cell.column.id === "AdqOdEst" ? (
                       (() => {
-                         const estado = {
+                        const estado = {
                           0: "Pendiente",
                           1: "Aprobada",
                           2: "Emitida",
@@ -109,12 +109,26 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                           5: "Nula",
                           6: "Rechazada"
                         }[cell.getValue()];
-                         return {estado} ? (
-                          <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      
+                        const getColorClasses = (value) => {
+                          switch (value) {
+                            case 0: return "bg-yellow-50 text-yellow-700 ring-yellow-600/20";
+                            case 1: return "bg-green-50 text-green-700 ring-green-600/20";
+                            case 2: return "bg-blue-50 text-blue-700 ring-blue-600/20";
+                            case 3: return "bg-orange-50 text-orange-700 ring-orange-600/20";
+                            case 4: return "bg-teal-50 text-teal-700 ring-teal-600/20";
+                            case 5: return "bg-gray-50 text-gray-700 ring-gray-600/20";
+                            case 6: return "bg-red-50 text-red-700 ring-red-600/20";
+                            default: return "bg-purple-50 text-purple-700 ring-purple-600/20";
+                          }
+                        };
+                      
+                        return estado ? (
+                          <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${getColorClasses(cell.getValue())}`}>
                             {estado}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
+                          <span className="inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-600/20">
                             Estado desconocido
                           </span>
                         );
@@ -134,17 +148,17 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                   </td>
                 ))}
                 <td className="px-6 py-4">
-                  <button className='rounded bg-indigo-600 px-2 py-1 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-2'
+                  <button className='rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
                     onClick={() => onView(row.original)}>
                       Ver
                   </button>
                   {estadoFiltro === null ? 
-                  <button className='rounded bg-indigo-600 px-2 py-1 text-sm text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mr-2'
+                  <button className='rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
                     onClick={() => onAccept(row.original)}>
                       Aprobar
                   </button>: ''}
                   {estadoFiltro === null || (estadoFiltro === '0' && row.original.estado === 0) ? 
-                  <button className='rounded bg-red-600 px-2 py-1 text-sm text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                  <button className='rounded bg-red-50 px-2 py-1 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100'
                     onClick={() => onReject(row.original)}>
                       Rechazar
                   </button> : ''}

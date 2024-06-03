@@ -403,7 +403,6 @@ return (
                       </div>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                      {/* Your content */}
                       <div>
                         <dl className="mt-2 divide-y divide-gray-200 border-b border-t border-gray-200">
                           <div className="flex justify-between py-3 text-sm font-medium">
@@ -411,7 +410,19 @@ return (
                             OC Número {dataOcR.AdqOdNum} Compra de Activo
                             
                           </dd>
-                            <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20" style={{ float: "right" }}>
+                          <span 
+                              className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
+                                dataOcR.AdqOdEst === 0 ? "bg-yellow-50 text-yellow-700 ring-yellow-600/20" :
+                                dataOcR.AdqOdEst === 1 ? "bg-green-50 text-green-700 ring-green-600/20" :
+                                dataOcR.AdqOdEst === 2 ? "bg-blue-50 text-blue-700 ring-blue-600/20" :
+                                dataOcR.AdqOdEst === 3 ? "bg-orange-50 text-orange-700 ring-orange-600/20" :
+                                dataOcR.AdqOdEst === 4 ? "bg-teal-50 text-teal-700 ring-teal-600/20" :
+                                dataOcR.AdqOdEst === 5 ? "bg-gray-50 text-gray-700 ring-gray-600/20" :
+                                dataOcR.AdqOdEst === 6 ? "bg-red-50 text-red-700 ring-red-600/20" : 
+                                "bg-purple-50 text-purple-700 ring-purple-600/20"
+                              }`}
+                              style={{ float: "right" }}
+                            >
                               {dataOcR.AdqOdEst === 0 ? "Pendiente" :
                               dataOcR.AdqOdEst === 1 ? "Aprobada" :
                               dataOcR.AdqOdEst === 2 ? "Emitida" :

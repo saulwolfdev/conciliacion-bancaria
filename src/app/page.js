@@ -59,7 +59,7 @@ export default function Home() {
       } else if (error.name === 'NotAuthorizedException') {
         setErrors({ password: 'Contraseña incorrecta' });
       } else if (error.name === 'EmptySignInUsername') {
-        setErrors({ password: 'Usuario requerido' });
+        setErrors({ username: 'Usuario requerido' });
       } else if (error.name === 'EmptySignInPassword') {
         setErrors({ password: 'Password incorrecta' });
       }

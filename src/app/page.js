@@ -49,8 +49,6 @@ export default function Home() {
       
       router.push('/dashboard');
     } catch (error) {
-      console.log('error signing in', error.name);
-      // Reset previous errors
       setErrors({});
       
       const errorMessage = error || 'An unexpected error occurred';
@@ -72,7 +70,6 @@ export default function Home() {
   const logOut = async () => {
     try {
       await signOut();
-      console.log("Sign out successful");
     } catch (error) {
       console.log('error signing out: ', error);
     }

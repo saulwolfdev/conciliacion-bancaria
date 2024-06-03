@@ -274,11 +274,9 @@ const ComentarActividad = async () => {
 };
 
 const decodificarArchivo = async (numero, anio, mes, secuencia) => {
-  console.log('aqui decodificar', numero, anio, mes, secuencia)
   try {
     const response = await decodificarArchivoApi({numero: numero, anio: anio, mes: mes, secuencia: secuencia});
     if (response.status === 200) {
-      console.log('archivo', response)
       window.open(response.data.url_archivo)
     } else {
       setShowErrors(true)

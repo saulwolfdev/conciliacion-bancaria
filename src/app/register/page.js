@@ -18,7 +18,6 @@ export default function Register() {
 
   const signUpPage = async () => {
     try {
-        console.log(user)
         await signUp({
             'username': user.username,
             'password': user.password,
@@ -29,7 +28,6 @@ export default function Register() {
             }
           });
         navigate.push("/confirm-register");
-        console.log("success sign up");
     } catch (error) {
         console.log("error", error);
     }

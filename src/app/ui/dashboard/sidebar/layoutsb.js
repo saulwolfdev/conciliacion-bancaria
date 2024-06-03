@@ -43,17 +43,6 @@ export default function HomeLayout({ children }) {
   useEffect(() => {
     setUsername( Cookies.get('username'));
     setAvatar( Cookies.get('avatar'));
-    // const currentAuthenticatedUser = async () => {
-    //   try {
-    //     // const user = await getCurrentUser();
-    //     // setUsername(user.username);
-        
-    //   } catch (error) {
-    //     console.log('error getting user: ', error);
-    //   }
-    // };
-
-    // currentAuthenticatedUser();
   }, []);
 
   async function handleSignOut() {

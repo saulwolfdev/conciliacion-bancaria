@@ -20,12 +20,10 @@ function Dashboard() {
         const config = await getAmplifyConfig()
         Amplify.configure(config)
         const user = await getCurrentUser();
-        // Create a new script element
         const scriptElement = document.createElement("script");
         scriptElement.type = "text/javascript";
-        scriptElement.defer = true; // or use scriptElement.setAttribute("defer", "true");
-
-        // Add user information to the script content
+        scriptElement.defer = true;
+        
         scriptElement.innerHTML = `
           var beamer_config = {
             product_id: 'TBYVjWVI65518',
@@ -33,10 +31,8 @@ function Dashboard() {
           };
         `;
 
-        // Append the script element to the document
         document.head.appendChild(scriptElement);
 
-        // Create another script element for the Beamer embed script
         const beamerScriptElement = document.createElement("script");
         beamerScriptElement.type = "text/javascript";
         beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
@@ -75,7 +71,6 @@ function Dashboard() {
   const [selectedTab, setSelectedTab] = useState('Todas');
 
   const handleTabClick = (tabName) => {
-    console.log(tabName)
     setSelectedTab(tabName);
   };
 
@@ -95,13 +90,12 @@ function Dashboard() {
             <label htmlFor="tabs" className="sr-only">
               Select a tab
             </label>
-            {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
             <select
               id="tabs"
               name="tabs"
               className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
               defaultValue={tabs.find((tab) => tab.current).name}
-              onChange={(e) => handleTabClick(e.target.value)} // Añadir el manejador onChange
+              onChange={(e) => handleTabClick(e.target.value)} 
             >
               {tabs.map((tab) => (
                 <option key={tab.name}>{tab.name}</option>

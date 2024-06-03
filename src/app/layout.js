@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 
 
 const inter = Inter({ subsets: ["latin"] });
-export const datos_prueba = false;
+export const datos_prueba = true;
 
 export const removeAllCookies = () => {
   const allCookies = Cookies.get(); 

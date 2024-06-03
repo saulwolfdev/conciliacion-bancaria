@@ -45,7 +45,7 @@ export default function Home() {
       const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
       Cookies.set('authToken', authToken);    
       Cookies.set('username', user.username);
-      Cookies.set('avatar', user.username.substring(0, 2));
+      Cookies.set('avatar', user.username.substring(0, 2).toUpperCase());
       
       router.push('/dashboard');
     } catch (error) {
@@ -71,7 +71,7 @@ export default function Home() {
               className="mb-6"
               src="/images/informat.png"
               alt="Informat Logo"
-              style={{ maxWidth: '100%', height: 'auto' }} // Mantener tamaño original
+              style={{ maxWidth: '100%', height: 'auto' }} 
             />
             <h2 className="font-heading text-4xl text-gray-900 font-semibold mb-4 text-center">
               Bienvenido
@@ -105,13 +105,6 @@ export default function Home() {
             >
               Iniciar sesión
             </button>
-            {/* <button
-              type="button"
-              className="mt-5 flex w-full justify-center rounded-md bg-customBlue px-3 py-1.5 text-sm leading-6 text-white shadow-sm hover:bg-customBlue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => logOut()}
-            >
-              Salir
-            </button> */}
           </div>
         </div>
         <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -122,7 +115,7 @@ export default function Home() {
               height: 'auto',
               width: '70%',
               maxWidth: '90%',
-              margin: '20% auto' // Center vertically and adjust margin as needed
+              margin: '20% auto' 
             }}
           >
             <Swiper

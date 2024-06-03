@@ -15,20 +15,20 @@ import { removeAllCookies } from './layout';
 import { Amplify } from "aws-amplify";
 import { getAmplifyConfig } from '@/utils/amplify_config';
 
-// Amplify.configure(getAmplifyConfig());
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const configAmplify = async () => {
-        const config = await getAmplifyConfig();
-        Amplify.configure(config);
+      const config = await getAmplifyConfig();
+      Amplify.configure(config);
     };
     configAmplify();
   }, []);
-  
 
   const handleInputChange = (event, keyName) => {
     event.persist();
@@ -49,7 +49,18 @@ export default function Home() {
       
       router.push('/dashboard');
     } catch (error) {
-      console.log('error signing in', error);
+      console.log('error signing in', error.name);
+      // Reset previous errors
+      setErrors({});
+      
+      const errorMessage = error || 'An unexpected error occurred';
+      if (error.name === 'UserNotFoundException') {
+        setErrors({ username: 'Usuario no existe' });
+      } else if (error.name === 'NotAuthorizedException') {
+        setErrors({ password: 'Password incorrecta' });
+      } else {
+        setErrors({ general: errorMessage });
+      }
     }
   };
 
@@ -81,23 +92,46 @@ export default function Home() {
             </h2>
           </div>
           <div className="w-full md:w-8/12 mt-10 sm:mt-0">
-            <div className="mt-10">
+    
+            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+              Usuario
+            </label>
+            <div className="relative mt-2 rounded-md shadow-sm">
               <Input
-                labelName="Usuario"
+                labelName=""
                 value={user.username}
                 handleInputChange={(e) => handleInputChange(e, "username")}
-                className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-sm py-2 px-2 block w-full appearance-none leading-normal"
+                className={`account-input rounded-md bg-white focus:outline-none focus:shadow-outline border border-gray-300 py-2 px-2 block w-full appearance-none leading-normal ${errors.username ? 'text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500' : ''}`}
               />
+              {errors.username && (
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                </div>
+              )}
             </div>
+            {errors.username && <p className="text-sm text-red-600">{errors.username}</p>}
+    
             <div className="mt-2">
-              <Input
-                labelName="Contraseña"
-                type="password"
-                value={user.password}
-                handleInputChange={(e) => handleInputChange(e, "password")}
-                className="bg-white focus:outline-none focus:shadow-outline border border-gray-300 rounded-sm py-2 px-2 block w-full appearance-none leading-normal"
-              />
+              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                Contraseña
+              </label>
+              <div className="relative mt-2 rounded-md shadow-sm">
+                <Input
+                  labelName=""
+                  type="password"
+                  value={user.password}
+                  handleInputChange={(e) => handleInputChange(e, "password")}
+                  className={`account-input rounded-md bg-white focus:outline-none focus:shadow-outline border border-gray-300 py-2 px-2 block w-full appearance-none leading-normal ${errors.password ? 'text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500' : ''}`}
+                />
+                {errors.password && (
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                    <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                  </div>
+                )}
+              </div>
+              {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
             </div>
+            
             <button
               type="button"
               className="mt-10 flex w-full justify-center rounded-md bg-customGreen px-3 py-1.5 text-sm leading-6 text-white shadow-sm hover:bg-customBlue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -105,6 +139,7 @@ export default function Home() {
             >
               Iniciar sesión
             </button>
+            
           </div>
         </div>
         <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>

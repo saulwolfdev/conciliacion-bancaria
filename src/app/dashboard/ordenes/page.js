@@ -618,7 +618,7 @@ return (
                           {dataOcR?.documentos?.map((doc) => (
                             <div className="mt-5" key={doc.AdqAjNom}>
                               {/* <a href='#' onClick={() => decodificarArchivo(doc.AdqAjNum, doc.AdqAjAno, doc.AdqAjMes, doc.AdqAjSec)} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}> */}
-                              <a href={doc.url} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}>
+                              <a href={doc.url} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom} target="_blank">
                                 {doc.AdqAjNom.length > 40 ? doc.AdqAjNom.slice(0, 37) + '...' : doc.AdqAjNom}
                                 <DocumentArrowDownIcon className="w-4 h-4 inline-block ml-1" />
                               </a>

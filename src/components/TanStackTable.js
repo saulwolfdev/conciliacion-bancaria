@@ -148,17 +148,17 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                   </td>
                 ))}
                 <td className="px-6 py-4">
-                  <button className='rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
+                  <button className='rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
                     onClick={() => onView(row.original)}>
                       Ver
                   </button>
                   {estadoFiltro === null ? 
-                  <button className='rounded bg-indigo-50 px-2 py-1 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
+                  <button className='rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
                     onClick={() => onAccept(row.original)}>
                       Aprobar
                   </button>: ''}
                   {estadoFiltro === null || (estadoFiltro === '0' && row.original.estado === 0) ? 
-                  <button className='rounded bg-red-50 px-2 py-1 text-sm font-semibold text-red-600 shadow-sm hover:bg-red-100'
+                  <button className='rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100'
                     onClick={() => onReject(row.original)}>
                       Rechazar
                   </button> : ''}

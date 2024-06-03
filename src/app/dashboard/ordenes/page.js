@@ -434,7 +434,7 @@ return (
                             </span>
                           </div>
                         </dl>
-                        <h3 className="mt-20 font-medium text-gray-900">Información</h3>
+                        <h3 className="mt-10 font-medium text-gray-900">Información</h3>
                         <dl className="mt-2 divide-y divide-gray-200 border-b border-t border-gray-200">
                         <div className="flex justify-between py-3 text-sm font-medium">
                           <dt className="text-gray-500">Solicitante</dt>
@@ -617,7 +617,8 @@ return (
                         <h3 className="mt-10 font-medium text-gray-900">Archivos</h3>
                           {dataOcR?.documentos?.map((doc) => (
                             <div className="mt-5" key={doc.AdqAjNom}>
-                              <a href='#' onClick={() => decodificarArchivo(doc.AdqAjNum, doc.AdqAjAno, doc.AdqAjMes, doc.AdqAjSec)} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}>
+                              {/* <a href='#' onClick={() => decodificarArchivo(doc.AdqAjNum, doc.AdqAjAno, doc.AdqAjMes, doc.AdqAjSec)} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}> */}
+                              <a href={doc.url} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}>
                                 {doc.AdqAjNom.length > 40 ? doc.AdqAjNom.slice(0, 37) + '...' : doc.AdqAjNom}
                                 <DocumentArrowDownIcon className="w-4 h-4 inline-block ml-1" />
                               </a>

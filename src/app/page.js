@@ -1,41 +1,101 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { fetchAuthSession } from 'aws-amplify/auth';
-import { signIn, signOut } from 'aws-amplify/auth';
 import { useRouter } from 'next/navigation';
-import Input from '../common/Input';
 import Cookies from 'js-cookie';
+
+import { fetchAuthSession, signIn, signOut } from 'aws-amplify/auth';
+import { Amplify } from "aws-amplify";
+import { getAmplifyConfig } from '@/utils/amplify_config';
+
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { removeAllCookies } from './layout';
-
-import { Amplify } from "aws-amplify";
-import { getAmplifyConfig } from '@/utils/amplify_config';
 
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
-export default function Home() {
-  const router = useRouter();
+import Input from '../common/Input';
+import { removeAllCookies } from './layout';
+
+const useAuth = () => {
   const [user, setUser] = useState({ username: '', password: '' });
   const [errors, setErrors] = useState({});
 
+  const handleInputChange = (event, keyName) => {
+    event.persist();
+    setUser((user) => ({ ...user, [keyName]: event.target.value }));
+  };
+
+  const clearErrors = () => setErrors({});
+
+  return { user, setUser, errors, setErrors, handleInputChange, clearErrors };
+};
+
+const InputField = ({ label, type, value, handleChange, error }) => (
+  <div className="mt-2">
+    <label className="block text-sm font-medium leading-6 text-gray-900">
+      {label}
+    </label>
+    <div className="relative mt-2 rounded-md shadow-sm">
+      <Input
+        labelName=""
+        type={type}
+        value={value}
+        handleInputChange={handleChange}
+        className={`account-input rounded-md bg-white focus:outline-none focus:shadow-outline border border-gray-300 py-2 px-2 block w-full appearance-none leading-normal ${error ? 'text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500' : ''}`}
+      />
+      {error && (
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+        </div>
+      )}
+    </div>
+    {error && <p className="text-sm text-red-600">{error}</p>}
+  </div>
+);
+
+const LoginForm = ({ user, errors, handleInputChange, logIn }) => (
+  <div className="w-full md:w-8/12 mt-10 sm:mt-0">
+    <InputField
+      label="Usuario"
+      type="text"
+      value={user.username}
+      handleChange={(e) => handleInputChange(e, 'username')}
+      error={errors.username}
+    />
+    <InputField
+      label="Contraseña"
+      type="password"
+      value={user.password}
+      handleChange={(e) => handleInputChange(e, 'password')}
+      error={errors.password}
+    />
+    <button
+      type="button"
+      className="mt-10 flex w-full justify-center rounded-md bg-customGreen px-3 py-1.5 text-sm leading-6 text-white shadow-sm hover:bg-customBlue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      onClick={logIn}
+    >
+      Iniciar sesión
+    </button>
+  </div>
+);
+
+export default function Home() {
+  const router = useRouter();
+  const { user, errors, handleInputChange, clearErrors, setErrors } = useAuth();
+
   useEffect(() => {
     const configAmplify = async () => {
-      const config = await getAmplifyConfig();
-      Amplify.configure(config);
+      try {
+        const config = await getAmplifyConfig();
+        Amplify.configure(config);
+      } catch (error) {
+        console.error('Error configuring Amplify', error);
+      }
     };
     configAmplify();
   }, []);
-
-  const handleInputChange = (event, keyName) => {
-    event.persist();
-    setUser((user) => {
-      return { ...user, [keyName]: event.target.value };
-    });
-  };
 
   const logIn = async () => {
     try {
@@ -46,32 +106,17 @@ export default function Home() {
       Cookies.set('authToken', authToken);    
       Cookies.set('username', user.username);
       Cookies.set('avatar', user.username.substring(0, 2).toUpperCase());
-      
       router.push('/dashboard');
     } catch (error) {
-      setErrors({});
-      
-      const errorMessage = error || 'An unexpected error occurred';
-      if (error.name === 'UserNotFoundException') {
-        setErrors({ username: 'Usuario no existe' });
-      } else if (error.name === 'NotAuthorizedException') {
-        setErrors({ password: 'Contraseña incorrecta' });
-      } else if (error.name === 'EmptySignInUsername') {
-        setErrors({ username: 'Usuario requerido' });
-      } else if (error.name === 'EmptySignInPassword') {
-        setErrors({ password: 'Contraseña requerida' });
-      }
-       else {
-        setErrors({ general: errorMessage });
-      }
-    }
-  };
-
-  const logOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.log('error signing out: ', error);
+      clearErrors();
+      let errorMessage = error?.message || 'An unexpected error occurred';
+      const errorMapping = {
+        'UserNotFoundException': { username: 'Usuario no existe' },
+        'NotAuthorizedException': { password: 'Contraseña incorrecta' },
+        'EmptySignInUsername': { username: 'Usuario requerido' },
+        'EmptySignInPassword': { password: 'Contraseña requerida' },
+      };
+      setErrors(errorMapping[error.name] || { general: errorMessage });
     }
   };
 
@@ -93,56 +138,12 @@ export default function Home() {
               Tu gestión empresarial empieza aquí.
             </h2>
           </div>
-          <div className="w-full md:w-8/12 mt-10 sm:mt-0">
-    
-            <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
-              Usuario
-            </label>
-            <div className="relative mt-2 rounded-md shadow-sm">
-              <Input
-                labelName=""
-                value={user.username}
-                handleInputChange={(e) => handleInputChange(e, "username")}
-                className={`account-input rounded-md bg-white focus:outline-none focus:shadow-outline border border-gray-300 py-2 px-2 block w-full appearance-none leading-normal ${errors.username ? 'text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500' : ''}`}
-              />
-              {errors.username && (
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-                </div>
-              )}
-            </div>
-            {errors.username && <p className="text-sm text-red-600">{errors.username}</p>}
-    
-            <div className="mt-2">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                Contraseña
-              </label>
-              <div className="relative mt-2 rounded-md shadow-sm">
-                <Input
-                  labelName=""
-                  type="password"
-                  value={user.password}
-                  handleInputChange={(e) => handleInputChange(e, "password")}
-                  className={`account-input rounded-md bg-white focus:outline-none focus:shadow-outline border border-gray-300 py-2 px-2 block w-full appearance-none leading-normal ${errors.password ? 'text-red-900 ring-1 ring-inset ring-red-300 placeholder:text-red-300 focus:ring-2 focus:ring-inset focus:ring-red-500' : ''}`}
-                />
-                {errors.password && (
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                    <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
-                  </div>
-                )}
-              </div>
-              {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
-            </div>
-            
-            <button
-              type="button"
-              className="mt-10 flex w-full justify-center rounded-md bg-customGreen px-3 py-1.5 text-sm leading-6 text-white shadow-sm hover:bg-customBlue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => logIn()}
-            >
-              Iniciar sesión
-            </button>
-            
-          </div>
+          <LoginForm
+            user={user}
+            errors={errors}
+            handleInputChange={handleInputChange}
+            logIn={logIn}
+          />
         </div>
         <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <div

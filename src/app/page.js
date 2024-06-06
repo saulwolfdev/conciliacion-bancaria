@@ -81,9 +81,19 @@ const LoginForm = ({ user, errors, handleInputChange, logIn }) => (
   </div>
 );
 
+const LoadingSpinner = () => (
+  <div className="loading active fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-customGreen"></div>
+    <img src="/images/image.png" className="absolute rounded-full h-24 w-24 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></img>
+  </div>
+);
+
+
+
 export default function Home() {
   const router = useRouter();
   const { user, errors, handleInputChange, clearErrors, setErrors } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const configAmplify = async () => {
@@ -98,6 +108,7 @@ export default function Home() {
   }, []);
 
   const logIn = async () => {
+    setLoading(true);
     try {
       await signOut();
       removeAllCookies();
@@ -117,12 +128,14 @@ export default function Home() {
         'EmptySignInPassword': { password: 'Contraseña requerida' },
       };
       setErrors(errorMapping[error.name] || { general: errorMessage });
+      setLoading(false);
     }
   };
 
   return (
     <div className="container-fluid">
-      <div className="min-h-screen flex flex-col sm:flex-row">
+      {loading && <LoadingSpinner />}
+      <div className={`min-h-screen flex flex-col sm:flex-row ${loading ? 'opacity-50' : ''}`}>
         <div className="w-full sm:w-5/12 bg-white flex flex-col justify-center items-center relative p-4">
           <div className="flex flex-col items-center">
             <img

@@ -94,9 +94,9 @@ const ProductGrid = ({ products }) => (
             </div>
           </div>
         </div>
-        <div className="p-4 bg-white rounded-b-lg shadow">
+        <div className="p-2 bg-white rounded-b-lg shadow">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">
+            <h3 className="text-lg sm:text-base font-medium text-gray-900">
               <a href={product.href} target="_blank">
                 <span aria-hidden="true" className="absolute inset-0" />
                 {product.name}
@@ -104,14 +104,13 @@ const ProductGrid = ({ products }) => (
             </h3>
             <img src="/images/inet.png" alt="Check Icon" className="w-8 h-8 ml-2" />
           </div>
-          <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+          <p className="mt-1 text-xs sm:text-sm text-gray-500">{product.category}</p>
         </div>
       </div>
     ))}
   </div>
 );
 
-// Componente principal Dashboard
 function Dashboard() {
   useAmplifyConfig();
   const [selectedTab, setSelectedTab] = useState('Todas');

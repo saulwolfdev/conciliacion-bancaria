@@ -1,4 +1,4 @@
-// pages/Home.js or pages/index.js or wherever your Home component is located
+"use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -17,7 +17,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 import Input from '../common/Input';
 import { removeAllCookies } from './layout';
-import LoadingSpinner from '../common/LoadingSpinner'; // Import the LoadingSpinner component
+import LoadingSpinner from '../common/LoadingSpinner'; 
 
 const useAuth = () => {
   const [user, setUser] = useState({ username: '', password: '' });

@@ -43,14 +43,9 @@ const [openOcD, setOpenOcD] = useState(false)
 const [tamano, setTamano] = useState(7)
 const navigate = useRouter();
 
-// const [columns, setColums] = []
-
-
-
 function currencyFormatter({ currency, value}) {
   return new Intl.NumberFormat('es-CL', {currency: currency, style: 'currency'}).format(value);
 }
-
 
 const setValorTamano = () => {
   if (window.innerWidth >= 1280) { // xl
@@ -64,33 +59,33 @@ const setValorTamano = () => {
   }
 };
 
-const columns = [
-  columnHelper.accessor("AdqOdNum", {
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: "OC (Nro. Interno)",
-  }),
-  
-  columnHelper.accessor("AdqOdGlo", {
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: "Glosa",
-  }),
-  columnHelper.accessor("AdqOdTot", {
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: "Monto Bruto",
-  }),
-  columnHelper.accessor("AdqOdPvNo", {
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: "Proveedor",
-  }),
-  columnHelper.accessor("AdqOdFcIn", {
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: "Creada en",
-  }),
-  columnHelper.accessor("AdqOdEst", {
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: "Estado",
-  })
-];
+const handleDismiss = () => {setShowSuccess(false);};
+const handleDismissError = () => {setShowErrors(false);};
+const handleObservationChange = (event) => {setObservation(event.target.value);}
+const handleCommentChange = (event) => {
+  const value = event.target.value;
+  setActividad(value);
+  setComentarioActividad(value);
+};
+
+const loadProducts = async (estado) => {
+  try {
+    const res = await getAllProduct(estado);
+    setProduct(res.data);
+    setEstadoFiltro(estado);
+  } catch (error) {
+    console.log('error getting oc: ', error);
+  }
+};
+
+const loadCards = async () => {
+  try {
+    const res = await getTotales();
+    setdataCards(res.data)
+  } catch (error) {
+    console.log('error getting oc: ', error);
+  }
+};
 
 const onAccept = (dataOc) => {
   setIdOC({numero: dataOc.AdqOdNum, anio: dataOc.AdqOdAno, mes:dataOc.AdqOdMes, estado:true});
@@ -110,43 +105,6 @@ const onView = (dataOC) =>{
 const onDetail = (dataOC) =>{
   setIdOC({numero: dataOC.AdqOdNum, anio: dataOC.AdqOdAno, mes: dataOC.AdqOdMes});
   loadDetail(dataOC.AdqOdNum, dataOC.AdqOdAno, dataOC.AdqOdMes, dataOC.SucCod)
-};
-
-
-const handleDismiss = () => {
-  setShowSuccess(false);
-};
-
-const handleDismissError = () => {
-  setShowErrors(false);
-};
-
-const handleObservationChange = (event) => {
-  setObservation(event.target.value);
-}
-
-const handleCommentChange = (event) => {
-  setActividad(event.target.value);
-  setComentarioActividad(event.target.value);
-}
-
-const loadProducts = async (estado) => {
-  try {
-    const res = await getAllProduct(estado);
-    setProduct(res.data);
-    setEstadoFiltro(estado);
-  } catch (error) {
-    console.log('error getting oc: ', error);
-  }
-};
-
-const loadCards = async () => {
-  try {
-    const res = await getTotales();
-    setdataCards(res.data)
-  } catch (error) {
-    console.log('error getting oc: ', error);
-  }
 };
 
 useEffect(() => {
@@ -204,50 +162,33 @@ const loadDetail = async (numero, anio, mes, sucursal) => {
   }
 };
 
-const RechazarOC = async () => {
-  try {
-    const response = await aprobarRechazarOC({id: idOC, comentario: observation});
-    if (response.status === 200) {
-      setShowSuccess(true)
-      setSuccess("OC rechazada correctamente");
-      setError(null); 
-      setObservation("")
-      loadProducts(null);
-      loadCards();
-    } else {
-      setShowErrors(true)
-      setSuccess(false);
-      setError('Hubo un problema al llamar a la API.');
-    }
-  } catch (error) {
-    setShowErrors(true)
-    setSuccess(false);
-    setError('Hubo un error al llamar a la API: ' + error.message);
-  }
-  setOpenD(false)
+const handleApiError = (error) => {
+  setShowErrors(true);
+  setSuccess(false);
+  setError('Hubo un error al llamar a la API: ' + error.message);
 };
 
-const AprobarOC = async () => {
+const handleApproval = async (estado, message) => {
   try {
-    const response = await aprobarRechazarOC({id: idOC, comentario: observation});
+    const response = await aprobarRechazarOC({ id: idOC, comentario: observation });
     if (response.status === 200) {
-      setShowSuccess(true)
-      setSuccess("OC aprobada correctamente");
-      setError(null); 
+      setShowSuccess(true);
+      setSuccess(message);
+      setError(null);
       loadProducts(null);
       loadCards();
     } else {
-      setShowErrors(true)
-      setSuccess(false);
-      setError('Hubo un problema al llamar a la API.');
+      handleApiError(new Error('Hubo un problema al llamar a la API.'));
     }
   } catch (error) {
-    setShowErrors(true)
-    setSuccess(false);
-    setError('Hubo un error al llamar a la API: ' + error.message);
+    handleApiError(error);
   }
-  setOpenA(false)
+  setOpenD(false);
 };
+
+const RechazarOC = () => handleApproval(false, "OC rechazada correctamente");
+const AprobarOC = () => handleApproval(true, "OC aprobada correctamente");
+
 
 const ComentarActividad = async () => {
   try {
@@ -275,22 +216,16 @@ const ComentarActividad = async () => {
 
 const decodificarArchivo = async (numero, anio, mes, secuencia) => {
   try {
-    const response = await decodificarArchivoApi({numero: numero, anio: anio, mes: mes, secuencia: secuencia});
+    const response = await decodificarArchivoApi({ numero: numero, anio: anio, mes: mes, secuencia: secuencia });
     if (response.status === 200) {
-      window.open(response.data.url_archivo)
+      window.open(response.data.url_archivo);
     } else {
-      setShowErrors(true)
-      setSuccess(false);
-      setError('Hubo un problema al llamar a la API.');
+      handleApiError(new Error('Hubo un problema al llamar a la API.'));
     }
   } catch (error) {
-    setShowErrors(true)
-    setSuccess(false);
-    setError('Hubo un error al llamar a la API: ' + error.message);
+    handleApiError(error);
   }
-  setOpenA(false)
-  // setActividad('');
-  
+  setOpenA(false);
 };
 
 const stats = [
@@ -304,6 +239,15 @@ const pages = [
   { name: 'Inet', href: '/dashboard', current: false },
   { name: 'Ordenes de Compra', href: '#', current: true },
 ]
+
+const columns = [
+  columnHelper.accessor("AdqOdNum", { cell: (info) => <span>{info.getValue()}</span>, header: "OC (Nro. Interno)" }),
+  columnHelper.accessor("AdqOdGlo", { cell: (info) => <span>{info.getValue()}</span>, header: "Glosa" }),
+  columnHelper.accessor("AdqOdTot", { cell: (info) => <span>{info.getValue()}</span>, header: "Monto Bruto" }),
+  columnHelper.accessor("AdqOdPvNo", { cell: (info) => <span>{info.getValue()}</span>, header: "Proveedor" }),
+  columnHelper.accessor("AdqOdFcIn", { cell: (info) => <span>{info.getValue()}</span>, header: "Creada en" }),
+  columnHelper.accessor("AdqOdEst", { cell: (info) => <span>{info.getValue()}</span>, header: "Estado" })
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -617,8 +561,8 @@ return (
                         <h3 className="mt-10 font-medium text-gray-900">Archivos</h3>
                           {dataOcR?.documentos?.map((doc) => (
                             <div className="mt-5" key={doc.AdqAjNom}>
-                              {/* <a href='#' onClick={() => decodificarArchivo(doc.AdqAjNum, doc.AdqAjAno, doc.AdqAjMes, doc.AdqAjSec)} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}> */}
-                              <a href={doc.url} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom} target="_blank">
+                              <a href='#' onClick={() => decodificarArchivo(doc.AdqAjNum, doc.AdqAjAno, doc.AdqAjMes, doc.AdqAjSec)} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom}>
+                              {/* <a href={doc.url} className="mt-20 text-xs font-medium text-indigo-700 underline hover:text-indigo-600" title={doc.AdqAjNom} target="_blank"> */}
                                 {doc.AdqAjNom.length > 40 ? doc.AdqAjNom.slice(0, 37) + '...' : doc.AdqAjNom}
                                 <DocumentArrowDownIcon className="w-4 h-4 inline-block ml-1" />
                               </a>

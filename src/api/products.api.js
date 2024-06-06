@@ -10,7 +10,7 @@ const productsApi = axios.create({
     baseURL: 'https://container-inetevo.r1na2lodul27u.us-east-1.cs.amazonlightsail.com/oc/',
     headers: {
         'Authorization': 'Bearer '+token,
-        'Tenant': typeof window !== 'undefined' ? window.location.hostname : ''
+        'Tenant': typeof window !== 'undefined' ? window.location.hostname.split(".")[0] : ''
     }
 })
 

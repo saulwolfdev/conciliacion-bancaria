@@ -1,4 +1,4 @@
-"use client";
+// pages/Home.js or pages/index.js or wherever your Home component is located
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -17,7 +17,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 import Input from '../common/Input';
 import { removeAllCookies } from './layout';
-import LoadingSpinner from '@/common/LoadingSpinner';
+import LoadingSpinner from '../common/LoadingSpinner'; // Import the LoadingSpinner component
 
 const useAuth = () => {
   const [user, setUser] = useState({ username: '', password: '' });
@@ -126,7 +126,7 @@ export default function Home() {
 
   return (
     <div className="container-fluid">
-      {loading && <LoadingSpinner />}
+      {loading && <LoadingSpinner />} {/* Use the LoadingSpinner component */}
       <div className={`min-h-screen flex flex-col sm:flex-row ${loading ? 'opacity-50' : ''}`}>
         <div className="w-full sm:w-5/12 bg-white flex flex-col justify-center items-center relative p-4">
           <div className="flex flex-col items-center">
@@ -151,7 +151,6 @@ export default function Home() {
           />
         </div>
         <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          
           
           <div
             className="rounded-lg shadow-lg p-4 flex items-center justify-center relative"

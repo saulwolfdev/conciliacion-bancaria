@@ -1,5 +1,6 @@
 import { getParams } from "@/api/params.api";
 import { datos_prueba } from "@/app/layout";
+import { products } from "@/app/lib/datainet";
 import Cookies from 'js-cookie';
 
 export const getAmplifyConfig = async () => {
@@ -23,6 +24,7 @@ export const getAmplifyConfig = async () => {
         },
         "aws_cognito_verification_mechanisms": ["EMAIL"]
       }
+      Cookies.set('apps_config', JSON.stringify(products))
   
     }else{
       let identity_pool_id = Cookies.get('identity_pool_id');
@@ -39,6 +41,7 @@ export const getAmplifyConfig = async () => {
         Cookies.set('identity_pool_id', p.data.identity_pool_id);
         Cookies.set('user_pools_id', p.data.user_pools_id);
         Cookies.set('web_client_id', p.data.web_client_id);
+        Cookies.set('apps_config', JSON.stringify(p.data.apps))
       }
       config = {
         "aws_project_region": "us-east-1",
@@ -58,8 +61,7 @@ export const getAmplifyConfig = async () => {
         },
         "aws_cognito_verification_mechanisms": ["EMAIL"]
   
-      }
-    
+      }    
     }
     return(config);
   };

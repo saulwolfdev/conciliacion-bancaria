@@ -6,7 +6,8 @@ import Cookies from 'js-cookie';
 
 const token = Cookies.get('authToken');
 const productsApi = axios.create({
-    baseURL: 'http://localhost:8000/oc/',
+    // baseURL: 'http://localhost:8000/oc/',
+    baseURL: 'https://container-inetevo.r1na2lodul27u.us-east-1.cs.amazonlightsail.com/oc/',
     headers: {
         'Authorization': 'Bearer '+token,
         'Tenant': typeof window !== 'undefined' ? window.location.hostname : ''

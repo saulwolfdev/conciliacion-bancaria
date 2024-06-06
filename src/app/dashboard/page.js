@@ -7,18 +7,27 @@ import { getAmplifyConfig } from "@/utils/amplify_config";
 import { Amplify } from "aws-amplify";
 import { useRouter } from 'next/navigation'
 import { getCurrentUser } from "aws-amplify/auth";
+import Cookies from 'js-cookie';
 
 function Dashboard() {
+  const [apps, setApps] = useState([]);
   const navigate = useRouter();
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
   useEffect(() => {
+    
+
     const configAmplify = async () => {
       try{
         const config = await getAmplifyConfig()
         Amplify.configure(config)
+
+        const configAppCookie = Cookies.get('apps_config');
+        const configApp = JSON.parse(configAppCookie);
+        setApps(configApp)
+
         const user = await getCurrentUser();
         const scriptElement = document.createElement("script");
         scriptElement.type = "text/javascript";
@@ -76,8 +85,8 @@ function Dashboard() {
 
 
   const filteredProducts = selectedTab === 'Todas' 
-  ? products 
-  : products.filter(product => product.categoria === selectedTab);
+  ? apps 
+  : apps.filter(product => product.categoria === selectedTab);
 
   return (
     <>
@@ -122,13 +131,13 @@ function Dashboard() {
         </div>
         
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {filteredProducts.map((product) => (
-          <div key={product.id} className="group relative" >
+          {filteredProducts.map((product, index) => (
+          <div key={index} className="group relative" >
             <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100 relative">
               <div className="absolute top-3 left-3 flex items-center justify-center bg-customLightBlue bg-opacity-75 w-48 h-8 px-8 py-4 text-xs font-small text-gray-900 z-10 rounded-tl-md rounded-br-md">
                 {product.categoria}
               </div>
-              <img src={product.imageSrc} alt={product.imageAlt} className="object-cover object-center w-full h-full" />
+              <img src={product.imagesrc} alt={product.imageAlt} className="object-cover object-center w-full h-full" />
               <div className="flex items-end p-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
                 <div className="w-full rounded-md bg-white bg-opacity-75 px-2 py-1 text-center text-sm font-medium text-gray-900 backdrop-blur backdrop-filter">
                   {product.status}
@@ -140,12 +149,12 @@ function Dashboard() {
                 <h3 className="text-lg font-medium text-gray-900">
                   <a href={product.href} target="_blank">
                     <span aria-hidden="true" className="absolute inset-0" />
-                    {product.name}
+                    {product.nombre}
                   </a>
                 </h3>
                 <img src="/images/inet.png" alt="Check Icon" className="w-8 h-8 ml-2" />
               </div>
-              <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+              <p className="mt-1 text-sm text-gray-500">{product.descripcion}</p>
             </div>
           </div>
           ))}

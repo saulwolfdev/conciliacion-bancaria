@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -126,7 +127,7 @@ export default function Home() {
 
   return (
     <div className="container-fluid">
-      {loading && <LoadingSpinner />} {/* Use the LoadingSpinner component */}
+      {loading && <LoadingSpinner />} 
       <div className={`min-h-screen flex flex-col sm:flex-row ${loading ? 'opacity-50' : ''}`}>
         <div className="w-full sm:w-5/12 bg-white flex flex-col justify-center items-center relative p-4">
           <div className="flex flex-col items-center">

@@ -195,7 +195,7 @@ const handleApproval = async (estado, message) => {
 };
 
 const LoadingSpinner = () => (
-  <div className="loading active fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-1000">
+  <div className="loading active fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
     <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-customGreen"></div>
     <img src="/images/image.png" className="absolute rounded-full h-24 w-24 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></img>
   </div>
@@ -331,7 +331,7 @@ return (
 
     {/* Slide over */}
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={setOpen}>
+      <Dialog as="div" className="relative z-40" onClose={setOpen}>
         <div className="fixed inset-0" />
 
         <div className="fixed inset-0 overflow-hidden">
@@ -602,7 +602,7 @@ return (
 
     {/* Slide detalle oc */}
     <Transition.Root show={openOcD} as={Fragment}>
-      <Dialog className="relative z-50" onClose={setOpenOcD}>
+      <Dialog className="relative z-40" onClose={setOpenOcD}>
         <div className="fixed inset-0" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
@@ -832,7 +832,7 @@ return (
     
     {/* Dialog */}
     <Transition.Root show={opend} as={Fragment}>
-      <Dialog as="div" className="relative z-50" initialFocus={cancelButtonRef} onClose={setOpenD}>
+      <Dialog as="div" className="relative z-40" initialFocus={cancelButtonRef} onClose={setOpenD}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -845,7 +845,7 @@ return (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
+        <div className="fixed inset-0 z-40 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
@@ -904,7 +904,7 @@ return (
     </Transition.Root>
 
     <Transition.Root show={opena} as={Fragment}>
-      <Dialog as="div" className="relative z-50" initialFocus={cancelButtonRef} onClose={setOpenA}>
+      <Dialog as="div" className="relative z-40" initialFocus={cancelButtonRef} onClose={setOpenA}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -917,7 +917,7 @@ return (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
+        <div className="fixed inset-0 z-40 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}

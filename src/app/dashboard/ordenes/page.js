@@ -154,6 +154,7 @@ const loadProduct = async (numero, anio, mes, sucursal) => {
 };
 
 const loadDetail = async (numero, anio, mes, sucursal) => {
+  setLoading(true);
   try {
     if(datos_prueba){
       setDataOcR(res);
@@ -165,8 +166,10 @@ const loadDetail = async (numero, anio, mes, sucursal) => {
     }    
     setComentario(usuario.AdqOAGl3)
     setOpenOcD(true)
+    setLoading(false);
   } catch (error) {
     console.log('error getting oc: ', error);
+    setLoading(false);
   }
 };
 

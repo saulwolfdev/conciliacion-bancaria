@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
@@ -18,7 +17,6 @@ import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 import Input from '../common/Input';
 import { removeAllCookies } from './layout';
-import LoadingSpinner from '../common/LoadingSpinner'; 
 
 const useAuth = () => {
   const [user, setUser] = useState({ username: '', password: '' });
@@ -83,6 +81,15 @@ const LoginForm = ({ user, errors, handleInputChange, logIn }) => (
   </div>
 );
 
+const LoadingSpinner = () => (
+  <div className="loading active fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-customGreen"></div>
+    <img src="/images/image.png" className="absolute rounded-full h-24 w-24 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></img>
+  </div>
+);
+
+
+
 export default function Home() {
   const router = useRouter();
   const { user, errors, handleInputChange, clearErrors, setErrors } = useAuth();
@@ -127,7 +134,7 @@ export default function Home() {
 
   return (
     <div className="container-fluid">
-      {loading && <LoadingSpinner />} 
+      {loading && <LoadingSpinner />}
       <div className={`min-h-screen flex flex-col sm:flex-row ${loading ? 'opacity-50' : ''}`}>
         <div className="w-full sm:w-5/12 bg-white flex flex-col justify-center items-center relative p-4">
           <div className="flex flex-col items-center">
@@ -152,6 +159,7 @@ export default function Home() {
           />
         </div>
         <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+          
           
           <div
             className="rounded-lg shadow-lg p-4 flex items-center justify-center relative"

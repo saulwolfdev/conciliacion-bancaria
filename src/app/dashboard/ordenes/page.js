@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect, useState, Fragment, useRef } from 'react';
-import { dataOc, dataOcD, res} from "@/app/lib/dataoc";
-import { getAllProduct, getProduct, aprobarRechazarOC, getTotales, guardarComentario, decodificarArchivoApi } from "@/api/products.api";
-import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon, ExclamationTriangleIcon, CheckCircleIcon, DocumentArrowDownIcon, XCircleIcon, StarIcon} from '@heroicons/react/24/outline'
+import React, { useEffect, useState, Fragment, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { Dialog, Transition } from '@headlessui/react';
+import { XMarkIcon, ExclamationTriangleIcon, CheckCircleIcon, DocumentArrowDownIcon, XCircleIcon, StarIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import { format } from 'date-fns';
+import { Amplify } from 'aws-amplify';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { createColumnHelper } from '@tanstack/react-table';
+
+import { dataOc, dataOcD, res } from '@/app/lib/dataoc';
+import { getAllProduct, getProduct, aprobarRechazarOC, getTotales, guardarComentario, decodificarArchivoApi } from '@/api/products.api';
 import BreadCrumbs from '@/components/BreadCrumbs';
 import Input from '@/common/Input';
 import SuccessNotification from '@/common/SuccessNotification';
 import ErrorNotifications from '@/common/ErrorNotification';
 import TanStackTable from '@/components/TanStackTable';
-import {createColumnHelper} from "@tanstack/react-table";
-import React from 'react';
-import Image from 'next/image';
-import { format } from 'date-fns';
 import { datos_prueba } from '@/app/layout';
-import { getCurrentUser } from 'aws-amplify/auth';
-import { Amplify } from "aws-amplify";
 import { getAmplifyConfig } from '@/utils/amplify_config';
-import { useRouter } from 'next/navigation'
+
 
 const ProductsPage = ({ searchParams }) => {
 const [open, setOpen] = useState(false)
@@ -41,6 +42,7 @@ const [idOC, setIdOC] = useState({numero:'', anio: '', mes: '', estado:''});
 const columnHelper = createColumnHelper();
 const [openOcD, setOpenOcD] = useState(false)
 const [tamano, setTamano] = useState(7)
+const [loading, setLoading] = useState(false);
 const navigate = useRouter();
 
 function currencyFormatter({ currency, value}) {
@@ -186,11 +188,19 @@ const handleApproval = async (estado, message) => {
   setOpenD(false);
 };
 
+const LoadingSpinner = () => (
+  <div className="loading active fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
+    <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-customGreen"></div>
+    <img src="/images/image.png" className="absolute rounded-full h-24 w-24 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></img>
+  </div>
+);
+
 const RechazarOC = () => handleApproval(false, "OC rechazada correctamente");
 const AprobarOC = () => handleApproval(true, "OC aprobada correctamente");
 
 
 const ComentarActividad = async () => {
+  setLoading(true);
   try {
     const response = await guardarComentario({id: idOC, comentario: actividad});
     if (response.status === 200) {
@@ -203,15 +213,17 @@ const ComentarActividad = async () => {
       setShowErrors(true)
       setSuccess(false);
       setError('Hubo un problema al llamar a la API.');
+      setLoading(false);
     }
   } catch (error) {
     setShowErrors(true)
     setSuccess(false);
     setError('Hubo un error al llamar a la API: ' + error.message);
+    setLoading(false);
   }
   setOpenA(false)
   setComentarioActividad('');
-
+  
 };
 
 const decodificarArchivo = async (numero, anio, mes, secuencia) => {
@@ -276,6 +288,8 @@ return (
     <BreadCrumbs
       pages={pages}
     />
+
+    {loading && <LoadingSpinner />}
 
     {/* Cards */}
     <dl className="mt-5 lg:col-start-3 lg:row-end-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:grid-cols-4 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow md:divide-x md:divide-y-0">

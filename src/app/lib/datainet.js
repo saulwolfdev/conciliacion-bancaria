@@ -49,7 +49,7 @@ export const cardsInet = [
       categoria: 'Gestión de Activos',
       descripcion: 'Solución para la gestión de inmuebles, strip centers y malls.',
       href: 'http://demoarrendador.iproperty.cl/login/?next=/',
-      imagesrc: '/images/IProperty.png',
+      imagesrc: '/images/IProperty2.png',
       status: 'Ver Producto'
     },
     {

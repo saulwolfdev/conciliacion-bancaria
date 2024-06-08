@@ -150,7 +150,7 @@ function Dashboard() {
   return (
     <>
       <BreadCrumbs pages={pages} />
-      <div className="mx-auto px-4 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-16 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto px-4 pb-24 pt-14 sm:px-6 sm:pb-32 sm:pt-16 md:max-w-7xl lg:max-w-5xl lg:px-8">
         <TabNavigation tabs={tabs} selectedTab={selectedTab} handleTabClick={handleTabClick} />
         <ProductGrid products={filteredProducts} />
       </div>

@@ -43,33 +43,35 @@ const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
   </div>
 );
 
-
 const ProductGrid = ({ products }) => (
-  <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+  <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
     {products.map((product, index) => (
-      <div key={index} className="group relative">
-        <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100 relative">
-          <div className="absolute top-3 left-3 flex items-center justify-center bg-customLightBlue bg-opacity-75 w-48 h-8 px-8 py-4 text-xs font-small text-gray-900 z-10 rounded-tl-md rounded-br-md">
-            {product.categoria}
-          </div>
-          <img src={product.imagesrc} alt={product.imageAlt} className="object-cover object-center w-full h-full" />
-          <div className="flex items-end p-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
+      <div key={index} className="group relative flex flex-col">
+        <div className="aspect-h-4 aspect-w-5 sm:aspect-h-4 sm:aspect-w-5 overflow-hidden rounded-lg bg-gray-100 relative"> {/* Cambiado aspect-h-4 a sm:aspect-h-4 */}
+          <img
+            src={product.imagesrc}
+            alt={product.imageAlt}
+            className="object-cover object-center w-full h-full"
+          />
+          {/* <div className="flex items-end p-1 opacity-0 group-hover:opacity-100 absolute inset-0">
             <div className="w-full rounded-md bg-white bg-opacity-75 px-2 py-1 text-center text-sm font-medium text-gray-900 backdrop-blur backdrop-filter">
               {product.status}
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="p-2 bg-white rounded-b-lg shadow">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg sm:text-base font-medium text-gray-900">
-              <a href={product.href} target="_blank">
+        <div className="p-2 bg-white rounded-b-lg shadow flex flex-col h-full">
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="text-sm font-medium text-gray-900">
+              <a href={product.href} target="_blank" rel="noopener noreferrer">
                 <span aria-hidden="true" className="absolute inset-0" />
                 {product.nombre}
               </a>
             </h3>
-            <img src="/images/inet.png" alt="Check Icon" className="w-8 h-8 ml-2" />
+            <div className="w-24 h-6 text-xs flex items-center justify-center rounded bg-customLightBlue bg-opacity-75 text-white">
+              {product.status}
+            </div>
           </div>
-          <p className="mt-1 text-xs sm:text-sm text-gray-500">{product.descripcion}</p>
+          <p className="text-xs text-gray-500">{product.descripcion}</p>
         </div>
       </div>
     ))}

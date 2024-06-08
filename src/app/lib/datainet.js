@@ -47,14 +47,14 @@ export const cardsInet = [
     {
       nombre: 'Iproperty',
       categoria: 'Gestión de Activos',
-      descripcion: 'Sistema de Control de activos',
+      descripcion: 'Solución para la gestión de inmuebles, strip centers y malls.',
       href: 'http://demoarrendador.iproperty.cl/login/?next=/',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/IProperty.png',
       status: 'Ver Producto'
     },
     {
       nombre: 'Portal de RRHH',
-      descripcion: 'Gestión del capital humano',
+      descripcion: 'Solución de autoconsulta de RRHH para empleados.',
       categoria: 'RRHH',
       href: 'http://verticales.inetcloud.cl:8081/rrhh/login.aspx',
       imagesrc: '/images/edificio.png',
@@ -62,7 +62,7 @@ export const cardsInet = [
     },
      {
       nombre: 'Match Financiero',
-      descripcion: 'Matchs automático para que ahorres tiempo y esfuerzos',
+      descripcion: 'Solución para la automatización de la conciliación bancaria.',
       categoria: 'Finanzas y Contabilidad',
       href: '#',
       imagesrc: '/images/edificio.png',
@@ -70,15 +70,15 @@ export const cardsInet = [
     }, 
     {
       nombre: 'IFacture V2',
-      descripcion: 'Matchs automático para que ahorres tiempo y esfuerzos',
+      descripcion: 'Solución de Facturación Electrónica.',
       categoria: 'Ventas y Compras',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/IFactureV2.png',
       status: 'Próximamente'
     }, 
     {
       nombre: 'Dashboad Finanzas',
-      descripcion: 'Matchs automático para que ahorres tiempo y esfuerzos',
+      descripcion: 'Solución para ver la información de cuentas por cobrar y pagar.',
       categoria: 'Analítica',
       href: '#',
       imagesrc: '/images/edificio.png',
@@ -86,66 +86,66 @@ export const cardsInet = [
     }, 
     {
       nombre: 'Datawalt',
-      descripcion: 'Analisis de datos',
+      descripcion: 'Integración para dashboard financiero-contable, con IA.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/Datawalt.png',
       status: 'Ver Producto'
     }, 
     {
       nombre: 'ControlDoc',
-      descripcion: 'Firma Electrónica',
+      descripcion: 'Integración con solución de firma electrónica.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/ControlDoc.png',
       status: 'Ver Producto'
     }, 
     {
       nombre: 'Rindegastos',
-      descripcion: 'Rendiciones llevadas a INET',
+      descripcion: 'Integración que automatiza la rendición de gastos.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/Rindegastos.png',
       status: 'Ver Producto'
     }, 
     {
       nombre: 'GetPoint',
-      descripcion: 'Integración WMS',
+      descripcion: 'Integración con plataforma WMS para la gestión de bodegas y logística.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/Getpoint.png',
       status: 'Ver Producto'
     }, 
     {
-      name: 'Multivende',
-      descripcion: 'Integración WMS',
+      nombre: 'Multivende',
+      descripcion: 'Integración para la gestión de Marketplace y tiendas online.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/Multivende.png',
       status: 'Próximamente'
     }, 
     {
-      name: 'Duemint',
-      descripcion: 'Integración Duemint',
+      nombre: 'Duemint',
+      descripcion: 'Integración para el proceso de gestión de cobranza.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/Duemint.png',
       status: 'Próximamente'
     }, 
     {
-      name: 'SIRC',
-      descripcion: 'Integración que permite descargar el libro de asistencia de Geovictoria o Bnovus',
+      nombre: 'SIRC',
+      descripcion: 'Integración para descarga del libro de asistencia de Geovictoria o Bnovus.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/SIRC.png',
       status: 'Ver Producto'
     }, 
     {
-      name: 'API iNET',
-      descripcion: 'Solución que permite integrar tus sistemas con iNET',
+      nombre: 'API iNET',
+      descripcion: 'Solución que integra tus sistemas con iNET.',
       categoria: 'Integraciones',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/ApiInet.png',
       status: 'Ver Producto'
     }, 
   ] 

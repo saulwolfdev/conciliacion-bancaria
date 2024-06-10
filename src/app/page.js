@@ -158,7 +158,7 @@ export default function Home() {
             logIn={logIn}
           />
         </div>
-        <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/pc2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/login1.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           
           
           <div

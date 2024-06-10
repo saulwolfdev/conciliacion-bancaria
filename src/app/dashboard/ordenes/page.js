@@ -194,7 +194,8 @@ const handleApproval = async (estado, message) => {
   } catch (error) {
     handleApiError(error);
   }
-  setOpenD(false);
+  if(estado) setOpenA(false);
+  else setOpenD(false);
 };
 
 const LoadingSpinner = () => (

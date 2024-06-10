@@ -81,7 +81,7 @@ export const cardsInet = [
       descripcion: 'Solución para ver la información de cuentas por cobrar y pagar.',
       categoria: 'Analítica',
       href: '#',
-      imagesrc: '/images/DFinanzas.png',
+      imagesrc: '/images/finanzas.png',
       status: 'Próximamente'
     }, 
     {

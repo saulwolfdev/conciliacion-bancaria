@@ -6,7 +6,13 @@ import Cookies from 'js-cookie';
 export const getAmplifyConfig = async () => {
     let config;
     if(datos_prueba){
+
       console.log(products)
+
+      console.log(JSON.stringify(products))
+      Cookies.set('apps_config', JSON.stringify(products))
+      console.log(Cookies.get('apps_config'))
+
       config = {
         "aws_project_region": "us-east-1",
         "aws_cognito_identity_pool_id": 'us-east-1:f1f25452-aa26-4dec-92d6-d28071f7d052',
@@ -25,9 +31,7 @@ export const getAmplifyConfig = async () => {
         },
         "aws_cognito_verification_mechanisms": ["EMAIL"]
       }
-      console.log(JSON.stringify(products))
-      Cookies.set('apps_config', JSON.stringify(products))
-      console.log(Cookies.get('apps_config'))
+     
   
     }else{
       let identity_pool_id = Cookies.get('identity_pool_id');

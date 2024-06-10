@@ -7,11 +7,7 @@ export const getAmplifyConfig = async () => {
     let config;
     if(datos_prueba){
 
-      console.log(products)
-
-      console.log(JSON.stringify(products))
       Cookies.set('apps_config', JSON.stringify(products))
-      console.log(Cookies.get('apps_config'))
 
       config = {
         "aws_project_region": "us-east-1",

@@ -180,6 +180,7 @@ const handleApiError = (error) => {
 };
 
 const handleApproval = async (estado, message) => {
+  setLoading(true);
   try {
     const response = await aprobarRechazarOC({ id: idOC, comentario: observation });
     if (response.status === 200) {
@@ -191,11 +192,16 @@ const handleApproval = async (estado, message) => {
     } else {
       handleApiError(new Error('Hubo un problema al llamar a la API.'));
     }
+
+    setLoading(false);
+    if(estado) setOpenA(false);
+    else setOpenD(false);
+
   } catch (error) {
     handleApiError(error);
+    setLoading(false);
   }
-  if(estado) setOpenA(false);
-  else setOpenD(false);
+
 };
 
 const LoadingSpinner = () => (

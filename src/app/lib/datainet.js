@@ -57,7 +57,7 @@ export const cardsInet = [
       descripcion: 'Solución de autoconsulta de RRHH para empleados.',
       categoria: 'RRHH',
       href: 'http://verticales.inetcloud.cl:8081/rrhh/login.aspx',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/PortalRRHH.png',
       status: 'Ver Producto'
     },
      {
@@ -65,7 +65,7 @@ export const cardsInet = [
       descripcion: 'Solución para la automatización de la conciliación bancaria.',
       categoria: 'Finanzas y Contabilidad',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/MatchFinanciero.png',
       status: 'Próximamente'
     }, 
     {
@@ -81,7 +81,7 @@ export const cardsInet = [
       descripcion: 'Solución para ver la información de cuentas por cobrar y pagar.',
       categoria: 'Analítica',
       href: '#',
-      imagesrc: '/images/edificio.png',
+      imagesrc: '/images/DFinanzas.png',
       status: 'Próximamente'
     }, 
     {

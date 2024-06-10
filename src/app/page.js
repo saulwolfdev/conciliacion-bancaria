@@ -158,17 +158,15 @@ export default function Home() {
             logIn={logIn}
           />
         </div>
-        <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-center justify-center relative" style={{ backgroundImage: 'url(/images/login1.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-          
-          
+        <div className="hidden sm:flex sm:w-7/12 bg-customGreen items-start justify-center relative" style={{ backgroundImage: 'url(/images/login1.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <div
-            className="rounded-lg shadow-lg p-4 flex items-center justify-center relative"
+            className="rounded-lg shadow-lg p-4 flex items-center justify-start relative"
             style={{
               backgroundColor: 'rgba(55, 54, 54, 0.7)',
               height: 'auto',
               width: '70%',
               maxWidth: '90%',
-              margin: '20% auto' 
+              margin: '5% auto' // Ajuste el margen para que esté más cerca de la parte superior
             }}
           >
             <Swiper

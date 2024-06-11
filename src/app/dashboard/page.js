@@ -6,7 +6,6 @@ import { Amplify } from "aws-amplify";
 import { getAmplifyConfig } from "@/utils/amplify_config";
 import { getCurrentUser } from "aws-amplify/auth";
 import BreadCrumbs from "@/components/BreadCrumbs";
-import Cookies from 'js-cookie';
 import ProductGrid from '@/components/ProductGrid';
 
 
@@ -89,8 +88,7 @@ function Dashboard() {
       try {
         const config = await getAmplifyConfig();
         Amplify.configure(config);
-        const configAppCookie = Cookies.get('apps_config');
-        const configApp = JSON.parse(configAppCookie);
+        const configApp = JSON.parse(localStorage.getItem('apps_config'))
         setApps(configApp)
         
 

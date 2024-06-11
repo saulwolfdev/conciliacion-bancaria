@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 import { fetchAuthSession, signIn, signOut } from 'aws-amplify/auth';
 import { Amplify } from "aws-amplify";
@@ -16,7 +15,6 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
 
 import Input from '../common/Input';
-import { removeAllCookies } from './layout';
 
 const useAuth = () => {
   const [user, setUser] = useState({ username: '', password: '' });
@@ -111,12 +109,12 @@ export default function Home() {
     setLoading(true);
     try {
       await signOut();
-      removeAllCookies();
+      localStorage.clear();
       await signIn({ username: user.username, password: user.password });
       const authToken = (await fetchAuthSession()).tokens?.idToken?.toString();
-      Cookies.set('authToken', authToken);    
-      Cookies.set('username', user.username);
-      Cookies.set('avatar', user.username.substring(0, 2).toUpperCase());
+      localStorage.setItem('authToken', authToken);    
+      localStorage.setItem('username', user.username);
+      localStorage.setItem('avatar', user.username.substring(0, 2).toUpperCase());
       router.push('/dashboard');
     } catch (error) {
       clearErrors();

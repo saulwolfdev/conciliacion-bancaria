@@ -7,6 +7,7 @@ export const getAmplifyConfig = async () => {
     let config;
     if(datos_prueba){
 
+      console.log(products)
       Cookies.set('apps_config', JSON.stringify(products))
 
       config = {

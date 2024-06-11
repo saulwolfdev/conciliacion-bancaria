@@ -41,16 +41,18 @@ export const cardsInet = [
       categoria: 'Adquisiciones',
       descripcion: 'Sistema de aprobaciones de ordenes de compra',
       href: 'dashboard/ordenes',
-      imagesrc: '/images/edificio.png',
-      status: 'Ver Producto'
+      imagesrc: '/images/aprob.png',
+      status: 'Ver Producto',
+      habilitado: false
     },
     {
-      nombre: 'Iproperty',
+      nombre: 'Ipropertyss',
       categoria: 'Gestión de Activos',
-      descripcion: 'Solución para la gestión de inmuebles, strip centers y malls.',
+      descripcion: 'Solución para la gestión de inmuebles strip centers y malls.',
       href: 'http://demoarrendador.iproperty.cl/login/?next=/',
       imagesrc: '/images/IProperty2.png',
-      status: 'Ver Producto'
+      status: 'No habilitada',
+      habilitado: true
     },
     {
       nombre: 'Portal de RRHH',
@@ -58,7 +60,8 @@ export const cardsInet = [
       categoria: 'RRHH',
       href: 'http://verticales.inetcloud.cl:8081/rrhh/login.aspx',
       imagesrc: '/images/PortalRRHH.png',
-      status: 'Ver Producto'
+      status: 'Ver Producto',
+      habilitado: false
     },
      {
       nombre: 'Match Financiero',
@@ -86,7 +89,7 @@ export const cardsInet = [
     }, 
     {
       nombre: 'Datawalt',
-      descripcion: 'Integración para dashboard financiero-contable, con IA.',
+      descripcion: 'Integración para dashboard financiero contable con IA.',
       categoria: 'Integraciones',
       href: '#',
       imagesrc: '/images/Datawalt.png',
@@ -140,12 +143,12 @@ export const cardsInet = [
       imagesrc: '/images/SIRC.png',
       status: 'Ver Producto'
     }, 
-    {
-      nombre: 'API iNET',
-      descripcion: 'Solución que integra tus sistemas con iNET.',
-      categoria: 'Integraciones',
-      href: '#',
-      imagesrc: '/images/ApiInet.png',
-      status: 'Ver Producto'
-    }, 
+    // {
+    //   nombre: 'API iNET',
+    //   descripcion: 'Solución que integra tus sistemas con iNET.',
+    //   categoria: 'Integraciones',
+    //   href: '#',
+    //   imagesrc: '/images/ApiInet.png',
+    //   status: 'Ver Producto'
+    // },
   ] 

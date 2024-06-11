@@ -11,5 +11,5 @@ const paramsApi = axios.create({
     
 })
 
-export const getParams = () => paramsApi.get('/get_params_cognito/');
+export const getParams = () => paramsApi.get('/cognito/');
 

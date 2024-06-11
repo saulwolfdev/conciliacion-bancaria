@@ -11,6 +11,7 @@ module.exports = {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
         lato: ['Lato', 'sans-serif'],
+        display: ['Cabinet Grotesk','ui-sans-serif','system-ui','sans-serif','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji']
       },
       fontSize: {
         'h7': ['12px', { lineHeight: '14.4px' }],

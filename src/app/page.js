@@ -144,10 +144,10 @@ export default function Home() {
               alt="Informat Logo"
               style={{ maxWidth: '100%', height: 'auto' }} 
             />
-            <h2 className="mt-2 font-heading text-4xl text-gray-900 font-semibold mb-4 text-center">
+            <h2 className="font-display text-4xl font-bold tracking-tight text-slate-900">
               Bienvenido
             </h2>
-            <h2 className="text-1xl leading-9 tracking-tight text-gray-400 mb-6 text-center">
+            <h2 className="mt-2 text-1xl leading-9 tracking-tight text-gray-400 mb-6 text-center">
               Tu gestión empresarial empieza aquí.
             </h2>
           </div>

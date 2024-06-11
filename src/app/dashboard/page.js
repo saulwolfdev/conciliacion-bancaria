@@ -6,8 +6,8 @@ import { Amplify } from "aws-amplify";
 import { getAmplifyConfig } from "@/utils/amplify_config";
 import { getCurrentUser } from "aws-amplify/auth";
 import BreadCrumbs from "@/components/BreadCrumbs";
-import { products } from "../lib/datainet";
 import Cookies from 'js-cookie';
+import ProductGrid from '@/components/ProductGrid';
 
 
 const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
@@ -17,14 +17,17 @@ const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
       <select
         id="tabs"
         name="tabs"
-        className="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+        className="block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         value={selectedTab}
         onChange={(e) => handleTabClick(e.target.value)}
       >
         {tabs.map((tab) => (
-          <option key={tab.name}>{tab.name}</option>
+          <option key={tab.name} className="text-gray-900 bg-white hover:bg-indigo-100">
+            {tab.name}
+          </option>
         ))}
       </select>
+
     </div>
     <div className="hidden sm:block">
       <nav className="flex space-x-4" aria-label="Tabs">
@@ -43,40 +46,37 @@ const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
   </div>
 );
 
-const ProductGrid = ({ products }) => (
-  <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-    {products.map((product, index) => (
-      <div key={index} className="group relative flex flex-col">
-        <div className="aspect-h-4 aspect-w-5 sm:aspect-h-4 sm:aspect-w-5 overflow-hidden rounded-lg bg-gray-100 relative"> {/* Cambiado aspect-h-4 a sm:aspect-h-4 */}
-          <img
-            src={product.imagesrc}
-            alt={product.imageAlt}
-            className="object-cover object-center w-full h-full"
-          />
-          {/* <div className="flex items-end p-1 opacity-0 group-hover:opacity-100 absolute inset-0">
-            <div className="w-full rounded-md bg-white bg-opacity-75 px-2 py-1 text-center text-sm font-medium text-gray-900 backdrop-blur backdrop-filter">
-              {product.status}
-            </div>
-          </div> */}
-        </div>
-        <div className="p-2 bg-white rounded-b-lg shadow flex flex-col h-full">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="text-sm font-medium text-gray-900">
-              <a href={product.href} target="_blank" rel="noopener noreferrer">
-                <span aria-hidden="true" className="absolute inset-0" />
-                {product.nombre}
-              </a>
-            </h3>
-            <div className="w-24 h-6 text-xs flex items-center justify-center rounded bg-customLightBlue bg-opacity-75 text-white">
-              {product.status}
-            </div>
-          </div>
-          <p className="text-xs text-gray-500">{product.descripcion}</p>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+// const ProductGrid = ({ products }) => (
+
+//   <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+//   {products.map((product, index) => (
+//     <div key={index} className={`group relative flex flex-col ${product.habilitado ? 'opacity-50 cursor-not-allowed' : ''}`}>
+//       <div className="aspect-h-4 aspect-w-5 sm:aspect-h-4 sm:aspect-w-5 overflow-hidden rounded-lg bg-gray-100 relative">
+//         <img
+//           src={product.imagesrc}
+//           alt={product.imageAlt}
+//           className="object-cover object-center w-full h-full"
+//         />
+//       </div>
+//       <div className={`p-2 bg-white rounded-b-lg shadow flex flex-col h-full ${product.habilitado ? 'bg-gray-200' : ''}`}>
+//         <div className="flex items-center justify-between mb-1">
+//           <h3 className={`text-sm font-medium ${product.habilitado ? 'text-gray-500' : 'text-gray-900'}`}>
+//             <a href={product.href} target="_blank" rel="noopener noreferrer" className={product.habilitado ? 'pointer-events-none' : ''}>
+//               <span aria-hidden="true" className="absolute inset-0" />
+//               {product.nombre}
+//             </a>
+//           </h3>
+//           <div className={`w-24 h-6 text-xs flex items-center justify-center rounded ${product.habilitado ? 'bg-gray-400' : 'bg-customLightBlue'} bg-opacity-75 text-white`}>
+//             {product.status}
+//           </div>
+//         </div>
+//         <p className={`text-xs ${product.habilitado ? 'text-gray-400' : 'text-gray-500'}`}>{product.descripcion}</p>
+//       </div>
+//     </div>
+//   ))}
+// </div>
+
+// );
 
 function Dashboard() {
   const [apps, setApps] = useState([]);

@@ -42,6 +42,11 @@ export const getAmplifyConfig = async () => {
       }else{
         const p = await getParams(); 
         params = p.data
+
+        console.log(p.data.apps)
+        localStorage.setItem('apps_config',JSON.stringify(p.data.apps));
+        console.log(localStorage.getItem('apps_config'))
+
         Cookies.set('identity_pool_id', p.data.identity_pool_id);
         Cookies.set('user_pools_id', p.data.user_pools_id);
         Cookies.set('web_client_id', p.data.web_client_id);

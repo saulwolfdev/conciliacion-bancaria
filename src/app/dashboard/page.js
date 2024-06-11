@@ -89,8 +89,9 @@ function Dashboard() {
       try {
         const config = await getAmplifyConfig();
         Amplify.configure(config);
-        const configAppCookie = Cookies.get('apps_config');
-        const configApp = JSON.parse(configAppCookie);
+        // const configAppCookie = Cookies.get('apps_config');
+        // const configApp = JSON.parse(configAppCookie);
+        const configApp = JSON.parse(localStorage.getItem('apps_config'))
         setApps(configApp)
         
 

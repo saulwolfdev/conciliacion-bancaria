@@ -1,14 +1,12 @@
 import { getParams } from "@/api/params.api";
 import { datos_prueba } from "@/app/layout";
 import { products } from "@/app/lib/datainet";
-import Cookies from 'js-cookie';
 
 export const getAmplifyConfig = async () => {
     let config;
     if(datos_prueba){
 
-      console.log(products)
-      Cookies.set('apps_config', JSON.stringify(products))
+      localStorage.setItem('apps_config', JSON.stringify(products))
 
       config = {
         "aws_project_region": "us-east-1",
@@ -31,26 +29,22 @@ export const getAmplifyConfig = async () => {
      
   
     }else{
-      let identity_pool_id = Cookies.get('identity_pool_id');
+      let identity_pool_id = localStorage.getItem('identity_pool_id');
       let params;
       if(identity_pool_id){
         params = {
           'identity_pool_id': identity_pool_id,
-          'user_pools_id': Cookies.get('user_pools_id'),
-          'web_client_id': Cookies.get('web_client_id'),
+          'user_pools_id': localStorage.getItem('user_pools_id'),
+          'web_client_id': localStorage.getItem('web_client_id'),
         }
       }else{
         const p = await getParams(); 
         params = p.data
 
-        console.log(p.data.apps)
-        localStorage.setItem('apps_config',JSON.stringify(p.data.apps));
-        console.log(localStorage.getItem('apps_config'))
-
-        Cookies.set('identity_pool_id', p.data.identity_pool_id);
-        Cookies.set('user_pools_id', p.data.user_pools_id);
-        Cookies.set('web_client_id', p.data.web_client_id);
-        Cookies.set('apps_config', JSON.stringify(p.data.apps))
+        localStorage.setItem('identity_pool_id', p.data.identity_pool_id);
+        localStorage.setItem('user_pools_id', p.data.user_pools_id);
+        localStorage.setItem('web_client_id', p.data.web_client_id);
+        localStorage.setItem('apps_config', JSON.stringify(p.data.apps))
       }
       config = {
         "aws_project_region": "us-east-1",

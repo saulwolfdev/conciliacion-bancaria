@@ -17,9 +17,6 @@ import { useRouter } from 'next/navigation';
 import { Suspense } from "react";
 import Loading from '@/app/dashboard/loading';
 
-import Cookies from 'js-cookie';
-import { removeAllCookies } from '@/app/layout';
-
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: true },
@@ -41,14 +38,14 @@ export default function HomeLayout({ children }) {
   const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
-    setUsername( Cookies.get('username'));
-    setAvatar( Cookies.get('avatar'));
+    setUsername(localStorage.getItem('username'));
+    setAvatar(localStorage.getItem('avatar'));
   }, []);
 
   async function handleSignOut() {
     try {
       await signOut();
-      removeAllCookies();
+      localStorage.clear()
       navigate.push('/');
     } catch (error) {
       console.log('error signing out: ', error);

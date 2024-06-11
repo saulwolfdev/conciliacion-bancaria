@@ -1,10 +1,6 @@
-import { getAmplifyConfig } from '@/utils/amplify_config';
-import { checkToken, getToken } from '@/utils/auth';
-import { Amplify } from 'aws-amplify';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
-const token = Cookies.get('authToken');
+const token = localStorage.getItem('authToken');
 const productsApi = axios.create({
     // baseURL: 'http://localhost:8000/oc/',
     baseURL: 'https://container-inetevo.r1na2lodul27u.us-east-1.cs.amazonlightsail.com/oc/',

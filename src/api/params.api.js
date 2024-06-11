@@ -6,7 +6,7 @@ const paramsApi = axios.create({
     // baseURL: 'https://container-inetevo.r1na2lodul27u.us-east-1.cs.amazonlightsail.com/users/',
     baseURL: 'https://inetevo-main.azurewebsites.net/users/',
     headers: {
-        'Tenant': typeof window !== 'undefined' ? window.location.hostname.split(".")[0] : ''
+        'Tenant': typeof window !== 'undefined' ? window.location.hostname.split(".")[0] : 'undefined'
     }
     
     

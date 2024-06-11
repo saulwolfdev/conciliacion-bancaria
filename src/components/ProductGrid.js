@@ -4,7 +4,7 @@ const ProductGrid = ({ products }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleProductClick = (product) => {
-    if (product.habilitado) {
+    if (product.deshabilitado) {
       setIsModalOpen(true);
     }
   };
@@ -18,7 +18,7 @@ const ProductGrid = ({ products }) => {
       {products.map((product, index) => (
         <div 
           key={index} 
-          className={`group relative flex flex-col ${product.habilitado ? 'opacity-50 cursor-not-allowed' : ''}`} 
+          className={`group relative flex flex-col ${product.deshabilitado ? 'opacity-50 cursor-not-allowed' : ''}`} 
           onClick={() => handleProductClick(product)}
         >
           <div className="aspect-h-4 aspect-w-5 sm:aspect-h-4 sm:aspect-w-5 overflow-hidden rounded-lg bg-gray-100 relative">
@@ -28,19 +28,19 @@ const ProductGrid = ({ products }) => {
               className="object-cover object-center w-full h-full"
             />
           </div>
-          <div className={`p-2 bg-white rounded-b-lg shadow flex flex-col h-full ${product.habilitado ? 'bg-gray-200' : ''}`}>
+          <div className={`p-2 bg-white rounded-b-lg shadow flex flex-col h-full ${product.deshabilitado ? 'bg-gray-200' : ''}`}>
             <div className="flex items-center justify-between mb-1">
-              <h3 className={`text-sm font-medium ${product.habilitado ? 'text-gray-500' : 'text-gray-900'}`}>
-                <a href={product.href} target="_blank" rel="noopener noreferrer" className={product.habilitado ? 'pointer-events-none' : ''}>
+              <h3 className={`text-sm font-medium ${product.deshabilitado ? 'text-gray-500' : 'text-gray-900'}`}>
+                <a href={product.href} target="_blank" rel="noopener noreferrer" className={product.deshabilitado ? 'pointer-events-none' : ''}>
                   <span aria-hidden="true" className="absolute inset-0" />
                   {product.nombre}
                 </a>
               </h3>
-              <div className={`w-24 h-6 text-xs flex items-center justify-center rounded ${product.habilitado ? 'bg-gray-400' : 'bg-customLightBlue'} bg-opacity-75 text-white`}>
+              <div className={`w-24 h-6 text-xs flex items-center justify-center rounded ${product.deshabilitado ? 'bg-gray-400' : 'bg-customLightBlue'} bg-opacity-75 text-white`}>
                 {product.status}
               </div>
             </div>
-            <p className={`text-xs ${product.habilitado ? 'text-gray-400' : 'text-gray-500'}`}>{product.descripcion}</p>
+            <p className={`text-xs ${product.deshabilitado ? 'text-gray-400' : 'text-gray-500'}`}>{product.descripcion}</p>
           </div>
         </div>
       ))}

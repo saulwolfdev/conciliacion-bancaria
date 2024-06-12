@@ -49,42 +49,40 @@ function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const configAmplify = async () => {
+    const loadBeamerScripts = () => {
+      const scriptElement = document.createElement("script");
+      scriptElement.type = "text/javascript";
+      scriptElement.defer = true;
+      scriptElement.innerHTML = `
+        var beamer_config = {
+          product_id: 'TBYVjWVI65518',
+          button_position: 'bottom-right',
+        };
+      `;
+      document.head.appendChild(scriptElement);
+
+      const beamerScriptElement = document.createElement("script");
+      beamerScriptElement.type = "text/javascript";
+      beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
+      beamerScriptElement.defer = true;
+      document.head.appendChild(beamerScriptElement);
+    };
+
+    const fetchApps = async () => {
       try {
         const config = await getAmplifyConfig();
         Amplify.configure(config);
-        const configApp = JSON.parse(localStorage.getItem('apps_config'));
-        setApps(configApp || []);  
-        
+        const configApp = JSON.parse(localStorage.getItem('apps_config')) || [];
+        setApps(configApp);  
         await getCurrentUser();
-
-        // const loadBeamerScripts = () => {
-        //   const scriptElement = document.createElement("script");
-        //   scriptElement.type = "text/javascript";
-        //   scriptElement.defer = true;
-        //   scriptElement.innerHTML = `
-        //     var beamer_config = {
-        //       product_id: 'TBYVjWVI65518',
-        //       button_position: 'bottom-right',
-        //     };
-        //   `;
-        //   document.head.appendChild(scriptElement);
-
-        //   const beamerScriptElement = document.createElement("script");
-        //   beamerScriptElement.type = "text/javascript";
-        //   beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
-        //   beamerScriptElement.defer = true;
-        //   document.head.appendChild(beamerScriptElement);
-        // };
-
-        // loadBeamerScripts();
+        loadBeamerScripts();
       } catch (error) {
         console.error('User not logged in:', error);
         router.push('/');
       }
     };
 
-    configAmplify();
+    fetchApps();
   }, [router]);  
 
   const tabs = [

@@ -54,30 +54,30 @@ function Dashboard() {
         const config = await getAmplifyConfig();
         Amplify.configure(config);
         const configApp = JSON.parse(localStorage.getItem('apps_config'));
-        setApps(configApp || []);  // Default to empty array if configApp is null
+        setApps(configApp || []);  
         
         await getCurrentUser();
 
-        const loadBeamerScripts = () => {
-          const scriptElement = document.createElement("script");
-          scriptElement.type = "text/javascript";
-          scriptElement.defer = true;
-          scriptElement.innerHTML = `
-            var beamer_config = {
-              product_id: 'TBYVjWVI65518',
-              button_position: 'bottom-right',
-            };
-          `;
-          document.head.appendChild(scriptElement);
+        // const loadBeamerScripts = () => {
+        //   const scriptElement = document.createElement("script");
+        //   scriptElement.type = "text/javascript";
+        //   scriptElement.defer = true;
+        //   scriptElement.innerHTML = `
+        //     var beamer_config = {
+        //       product_id: 'TBYVjWVI65518',
+        //       button_position: 'bottom-right',
+        //     };
+        //   `;
+        //   document.head.appendChild(scriptElement);
 
-          const beamerScriptElement = document.createElement("script");
-          beamerScriptElement.type = "text/javascript";
-          beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
-          beamerScriptElement.defer = true;
-          document.head.appendChild(beamerScriptElement);
-        };
+        //   const beamerScriptElement = document.createElement("script");
+        //   beamerScriptElement.type = "text/javascript";
+        //   beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
+        //   beamerScriptElement.defer = true;
+        //   document.head.appendChild(beamerScriptElement);
+        // };
 
-        loadBeamerScripts();
+        // loadBeamerScripts();
       } catch (error) {
         console.error('User not logged in:', error);
         router.push('/');
@@ -85,7 +85,7 @@ function Dashboard() {
     };
 
     configAmplify();
-  }, [router]);  // Add router as a dependency
+  }, [router]);  
 
   const tabs = [
     { name: 'Todas', href: '#', current: true },
@@ -104,7 +104,6 @@ function Dashboard() {
   const filteredProducts = selectedTab === 'Todas' ? apps : apps.filter(product => product.categoria === selectedTab);
 
   const pages = [
-    { name: 'Inet', href: '/dashboard', current: false },
     { name: 'Dashboard', href: '#', current: true },
   ];
 

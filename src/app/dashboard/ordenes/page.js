@@ -193,9 +193,9 @@ const handleApproval = async (estado, message) => {
       handleApiError(new Error('Hubo un problema al llamar a la API.'));
     }
 
-    setLoading(false);
-    if(estado) setOpenA(false);
-    else setOpenD(false);
+      setLoading(false);
+  if(estado) setOpenA(false);
+  else setOpenD(false);
 
   } catch (error) {
     handleApiError(error);
@@ -264,7 +264,6 @@ const stats = [
 ];
 
 const pages = [
-  { name: 'Inet', href: '/dashboard', current: false },
   { name: 'Ordenes de Compra', href: '#', current: true },
 ]
 

@@ -8,7 +8,6 @@ import { getCurrentUser } from "aws-amplify/auth";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import ProductGrid from '@/components/ProductGrid';
 
-
 const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
   <div>
     <div className="sm:hidden">
@@ -26,7 +25,6 @@ const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
           </option>
         ))}
       </select>
-
     </div>
     <div className="hidden sm:block">
       <nav className="flex space-x-4" aria-label="Tabs">
@@ -45,83 +43,49 @@ const TabNavigation = ({ tabs, selectedTab, handleTabClick }) => (
   </div>
 );
 
-// const ProductGrid = ({ products }) => (
-
-//   <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-//   {products.map((product, index) => (
-//     <div key={index} className={`group relative flex flex-col ${product.deshabilitado ? 'opacity-50 cursor-not-allowed' : ''}`}>
-//       <div className="aspect-h-4 aspect-w-5 sm:aspect-h-4 sm:aspect-w-5 overflow-hidden rounded-lg bg-gray-100 relative">
-//         <img
-//           src={product.imagesrc}
-//           alt={product.imageAlt}
-//           className="object-cover object-center w-full h-full"
-//         />
-//       </div>
-//       <div className={`p-2 bg-white rounded-b-lg shadow flex flex-col h-full ${product.deshabilitado ? 'bg-gray-200' : ''}`}>
-//         <div className="flex items-center justify-between mb-1">
-//           <h3 className={`text-sm font-medium ${product.deshabilitado ? 'text-gray-500' : 'text-gray-900'}`}>
-//             <a href={product.href} target="_blank" rel="noopener noreferrer" className={product.deshabilitado ? 'pointer-events-none' : ''}>
-//               <span aria-hidden="true" className="absolute inset-0" />
-//               {product.nombre}
-//             </a>
-//           </h3>
-//           <div className={`w-24 h-6 text-xs flex items-center justify-center rounded ${product.deshabilitado ? 'bg-gray-400' : 'bg-customLightBlue'} bg-opacity-75 text-white`}>
-//             {product.status}
-//           </div>
-//         </div>
-//         <p className={`text-xs ${product.deshabilitado ? 'text-gray-400' : 'text-gray-500'}`}>{product.descripcion}</p>
-//       </div>
-//     </div>
-//   ))}
-// </div>
-
-// );
-
 function Dashboard() {
   const [apps, setApps] = useState([]);
+  const [selectedTab, setSelectedTab] = useState('Todas');
   const router = useRouter();
 
   useEffect(() => {
-    
-
     const configAmplify = async () => {
       try {
         const config = await getAmplifyConfig();
         Amplify.configure(config);
-        const configApp = JSON.parse(localStorage.getItem('apps_config'))
-        setApps(configApp)
+        const configApp = JSON.parse(localStorage.getItem('apps_config'));
+        setApps(configApp || []);  // Default to empty array if configApp is null
         
-
         await getCurrentUser();
-        
-        const scriptElement = document.createElement("script");
-        scriptElement.type = "text/javascript";
-        scriptElement.defer = true;
-        scriptElement.innerHTML = `
-          var beamer_config = {
-            product_id: 'TBYVjWVI65518',
-            button_position: 'bottom-right',
-          };
-        `;
-        document.head.appendChild(scriptElement);
 
-        const beamerScriptElement = document.createElement("script");
-        beamerScriptElement.type = "text/javascript";
-        beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
-        beamerScriptElement.defer = true;
-        document.head.appendChild(beamerScriptElement);
+        const loadBeamerScripts = () => {
+          const scriptElement = document.createElement("script");
+          scriptElement.type = "text/javascript";
+          scriptElement.defer = true;
+          scriptElement.innerHTML = `
+            var beamer_config = {
+              product_id: 'TBYVjWVI65518',
+              button_position: 'bottom-right',
+            };
+          `;
+          document.head.appendChild(scriptElement);
 
+          const beamerScriptElement = document.createElement("script");
+          beamerScriptElement.type = "text/javascript";
+          beamerScriptElement.src = "https://app.getbeamer.com/js/beamer-embed.js";
+          beamerScriptElement.defer = true;
+          document.head.appendChild(beamerScriptElement);
+        };
+
+        loadBeamerScripts();
       } catch (error) {
         console.error('User not logged in:', error);
         router.push('/');
       }
     };
-    configAmplify();
-  }, []);
-  
-  
 
-  const [selectedTab, setSelectedTab] = useState('Todas');
+    configAmplify();
+  }, [router]);  // Add router as a dependency
 
   const tabs = [
     { name: 'Todas', href: '#', current: true },
@@ -143,7 +107,6 @@ function Dashboard() {
     { name: 'Inet', href: '/dashboard', current: false },
     { name: 'Dashboard', href: '#', current: true },
   ];
-  
 
   return (
     <>

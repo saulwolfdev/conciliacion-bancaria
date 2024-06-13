@@ -175,7 +175,7 @@ const TanStackTable = ({ dataOc, columns, onAccept, onReject, onView, estadoFilt
             ))
           ) : (
             <tr className="text-center h-32">
-              <td colSpan={12}>No existen registros!</td>
+              <td colSpan={12}>No existen registros !</td>
             </tr>
           )}
         </tbody>

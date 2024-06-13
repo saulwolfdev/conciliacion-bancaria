@@ -1,56 +1,56 @@
+import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
 import DebouncedInput from "./DebouncedInput";
-import { dataOcD, res} from "@/app/lib/dataoc";
+import { dataOcD } from "@/app/lib/dataoc";
+import { ChevronUpIcon, ChevronDownIcon, ArrowsUpDownIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 import { datos_prueba } from "@/app/layout";
 import Link from 'next/link';
-// import DownloadBtn from "./DownloadBtn";
 
-function currencyFormatter({ currency, value}) {
-  return new Intl.NumberFormat('es-CL', {currency: currency, style: 'currency'}).format(value);
+function currencyFormatter({ currency, value }) {
+  return new Intl.NumberFormat('es-CL', { currency: currency, style: 'currency' }).format(value);
 }
 
-const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltro, onDetail}) => {
-  //enviar data
+const TanStackTable = ({ dataOc, columns, onAccept, onReject, onView, estadoFiltro, onDetail }) => {
+  // Enviar data
   const [data] = useState(() => [...dataOcD]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [sorting, setSorting] = useState([]);
+
   let table;
-  if(datos_prueba){
+  if (datos_prueba) {
     table = useReactTable({
       data: dataOcD,
       columns,
-      state: { 
-        globalFilter,
-      },
+      state: { globalFilter, sorting },
       getFilteredRowModel: getFilteredRowModel(),
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      onSortingChange: setSorting,
     });
-
-  }else{
+  } else {
     table = useReactTable({
       data: dataOc,
       columns,
-      state: { 
-        globalFilter,
-      },
+      state: { globalFilter, sorting },
       getFilteredRowModel: getFilteredRowModel(),
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      onSortingChange: setSorting,
     });
-
   }
-  
 
   return (
-    <div className="mt-5 overflow-x-auto shadow-md sm:rounded-lg ">
+    <div className="mt-5 overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex justify-between mb-2">
         <div className="w-full flex items-center gap-1">
           <DebouncedInput
@@ -67,11 +67,19 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-6 py-3">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                <th key={header.id} className="px-6 py-3 cursor-pointer" onClick={header.column.getToggleSortingHandler()}>
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                  <span className="inline-flex items-center ml-2">
+                    {header.column.getIsSorted() ? (
+                      header.column.getIsSorted() === 'desc' ? (
+                        <ChevronDownIcon className="h-4 w-4 text-gray-500" />
+                      ) : (
+                        <ChevronUpIcon className="h-4 w-4 text-gray-500" />
+                      )
+                    ) : (
+                      <ArrowsUpDownIcon className="h-4 w-4 text-gray-500" />
+                    )}
+                  </span>
                 </th>
               ))}
               <th className="px-6 py-3"> Acciones </th>
@@ -79,25 +87,16 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
           ))}
         </thead>
         <tbody>
-          {table?.getRowModel().rows.length ? (
+          {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row, i) => (
               <tr
                 key={row.id}
-                className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
                 {row.getVisibleCells().map((cell) => (
-                  // <td key={cell.id} className="px-6 py-4">
-                  //   {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  // </td>
                   <td key={cell.id} className="px-6 py-4">
-                    
                     {cell.column.id === "AdqOdTot" ? (
-                      (() => {
-                        return currencyFormatter({
-                          currency: "CLP",
-                          value: cell.getValue()
-                        });
-                      })()
+                      currencyFormatter({ currency: "CLP", value: cell.getValue() })
                     ) : cell.column.id === "AdqOdEst" ? (
                       (() => {
                         const estado = {
@@ -109,7 +108,7 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                           5: "Nula",
                           6: "Rechazada"
                         }[cell.getValue()];
-                      
+
                         const getColorClasses = (value) => {
                           switch (value) {
                             case 0: return "bg-yellow-50 text-yellow-700 ring-yellow-600/20";
@@ -122,7 +121,7 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                             default: return "bg-purple-50 text-purple-700 ring-purple-600/20";
                           }
                         };
-                      
+
                         return estado ? (
                           <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${getColorClasses(cell.getValue())}`}>
                             {estado}
@@ -134,45 +133,54 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
                         );
                       })()
                     ) : cell.column.id === "AdqOdNum" ? (
-                        <Link
-                          className="pt-2 text-sm text-blue-500 hover:text-blue-600"
-                          href='#'
-                          onClick={() => onDetail(row.original)}
-                        > {cell.getValue()} <span aria-hidden="true"></span></Link>
+                      <Link
+                        className="pt-2 text-sm text-blue-500 hover:text-blue-600"
+                        href="#"
+                        onClick={() => onDetail(row.original)}
+                      >
+                        {cell.getValue()} <span aria-hidden="true"></span>
+                      </Link>
                     ) : cell.column.id === "AdqOdFcIn" ? (
-                       format(new Date(cell.getValue()), 'dd-MM-yyyy')
-                    ): (
-                      // Si no es ninguna de las columnas especificadas, renderizar el valor utilizando flexRender
+                      format(new Date(cell.getValue()), 'dd-MM-yyyy')
+                    ) : (
                       flexRender(cell.column.columnDef.cell, cell.getContext())
                     )}
                   </td>
                 ))}
                 <td className="px-6 py-4">
-                  <button className='rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
-                    onClick={() => onView(row.original)}>
-                      Ver
+                  <button
+                    className="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2"
+                    onClick={() => onView(row.original)}
+                  >
+                    Ver
                   </button>
-                  {estadoFiltro === null ? 
-                  <button className='rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2'
-                    onClick={() => onAccept(row.original)}>
+                  {estadoFiltro === null ? (
+                    <button
+                      className="rounded bg-indigo-50 px-2 py-1 text-xs font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100 mr-2"
+                      onClick={() => onAccept(row.original)}
+                    >
                       Aprobar
-                  </button>: ''}
-                  {estadoFiltro === null || (estadoFiltro === '0' && row.original.estado === 0) ? 
-                  <button className='rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100'
-                    onClick={() => onReject(row.original)}>
+                    </button>
+                  ) : ''}
+                  {estadoFiltro === null || (estadoFiltro === '0' && row.original.estado === 0) ? (
+                    <button
+                      className="rounded bg-red-50 px-2 py-1 text-xs font-semibold text-red-600 shadow-sm hover:bg-red-100"
+                      onClick={() => onReject(row.original)}
+                    >
                       Rechazar
-                  </button> : ''}
+                    </button>
+                  ) : ''}
                 </td>
               </tr>
             ))
           ) : (
             <tr className="text-center h-32">
-              <td colSpan={12}>No existen registros !</td>
+              <td colSpan={12}>No existen registros!</td>
             </tr>
           )}
         </tbody>
       </table>
-      {/* pagination */}
+      {/* Pagination */}
       <div className="flex items-center justify-end mb-2 gap-2 mt-2">
         <button
           onClick={() => {
@@ -194,10 +202,9 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
         </button>
 
         <span className="flex text-sm text-gray-700">
-          <div>Pagina&nbsp;</div> 
+          <div>Pagina&nbsp;</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} de{" "}
-            {table.getPageCount()}
+            {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1 text-sm text-gray-700">
@@ -231,4 +238,3 @@ const TanStackTable = ({dataOc, columns, onAccept, onReject, onView, estadoFiltr
 };
 
 export default TanStackTable;
-

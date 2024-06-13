@@ -53,7 +53,6 @@ export default function HomeLayout({ children }) {
   }
 
   return (
-    <>
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -99,7 +98,12 @@ export default function HomeLayout({ children }) {
                   {/* Sidebar component, swap this element with another sidebar if you like */}
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                     <div className="mt-3 flex h-16 shrink-0 items-center">
-                      <Image src="/images/informat.png" width={100} height={100} alt=""/>
+                      <img
+                        className="mb-6 mt-5"
+                        src="/images/informat.png"
+                        alt="Informat Logo"
+                        style={{ maxWidth: '100%', height: 'auto' }} 
+                      />
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -143,7 +147,12 @@ export default function HomeLayout({ children }) {
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-green-50 px-6 pb-4">
-            <Image className='mt-5' src="/images/informat.png" width={150} height={200} alt=""/>
+            <img
+              className="mb-6 mt-5"
+              src="/images/informat.png"
+              alt="Informat Logo"
+              style={{ maxWidth: '100%', height: 'auto' }} 
+            />
             <nav className="mt-3 flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
@@ -267,6 +276,5 @@ export default function HomeLayout({ children }) {
           </main>
         </div>
       </div>
-    </>
   );
 }

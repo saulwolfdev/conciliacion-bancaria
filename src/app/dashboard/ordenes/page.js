@@ -70,6 +70,8 @@ const handleCommentChange = (event) => {
   setComentarioActividad(value);
 };
 
+
+
 const loadProducts = async (estado) => {
   setLoading(true);
   try {
@@ -431,76 +433,128 @@ return (
                           <h2 className="text-sm font-semibold leading-6 text-gray-900">Actividad</h2>
                           <ul role="list" className="mt-6 space-y-6">
                             {dataOcR?.aprobadores?.map((activityItem, activityItemIdx) => (
-                              <React.Fragment key={`${activityItem.AdqOAPeCo}-fragmento-${activityItemIdx}`}>
-                                <li className="relative flex gap-x-4">
-                                  <div className={classNames(
-                                    activityItemIdx === dataOcR.aprobadores.length - 1 ? 'h-6' : '-bottom-6',
-                                    'absolute left-0 top-0 flex w-6 justify-center'
-                                  )}>
-                                    <div className="w-px bg-gray-200" />
-                                  </div>
-                                  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white">
-                                    {activityItem.AdqOAAR === 1 ? (
-                                      <CheckCircleIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
-                                    ) : activityItem.AdqOAAR === 2 ? (
-                                      <XCircleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
-                                    ) : (
-                                      <div className="h-1.5 w-1.5 rounded-full bg-purple-300 ring-1 ring-gray-300" />
-                                    )}
-                                  </div>
-                                  <div className="flex items-center">
-                                    <p className="mr-2 ml-2 py-0.5 text-xs leading-5 text-gray-500">
-                                      <span className="font-medium text-gray-900">{activityItem.PerNom}</span>{' '}
-                                      {activityItem.AdqOAAR === 0 ? "Pendiente de aprobación" :
-                                        activityItem.AdqOAAR === 1 ? "Aprobó" :
-                                        activityItem.AdqOAAR === 2 ? "Rechazó" :
-                                        activityItem.AdqOAAR === 3 ? "Asumido" :
-                                        "Estado desconocido"}
-                                    </p>
-                                    <p className='mr-1 py-0.5 text-xs leading-5 font-medium text-gray-900'>Nivel {activityItem.AdqOAPri}</p>
-                                    {activityItem.usuario === 1 && (
-                                      <StarIcon className="h-5 w-5 text-yellow-600" aria-hidden="true" />
-                                    )}
-                                  </div>
-                                  <time
-                                    dateTime={format(new Date(activityItem.AdqOAFch), 'dd-MM-yyyy')}
-                                    className="flex-none py-0.5 text-xs leading-5 text-gray-500 ml-auto mt-auto"
-                                  >
-                                    {format(new Date(activityItem.AdqOAFch), 'dd-MM-yyyy')}
-                                  </time>
-                                </li>
-
-                                {/* Comment section */}
-                                {(activityItem.usuario === 1 && comentario && comentario.trim() !== "") ||
-                                (activityItem.usuario !== 1 && activityItem.AdqOAGl3 && activityItem.AdqOAGl3.trim() !== "") ||
-                                (activityItem.AdqOAGl2 && activityItem.AdqOAGl2.trim() !== "") &&
-                                <li className="relative flex gap-x-4">
-                                  <div className={classNames(
-                                    activityItemIdx === dataOcR.aprobadores.length - 1 ? 'h-6' : '-bottom-6',
-                                    'absolute left-0 top-0 flex w-6 justify-center'
-                                  )}>
-                                    <div className="w-px bg-gray-200" />
-                                  </div>
-                                  <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${
-                                    activityItem.AdqOAAR === 0 ? 'bg-purple-500' :
-                                    activityItem.AdqOAAR === 1 ? 'bg-green-500' :
-                                    activityItem.AdqOAAR === 2 ? 'bg-red-500' :
-                                    activityItem.AdqOAAR === 3 ? 'bg-yellow-500' : ''
-                                  } text-xs relative mt-3 h-6 w-6 flex items-center justify-center rounded-full text-white`}>
-                                    {activityItem.PerNom.charAt(0)}
-                                  </span>
-                                  <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
-                                    <div className="flex justify-between gap-x-4">
-                                      <div className="py-0.5 text-xs leading-5 text-gray-500">
-                                        <span className="font-medium text-gray-900">{activityItem.PerNom}</span> ha comentado
-                                      </div>
+                              <React.Fragment key={`${activityItem.AdqOAPeCo}fragmento${activityItemIdx}`}>
+                                <li key={`${activityItem.AdqOAPeCo}general${activityItemIdx}`} className="relative flex gap-x-4">
+                                    <div
+                                        className={classNames(
+                                            activityItemIdx === dataOcR.aprobadores - 1 ? 'h-6' : '-bottom-6',
+                                            'absolute left-0 top-0 flex w-6 justify-center'
+                                        )}
+                                    >
+                                        <div className="w-px bg-gray-200" />
                                     </div>
-                                    <p className="text-sm leading-6 text-gray-500">
-                                      {activityItem.usuario === 1 ? comentario : (activityItem.usuario !== 1 ? activityItem.AdqOAGl3 : activityItem.AdqOAGl2)}
-                                    </p>
-                                  </div>
+                                    <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white">
+                                    {activityItem.AdqOAAR === 1 ? (
+                                        <CheckCircleIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
+                                    ) : activityItem.AdqOAAR === 2 ? (
+                                        <XCircleIcon className="h-6 w-6 text-red-600" aria-hidden="true" />
+                                    ) : (
+                                        <div className="h-1.5 w-1.5 rounded-full bg-purple-300 ring-1 ring-gray-300" />
+                                    )}
+                                    </div>
+                                    <div className="flex items-center">
+                                        <p className="mr-2 ml-2 py-0.5 text-xs leading-5 text-gray-500">
+                                            <span className="font-medium text-gray-900">{activityItem.PerNom}</span>{' '}
+                                            {activityItem.AdqOAAR === 0 ? "Pendiente de aprobación" :
+                                            activityItem.AdqOAAR === 1 ? "Aprobó" :
+                                            activityItem.AdqOAAR === 2 ? "Rechazó" :
+                                            activityItem.AdqOAAR === 3 ? "Asumido" :
+                                            "Estado desconocido"} 
+                                        </p>
+                                        <p className='mr-1 py-0.5 text-xs leading-5 font-medium text-gray-900'>Nivel {activityItem.AdqOAPri}</p>
+                                        {activityItem.usuario === 1 ? (
+                                        <StarIcon className="h-5 w-5 text-yellow-600" aria-hidden="true" />
+                                        ):""}
+                                    </div>
+                                    <time
+                                      dateTime={format(new Date(activityItem.AdqOAFch), 'dd-MM-yyyy')}
+                                      className="flex-none py-0.5 text-xs leading-5 text-gray-500 ml-auto mt-auto"
+                                    >
+                                      {format(new Date(activityItem.AdqOAFch), 'dd-MM-yyyy')}
+                                    </time>
                                 </li>
-                                }
+                                
+                                {activityItem.usuario === 1 && comentario && comentario.trim() !== "" && (
+                                  <li key={`${activityItem.AdqOAPeCo}comentario${activityItemIdx}`} className="relative flex gap-x-4">
+                                      <div
+                                          className={classNames(
+                                              activityItemIdx === dataOcR.aprobadores - 1 ? 'h-6' : '-bottom-6',
+                                              'absolute left-0 top-0 flex w-6 justify-center'
+                                          )}
+                                      >
+                                          <div className="w-px bg-gray-200" />
+                                      </div>
+
+                                      <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${
+                                          activityItem.AdqOAAR === 0 ? 'bg-purple-500' :
+                                          activityItem.AdqOAAR === 1 ? 'bg-green-500' :
+                                          activityItem.AdqOAAR === 2 ? 'bg-red-500' :
+                                          activityItem.AdqOAAR === 3 ? 'bg-yellow-500' : ''
+                                      } text-xs relative mt-3 h-6 w-6 flex items-center justify-center rounded-full text-white`}>{activityItem.PerNom.charAt(0)}</span>
+                                      <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
+                                        <div className="flex justify-between gap-x-4">
+                                          <div className="py-0.5 text-xs leading-5 text-gray-500">
+                                            <span className="font-medium text-gray-900">{activityItem.PerNom}</span> ha comentado
+                                          </div>
+                                        </div>
+                                        <p className="text-sm leading-6 text-gray-500">{comentario}</p>
+                                      </div>
+                                  </li>
+                                )}
+                                {activityItem.usuario !== 1 && activityItem.AdqOAGl3 && activityItem.AdqOAGl3.trim() !== "" && (
+                                  <li key={`${activityItem.AdqOAPeCo}comentario${activityItemIdx}`} className="relative flex gap-x-4">
+                                      <div
+                                          className={classNames(
+                                              activityItemIdx === dataOcR.aprobadores - 1 ? 'h-6' : '-bottom-6',
+                                              'absolute left-0 top-0 flex w-6 justify-center'
+                                          )}
+                                      >
+                                          <div className="w-px bg-gray-200" />
+                                      </div>
+
+                                      <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${
+                                          activityItem.AdqOAAR === 0 ? 'bg-purple-500' :
+                                          activityItem.AdqOAAR === 1 ? 'bg-green-500' :
+                                          activityItem.AdqOAAR === 2 ? 'bg-red-500' :
+                                          activityItem.AdqOAAR === 3 ? 'bg-yellow-500' : ''
+                                      } text-xs relative mt-3 h-6 w-6 flex items-center justify-center rounded-full text-white`}>{activityItem.PerNom.charAt(0)}</span>
+                                      <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
+                                        <div className="flex justify-between gap-x-4">
+                                          <div className="py-0.5 text-xs leading-5 text-gray-500">
+                                            <span className="font-medium text-gray-900">{activityItem.PerNom}</span> ha comentado
+                                          </div>
+                                        </div>
+                                        <p className="text-sm leading-6 text-gray-500">{activityItem.usuario === 1 ? comentario: activityItem.AdqOAGl3}</p>
+                                      </div>
+                                  </li>
+                                )}
+                                {activityItem.AdqOAGl2 && activityItem.AdqOAGl2.trim() !== "" && (
+                                  <li key={`${activityItem.AdqOAPeCo}rechazo${activityItemIdx}`} className="relative flex gap-x-4">
+                                      <div
+                                          className={classNames(
+                                              activityItemIdx === dataOcR.aprobadores - 1 ? 'h-6' : '-bottom-6',
+                                              'absolute left-0 top-0 flex w-6 justify-center'
+                                          )}
+                                      >
+                                          <div className="w-px bg-gray-200" />
+                                      </div>
+
+                                      <span className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${
+                                          activityItem.AdqOAAR === 0 ? 'bg-purple-500' :
+                                          activityItem.AdqOAAR === 1 ? 'bg-green-500' :
+                                          activityItem.AdqOAAR === 2 ? 'bg-red-500' :
+                                          activityItem.AdqOAAR === 3 ? 'bg-yellow-500' : ''
+                                      } text-xs relative mt-3 h-6 w-6 flex items-center justify-center rounded-full text-white`}>{activityItem.PerNom.charAt(0)}</span>
+                                      <div className="flex-auto rounded-md p-3 ring-1 ring-inset ring-gray-200">
+                                        <div className="flex justify-between gap-x-4">
+                                          <div className="py-0.5 text-xs leading-5 text-gray-500">
+                                            <span className="font-medium text-gray-900">{activityItem.PerNom}</span> ha comentado
+                                          </div>
+                                        </div>
+                                        <p className="text-sm leading-6 text-gray-500">{activityItem.AdqOAGl2}</p>
+                                      </div>
+                                  </li>
+                                )}
                               </React.Fragment>
                             ))}
                           </ul>

@@ -619,10 +619,10 @@ return (
     {/* Slide detalle oc */}
     <Transition.Root show={openOcD} as={Fragment}>
       <Dialog className="relative z-40" onClose={setOpenOcD}>
-        <div className="fixed inset-0" />
+        <div className="fixed inset-0 bg-black bg-opacity-50" />
         <div className="fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-screen-sm sm:max-w-full pl-10 sm:pl-16">
+            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl pl-4 sm:pl-10">
               <Transition.Child
                 as={Fragment}
                 enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -632,9 +632,7 @@ return (
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-
-                        
-                <Dialog.Panel className="pointer-events-auto w-screen">
+                <Dialog.Panel className="pointer-events-auto w-full">
                   <div className="flex h-full flex-col overflow-y-auto bg-white py-6 shadow-xl">
                     <div className="px-4 py-6 sm:px-6">
                       <div className="flex items-start justify-between">
@@ -735,10 +733,9 @@ return (
                             <tfoot>
                               {dataOcR.AdqOdTNL===0?'':
                                 <tr>
-                                  
                                   <th
                                     scope="row"
-                                    colSpan={tamano}
+                                    colSpan={8}
                                     className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                   >
                                     Neto Líneas
@@ -752,7 +749,7 @@ return (
                                 <tr>
                                   <th
                                     scope="row"
-                                    colSpan={tamano}
+                                    colSpan={8}
                                     className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                   >
                                     Total Descuentos
@@ -766,7 +763,7 @@ return (
                                 <tr>
                                   <th
                                     scope="row"
-                                    colSpan={tamano}
+                                    colSpan={8}
                                     className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                   >
                                     Afecto
@@ -780,7 +777,7 @@ return (
                                 <tr>
                                   <th
                                     scope="row"
-                                    colSpan={tamano}
+                                    colSpan={8}
                                     className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                   >
                                     Exento
@@ -794,7 +791,7 @@ return (
                                 <tr>
                                   <th
                                     scope="row"
-                                    colSpan={tamano}
+                                    colSpan={8}
                                     className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                   >
                                     Total Impuestos
@@ -808,7 +805,7 @@ return (
                                 <tr>
                                   <th
                                     scope="row"
-                                    colSpan={tamano}
+                                    colSpan={8}
                                     className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                   >
                                     Iva
@@ -821,7 +818,7 @@ return (
                               <tr>
                                 <th
                                   scope="row"
-                                  colSpan={tamano}
+                                  colSpan={8}
                                   className="pt-4 text-right font-semibold text-gray-900 sm:table-cell"
                                 >
                                   Total
@@ -843,8 +840,6 @@ return (
         </div>
       </Dialog>
     </Transition.Root>
-
-
     
     {/* Dialog */}
     <Transition.Root show={opend} as={Fragment}>

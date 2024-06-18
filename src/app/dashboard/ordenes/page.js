@@ -245,6 +245,7 @@ const ComentarActividad = async () => {
 };
 
 const decodificarArchivo = async (numero, anio, mes, secuencia) => {
+  setLoading(true);
   try {
     const response = await decodificarArchivoApi({ numero: numero, anio: anio, mes: mes, secuencia: secuencia });
     if (response.status === 200) {
@@ -252,8 +253,10 @@ const decodificarArchivo = async (numero, anio, mes, secuencia) => {
     } else {
       handleApiError(new Error('Hubo un problema al llamar a la API.'));
     }
+    setLoading(false);
   } catch (error) {
     handleApiError(error);
+    setLoading(false);
   }
   setOpenA(false);
 };

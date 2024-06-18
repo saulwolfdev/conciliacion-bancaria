@@ -55,9 +55,9 @@ const setValorTamano = () => {
   } else if (window.innerWidth >= 1024) { // lg
     setTamano(7);
   } else if (window.innerWidth >= 768) { // md
-    setTamano(3);
+    setTamano(2);
   } else { // sm o menor
-    setTamano(3);
+    setTamano(2);
   }
 };
 
@@ -705,8 +705,8 @@ return (
                             <tbody>
                               {dataOcR?.lineas?.map((linea) => (
                                 <tr key={linea.AdqOlLin} className="border-b border-gray-100">
-                                  <td className="max-w-0 px-0 py-5 align-top">
-                                    <div className="hidden font-medium text-gray-900">{linea.PrdCod}</div>
+                                  <td className="hidden max-w-0 px-0 py-5 align-top">
+                                    <div className="font-medium text-gray-900">{linea.PrdCod}</div>
                                   </td>
                                   <td className="hidden py-5 pl-8 pr-0 align-top tabular-nums text-gray-700 sm:table-cell">
                                     {linea.producto}

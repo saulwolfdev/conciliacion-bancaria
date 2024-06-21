@@ -18,6 +18,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Loading from '@/app/dashboard/loading';
 import { signOut } from 'aws-amplify/auth';
+import { getAmplifyConfig } from '@/utils/amplify_config';
 
 const userNavigation = [
   { name: 'Salir', href: '#' },
@@ -54,13 +55,24 @@ export default function HomeLayout({ children }) {
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
     setAvatar(localStorage.getItem('avatar'));
-    const configApp = JSON.parse(localStorage.getItem('apps_config'));
-    console.log(configApp)
-    setApps(configApp); 
+
+    const fetchApps = async () => {
+      const config = await getAmplifyConfig();
+      try {
+        const configApp = JSON.parse(localStorage.getItem('apps_config')) || [];
+        console.log(configApp)
+        setApps(configApp);  
+      } catch (error) {
+        console.error('User not logged in:', error);
+      }
+
+    };
+
+    fetchApps();
     
   }, []);
 
-  const groupedItems = app_config.reduce((acc, item) => {
+  const groupedItems = apps.reduce((acc, item) => {
     if (!acc[item.categoria]) {
       acc[item.categoria] = [];
     }

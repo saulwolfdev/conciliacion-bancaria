@@ -43,16 +43,16 @@ export const cardsInet = [
       href: 'dashboard/ordenes',
       imagesrc: '/images/aprob.png',
       status: 'Ver Producto',
-      habilitado: false
+      deshabilitado: false
     },
     {
-      nombre: 'Ipropertyss',
+      nombre: 'Ipropertyss2',
       categoria: 'Gestión de Activos',
       descripcion: 'Solución para la gestión de inmuebles strip centers y malls.',
       href: 'http://demoarrendador.iproperty.cl/login/?next=/',
       imagesrc: '/images/IProperty2.png',
       status: 'No habilitada',
-      habilitado: true
+      deshabilitado: true
     },
     {
       nombre: 'Portal de RRHH',
@@ -61,7 +61,7 @@ export const cardsInet = [
       href: 'http://verticales.inetcloud.cl:8081/rrhh/login.aspx',
       imagesrc: '/images/PortalRRHH.png',
       status: 'Ver Producto',
-      habilitado: false
+      deshabilitado: false
     },
      {
       nombre: 'Match Financiero',

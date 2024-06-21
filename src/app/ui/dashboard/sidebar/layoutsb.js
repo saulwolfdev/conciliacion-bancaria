@@ -2,11 +2,7 @@
 import { Fragment, useState, useEffect, Suspense } from 'react';
 import { Dialog, Menu, Transition, Disclosure } from '@headlessui/react';
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
-import {
-  Bars3Icon,
-  XMarkIcon,
-  FolderIcon,
-} from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, FolderIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import Loading from '@/app/dashboard/loading';
 import { signOut } from 'aws-amplify/auth';
@@ -21,7 +17,6 @@ function classNames(...classes) {
 }
 
 export default function HomeLayout({ children }) {
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useRouter();
   const [username, setUsername] = useState(null);
@@ -40,11 +35,9 @@ export default function HomeLayout({ children }) {
       } catch (error) {
         console.error('User not logged in:', error);
       }
-
     };
 
     fetchApps();
-    
   }, []);
 
   const groupedItems = apps.reduce((acc, item) => {
@@ -53,8 +46,10 @@ export default function HomeLayout({ children }) {
     }
     acc[item.categoria].push({
       name: item.nombre,
-      href: item.href
+      href: item.href,
+      deshabilitado: item.deshabilitado
     });
+    console.log(acc)
     return acc;
   }, {});
   
@@ -64,18 +59,17 @@ export default function HomeLayout({ children }) {
     current: false,
     children: groupedItems[category]
   }));
-  
 
   async function handleSignOut() {
     try {
       await signOut();
-      localStorage.clear()
+      localStorage.clear();
       navigate.push('/');
     } catch (error) {
       console.log('error signing out: ', error);
     }
   }
-  
+
   return (
     <div>
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -132,63 +126,68 @@ export default function HomeLayout({ children }) {
                   <nav className="flex flex-1 flex-col">
                     <ul role="list" className="flex flex-1 flex-col gap-y-7">
                       <li>
-                        <ul role="list" className="-mx-2 space-y-1">
-                          {navigation.map((item) => (
-                            <li key={item.name}>
-                              {!item.children ? (
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                                    'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700',
-                                  )}
-                                >
-                                  <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
-                                  {item.name}
-                                </a>
-                              ) : (
-                                <Disclosure as="div">
-                                  {({ open }) => (
-                                    <>
-                                      <Disclosure.Button
+                        {navigation.map((item) => (
+                          <li key={item.name}>
+                            {!item.children ? (
+                              <a
+                                href={item.deshabilitado ? '#' : item.href}
+                                onClick={item.deshabilitado ? (e) => e.preventDefault() : null}
+                                className={classNames(
+                                  item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
+                                  'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700',
+                                  item.deshabilitado ? 'cursor-not-allowed text-gray-400' : ''
+                                )}
+                              >
+                                <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
+                                {item.name}
+                              </a>
+                            ) : (
+                              <Disclosure as="div" key={item.name}>
+                                {({ open }) => (
+                                  <>
+                                    <Disclosure.Button
+                                      className={classNames(
+                                        item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
+                                        'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700',
+                                      )}
+                                    >
+                                      <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
+                                      {item.name}
+                                      <ChevronRightIcon
                                         className={classNames(
-                                          item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                                          'flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-700',
+                                          open ? 'rotate-90 text-gray-500' : 'text-gray-400',
+                                          'ml-auto h-5 w-5 shrink-0',
                                         )}
-                                      >
-                                        <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
-                                        {item.name}
-                                        <ChevronRightIcon
-                                          className={classNames(
-                                            open ? 'rotate-90 text-gray-500' : 'text-gray-400',
-                                            'ml-auto h-5 w-5 shrink-0',
-                                          )}
-                                          aria-hidden="true"
-                                        />
-                                      </Disclosure.Button>
-                                      <Disclosure.Panel as="ul" className="mt-1 px-2">
-                                        {item.children.map((subItem) => (
-                                          <li key={subItem.name}>
-                                            <Disclosure.Button
-                                              as="a"
-                                              href={subItem.href}
-                                              className={classNames(
-                                                subItem.current ? 'bg-gray-50' : 'hover:bg-gray-50',
-                                                'block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700',
-                                              )}
-                                            >
-                                              {subItem.name}
-                                            </Disclosure.Button>
-                                          </li>
-                                        ))}
-                                      </Disclosure.Panel>
-                                    </>
-                                  )}
-                                </Disclosure>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
+                                        aria-hidden="true"
+                                      />
+                                    </Disclosure.Button>
+                                    <Disclosure.Panel as="ul" className="mt-1 px-2">
+                                      {item.children.map((subItem) => (
+                                        <li key={subItem.name}>
+                                          <Disclosure.Button
+                                            as="a"
+                                            href={subItem.deshabilitado ? '#' : subItem.href}
+                                            onClick={subItem.deshabilitado ? (e) => e.preventDefault() : null}
+                                            className={classNames(
+                                              subItem.current ? 'bg-gray-50' : 'hover:bg-gray-50',
+                                              'block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700',
+                                              subItem.deshabilitado ? 'cursor-not-allowed text-gray-400' : ''
+                                            )}
+                                          >
+                                            {subItem.name}
+                                            {/* <div className={`w-24 h-6 text-xs flex items-center justify-center rounded ${subItem.deshabilitado ? 'bg-gray-400' : 'bg-customLightBlue'} bg-opacity-75 text-white ml-2`}>
+                                              {subItem.deshabilitado ? 'Deshabilitado' : 'Habilitado'}
+                                            </div> */}
+                                          </Disclosure.Button>
+                                        </li>
+                                      ))}
+                                    </Disclosure.Panel>
+                                  </>
+                                )}
+                              </Disclosure>
+                            )}
+                          </li>
+                        ))}
                       </li>
                     </ul>
                   </nav>
@@ -215,10 +214,12 @@ export default function HomeLayout({ children }) {
                     <li key={item.name}>
                       {!item.children ? (
                         <a
-                          href={item.href}
+                          href={item.deshabilitado ? '#' : item.href}
+                          onClick={item.deshabilitado ? (e) => e.preventDefault() : null}
                           className={classNames(
                             item.current ? 'bg-gray-50' : 'hover:bg-gray-50',
                             'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700',
+                            item.deshabilitado ? 'cursor-not-allowed text-gray-400' : ''
                           )}
                         >
                           <item.icon className="h-6 w-6 shrink-0 text-gray-400" aria-hidden="true" />
@@ -249,13 +250,18 @@ export default function HomeLayout({ children }) {
                                   <li key={subItem.name}>
                                     <Disclosure.Button
                                       as="a"
-                                      href={subItem.href}
+                                      href={subItem.deshabilitado ? '#' : subItem.href}
+                                      onClick={subItem.deshabilitado ? (e) => e.preventDefault() : null}
                                       className={classNames(
                                         subItem.current ? 'bg-gray-50' : 'hover:bg-gray-50',
                                         'block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-700',
+                                        subItem.deshabilitado ? 'cursor-not-allowed text-gray-400' : ''
                                       )}
                                     >
                                       {subItem.name}
+                                      {/* <div className={`w-24 h-6 text-xs flex items-center justify-center rounded ${subItem.deshabilitado ? 'bg-gray-400' : 'bg-customLightBlue'} bg-opacity-75 text-white ml-2`}>
+                                        {subItem.deshabilitado ? 'Deshabilitado' : 'Habilitado'}
+                                      </div> */}
                                     </Disclosure.Button>
                                   </li>
                                 ))}

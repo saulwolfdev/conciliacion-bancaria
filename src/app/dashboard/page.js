@@ -47,7 +47,7 @@ function Dashboard() {
   const [apps, setApps] = useState([]);
   const [selectedTab, setSelectedTab] = useState('Todas');
   const router = useRouter();
-
+ 
   useEffect(() => {
     const loadBeamerScripts = () => {
       const scriptElement = document.createElement("script");
@@ -55,7 +55,7 @@ function Dashboard() {
       scriptElement.defer = true;
       scriptElement.innerHTML = `
         var beamer_config = {
-          product_id: 'TBYVjWVI65518',
+          product_id: 'tvMTuUbz67397',
           button_position: 'bottom-right',
         };
       `;

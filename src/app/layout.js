@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 
 const inter = Inter({ subsets: ["latin"] });
-export const datos_prueba = false;
+export const datos_prueba = true;
 
 
 export default function RootLayout({ children }) {

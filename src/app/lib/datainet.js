@@ -67,7 +67,7 @@ export const cardsInet = [
       nombre: 'Match Financiero',
       descripcion: 'Solución para la automatización de la conciliación bancaria.',
       categoria: 'Finanzas y Contabilidad',
-      href: '#',
+      href: 'dashboard/matchfinanciero',
       imagesrc: '/images/MatchFinanciero.png',
       status: 'Próximamente'
     }, 

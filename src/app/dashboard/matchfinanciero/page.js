@@ -38,8 +38,7 @@ const MatchFinanciero = () => {
         publicKey: publicKey,
         webhookUrl: webhookUrl,
         onSuccess: (res) => {
-          console.log('Response',res)
-          console.log('Fintoc success');
+          console.log('Response',res)         
           setResponseData(res)
         },
         onExit: (res) => {

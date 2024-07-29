@@ -23,7 +23,7 @@ const MatchFinanciero = () => {
     const product = 'movements';
     const publicKey = 'pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv';
     const domain = window.location.hostname;
-    const webhookUrl = `https://${domain}`;
+    const webhookUrl = `https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278`;
 
     try {
       const Fintoc = await getFintoc();
@@ -36,10 +36,12 @@ const MatchFinanciero = () => {
         product: product,
         publicKey: publicKey,
         webhookUrl: webhookUrl,
-        onSuccess: () => {
+        onSuccess: (res) => {
+          console.log('Response',res)
           console.log('Fintoc success');
         },
-        onExit: () => {
+        onExit: (res) => {
+          console.log("Exit",res)
           console.log('Fintoc exit');
         },
       });

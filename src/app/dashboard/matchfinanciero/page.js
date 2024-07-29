@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { getFintoc } from '@fintoc/fintoc-js';
+import React, { useState, useEffect } from "react";
+import { getFintoc } from "@fintoc/fintoc-js";
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [holderType, setHolderType] = useState(null);
   const [isClient, setIsClient] = useState(false);
   const [widget, setWidget] = useState(null);
+  const [responseData, setResponseData] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -20,8 +21,8 @@ const MatchFinanciero = () => {
   }, [holderType, isClient]);
 
   const initializeWidget = async (type) => {
-    const product = 'movements';
-    const publicKey = 'pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv';
+    const product = "movements";
+    const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
     const webhookUrl = `https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278`;
 
@@ -37,24 +38,33 @@ const MatchFinanciero = () => {
         publicKey: publicKey,
         webhookUrl: webhookUrl,
         onSuccess: (res) => {
+<<<<<<< HEAD
           console.log('Response',res)
           console.log('Fintoc success');
         },
         onExit: (res) => {
           console.log("Exit",res)
           console.log('Fintoc exit');
+=======
+          console.log("Respuesta", res);
+          console.log("Fintoc success");
+          setResponseData(res);
+        },
+        onExit: () => {
+          console.log("Fintoc exit");
+>>>>>>> e576862e6aae3f1a24c612e88d38b8d19f98fb01
         },
       });
       setWidget(newWidget);
       newWidget.open();
       setIsOpen(false);
     } catch (error) {
-      console.error('Error initializing Fintoc widget:', error);
+      console.error("Error initializing Fintoc widget:", error);
     }
   };
 
   const handleOptionClick = (type) => {
-    console.log('holderType:', type);
+    console.log("holderType:", type);
     setHolderType(type);
   };
 
@@ -66,14 +76,107 @@ const MatchFinanciero = () => {
     setIsOpen(false);
   };
 
+  const transactions1 = [
+    { amount: "$57.960", description: "eCOMMERCE MERPAGO BUILDER Las" },
+    { amount: "$16.060", description: "REDCOMPRA CLUB DE GOLF LOS SAN" },
+  ];
+
+  const transactions2 = [];
+console.log("response", responseData)
   return (
     <>
-      <button
-        className="px-4 py-2 bg-blue-500 text-white rounded"
-        onClick={() => setIsOpen(true)}
-      >
-        Match
-      </button>
+      <div className="flex justify-between items-center mb-4">
+        <div className="grid grid-cols-3 gap-4 flex-grow">
+          <div className="bg-white shadow-md rounded p-4 text-center">
+            <h2 className="text-2xl font-bold text-blue-700">$7.409.824</h2>
+            <p className="text-gray-500">Saldo Consolidado Pesos</p>
+          </div>
+          <div className="bg-white shadow-md rounded p-4 text-center">
+            <h2 className="text-2xl font-bold text-blue-700">$0</h2>
+            <p className="text-gray-500">Saldo Consolidado Dolares</p>
+          </div>
+          <div className="bg-white shadow-md rounded p-4 text-center">
+            <h2 className="text-2xl font-bold text-blue-700">$0</h2>
+            <p className="text-gray-500">Saldo Consolidado Euros</p>
+          </div>
+        </div>
+        <button
+          className="bg-red-500 text-white p-2 rounded ml-4"
+          onClick={() => setIsOpen(true)}
+        >
+          Nuevo Banco
+        </button>
+      </div>
+
+      <div className="flex mt-6">
+        <div className="bg-white shadow-md rounded p-6 m-4 flex-1">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h3 className="text-red-600 text-xl font-bold">Scotiabank</h3>
+              <p className="text-gray-600 mb-4">N° 977063116</p>
+              <h2 className="text-3xl font-bold text-blue-700">$7.409.824</h2>
+            </div>
+            <div className="flex">
+              <button className="bg-red-500 text-white p-2 rounded mr-2">
+                ↻
+              </button>
+              <button className="bg-red-500 text-white p-2 rounded">...</button>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-gray-600 mb-2">Últimos movimientos</h4>
+            {transactions1.length > 0 ? (
+              transactions1.map((tx, index) => (
+                <div key={index} className="bg-red-50 p-2 rounded mb-2">
+                  <span className="block text-red-600 font-semibold">
+                    {tx.amount}
+                  </span>
+                  <span className="block text-gray-600">{tx.description}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">Sin movimientos</p>
+            )}
+          </div>
+          {/* <p className="text-gray-500 mt-4">Últimos movimientos sin match: 485</p>
+          <button className="bg-red-500 text-white p-2 rounded mt-2">Match financieros</button> */}
+        </div>
+        <div className="bg-white shadow-md rounded p-6 m-4 flex-1">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h3 className="text-red-600 text-xl font-bold">Scotiabank</h3>
+              <p className="text-gray-600 mb-4">N° 982939909</p>
+              <h2 className="text-3xl font-bold text-blue-700">U$598,71</h2>
+            </div>
+            <div className="flex">
+              <button className="bg-red-500 text-white p-2 rounded mr-2">
+                ↻
+              </button>
+              <button className="bg-red-500 text-white p-2 rounded">...</button>
+            </div>
+          </div>
+          <div>
+            <h4 className="text-gray-600 mb-2">Últimos movimientos</h4>
+            {transactions2.length > 0 ? (
+              transactions2.map((tx, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center bg-red-50 p-2 rounded mb-2"
+                >
+                  <span className="text-red-600 font-semibold">
+                    {tx.amount}
+                  </span>
+                  <span className="text-gray-600">{tx.description}</span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">Sin movimientos</p>
+            )}
+          </div>
+          {/* <p className="text-gray-500 mt-4">Últimos movimientos sin match: 0</p>
+          <button className="bg-red-500 text-white p-2 rounded mt-2">Match financieros</button> */}
+        </div>
+      </div>
 
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -88,17 +191,23 @@ const MatchFinanciero = () => {
             <div className="mt-4">
               <div
                 className="bg-gray-100 p-4 rounded mb-4 cursor-pointer"
-                onClick={() => handleOptionClick('individual')}
+                onClick={() => handleOptionClick("individual")}
               >
                 <h3 className="font-bold">Persona</h3>
-                <p>Disponible para: Banco BICE, BCI, Itaú, Scotiabank, Banco Estado, Banco de Chile, Santander.</p>
+                <p>
+                  Disponible para: Banco BICE, BCI, Itaú, Scotiabank, Banco
+                  Estado, Banco de Chile, Santander.
+                </p>
               </div>
               <div
                 className="bg-gray-100 p-4 rounded mb-4 cursor-pointer"
-                onClick={() => handleOptionClick('business')}
+                onClick={() => handleOptionClick("business")}
               >
                 <h3 className="font-bold">Empresa</h3>
-                <p>Disponible para: Banco BICE, BCI, Itaú, Scotiabank, Banco Estado, Banco de Chile, Santander, 360 Connect, Security.</p>
+                <p>
+                  Disponible para: Banco BICE, BCI, Itaú, Scotiabank, Banco
+                  Estado, Banco de Chile, Santander, 360 Connect, Security.
+                </p>
               </div>
               <div className="bg-gray-100 p-4 rounded cursor-pointer">
                 <h3 className="font-bold">Crear Banco</h3>

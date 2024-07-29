@@ -40,6 +40,7 @@ const MatchFinanciero = () => {
         onSuccess: (res) => {
           console.log('Response',res)
           console.log('Fintoc success');
+          setResponseData(res)
         },
         onExit: (res) => {
           console.log("Exit",res)

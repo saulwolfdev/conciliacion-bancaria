@@ -20,11 +20,38 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
+
+  const sendPostRequest = async (dataId) => {
+    const requestOptions = {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: dataId  }),
+    };
+  
+    try {
+      const response = await fetch('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/', requestOptions);
+      
+      const isJson = response.headers.get('content-type')?.includes('application/json');
+      const data = isJson ? await response.json() : null;
+  
+      if (!response.ok) {
+        const error = (data && data.message) || response.status;
+        throw new Error(error);
+      }
+  
+      console.log('Complete data:', data);
+    } catch (error) {
+      console.error('data error!', error);
+    }
+  };
+
   const initializeWidget = async (type) => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl = `https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278`;
+    const webhookUrl = "https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278";
+    // const webhookUrl = `https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/`;
 
     try {
       const Fintoc = await getFintoc();
@@ -37,14 +64,16 @@ const MatchFinanciero = () => {
         product: product,
         publicKey: publicKey,
         webhookUrl: webhookUrl,
-        onSuccess: (res) => {
-          console.log('Response',res)         
-          setResponseData(res)
+        onSuccess: (res) => {   
+          let dataId = res.id       
+          console.log('Response:', JSON.stringify(res, null, 2));
+          setResponseData(res);
+          console.log("dataId:", dataId)
+          sendPostRequest(dataId);
         },
         onExit: (res) => {
-          console.log("Exit",res)
-          console.log('Fintoc exit');
-
+          console.log("Exit", res);
+          console.log("Fintoc exit");
         },
       });
       setWidget(newWidget);
@@ -54,7 +83,7 @@ const MatchFinanciero = () => {
       console.error("Error initializing Fintoc widget:", error);
     }
   };
-
+  
   const handleOptionClick = (type) => {
     console.log("holderType:", type);
     setHolderType(type);
@@ -74,7 +103,25 @@ const MatchFinanciero = () => {
   ];
 
   const transactions2 = [];
-console.log("response", responseData)
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(`https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278`);
+  //     const data = await response.json();
+  //     setResponseData(data);
+  //   } catch (error) {
+  //     console.error("Error data:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  useEffect(() => {
+    console.log("respuesta", responseData?.institution?.name);
+  }, [responseData]);
+
   return (
     <>
       <div className="flex justify-between items-center mb-4">
@@ -104,7 +151,7 @@ console.log("response", responseData)
         <div className="bg-white shadow-md rounded p-6 m-4 flex-1">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h3 className="text-red-600 text-xl font-bold">Scotiabank</h3>
+              <h3 className="text-red-600 text-xl font-bold">{responseData?.institution?.name}</h3>
               <p className="text-gray-600 mb-4">N° 977063116</p>
               <h2 className="text-3xl font-bold text-blue-700">$7.409.824</h2>
             </div>
@@ -136,7 +183,7 @@ console.log("response", responseData)
         <div className="bg-white shadow-md rounded p-6 m-4 flex-1">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h3 className="text-red-600 text-xl font-bold">Scotiabank</h3>
+              <h3 className="text-red-600 text-xl font-bold">{responseData?.institution?.name}</h3>
               <p className="text-gray-600 mb-4">N° 982939909</p>
               <h2 className="text-3xl font-bold text-blue-700">U$598,71</h2>
             </div>

@@ -19,6 +19,7 @@ const MatchFinanciero = () => {
       initializeWidget(holderType);
     }
   }, [holderType, isClient]);
+  
 
   const sendPostRequest = async (dataId) => {
     const requestOptions = {

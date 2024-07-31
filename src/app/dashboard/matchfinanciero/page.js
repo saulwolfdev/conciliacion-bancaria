@@ -20,7 +20,6 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
-
   const sendPostRequest = async (dataId) => {
     const requestOptions = {
       method: 'POST',

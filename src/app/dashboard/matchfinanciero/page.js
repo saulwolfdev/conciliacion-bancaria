@@ -19,7 +19,6 @@ const MatchFinanciero = () => {
       initializeWidget(holderType);
     }
   }, [holderType, isClient]);
-  
 
   const sendPostRequest = async (dataId) => {
     const requestOptions = {
@@ -31,12 +30,10 @@ const MatchFinanciero = () => {
   
     try {
       const response = await fetch('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/', requestOptions);
-      
-      const isJson = response.headers.get('content-type')?.includes('application/json');
-      const data = isJson ? await response.json() : null;
+      const data = await response.json();
   
       if (!response.ok) {
-        const error = (data && data.message) || response.status;
+        const error = (data) || response.status;
         throw new Error(error);
       }
   
@@ -50,8 +47,8 @@ const MatchFinanciero = () => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl = "https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278";
-    // const webhookUrl = `https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/`;
+    // const webhookUrl = "https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278";
+    const webhookUrl = `https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/`;
 
     try {
       const Fintoc = await getFintoc();

@@ -101,6 +101,40 @@ const MatchFinanciero = () => {
     console.log("respuesta", responseData?.institution?.name);
   }, [responseData]);
 
+
+  
+
+  // const sendPostRequestTest = async () => {
+  //   const requestOptions = {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({ 
+  //       id: "000",
+  //       userId: "11",
+  //       title: "titulo nuevo",
+  //       body: "algo del body"
+  //     }),
+  //   };
+  
+  //   try {
+  //     const response = await fetch('https://jsonplaceholder.typicode.com/posts', requestOptions);
+      
+  //     if (!response.ok) {
+  //       const error = await response.text();
+  //       throw new Error(error);
+  //     }
+  
+  //     const data = await response.json();
+  //     console.log('Complete data:', data);
+  //   } catch (error) {
+  //     console.error('data error', error);
+  //   }
+  // };
+  
+  // sendPostRequestTest();
+
+
+
   return (
     <>
       <div className="flex justify-between items-center mb-4">

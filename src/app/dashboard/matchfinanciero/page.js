@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
+import axios from 'axios';
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,25 +22,21 @@ const MatchFinanciero = () => {
   }, [holderType, isClient]);
 
   const sendPostRequest = async (dataId) => {
-    const requestOptions = {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: dataId  }),
-    };
-  
     try {
-      const response = await fetch('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/', requestOptions);
-      const data = await response.json();
-  
-      if (!response.ok) {
-        const error = (data) || response.status;
-        throw new Error(error);
-      }
-  
-      console.log('Complete data:', data);
+      const response = await axios.post('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/', 
+        { id: dataId },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      console.log('Complete data:', response.data);
     } catch (error) {
-      console.error('data error!', error);
+      if (error.response) {
+        console.error('data error!', error.response.data);
+      } else if (error.request) {
+        console.error('No response:', error.request);
+      } else {
+        console.error('Error setting:', error.message);
+      }
     }
   };
 
@@ -47,7 +44,6 @@ const MatchFinanciero = () => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    // const webhookUrl = "https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278";
     const webhookUrl = `https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/`;
 
     try {
@@ -100,20 +96,6 @@ const MatchFinanciero = () => {
   ];
 
   const transactions2 = [];
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch(`https://webhook.site/b3195938-0cbb-4832-afe4-52e82d8dc278`);
-  //     const data = await response.json();
-  //     setResponseData(data);
-  //   } catch (error) {
-  //     console.error("Error data:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     console.log("respuesta", responseData?.institution?.name);

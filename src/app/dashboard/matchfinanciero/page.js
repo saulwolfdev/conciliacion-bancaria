@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
+import { createIntegration } from '@/api/fintoc.api';
 import axios from 'axios';
 
 const MatchFinanciero = () => {
@@ -21,30 +22,30 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
-  const sendPostRequest = async (dataId) => {
-    try {
-      const response = await axios.post('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/', 
-        { id: dataId },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
+  // const sendPostRequest = async (dataId) => {
+  //   try {
+  //     const response = await axios.post('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_integracion_data2/', 
+  //       { id: dataId },
+  //       { headers: { 'Content-Type': 'application/json' } }
+  //     );
 
-      console.log('Complete data:', response.data);
-    } catch (error) {
-      if (error.response) {
-        console.error('data error!', error.response.data);
-      } else if (error.request) {
-        console.error('No response:', error.request);
-      } else {
-        console.error('Error setting:', error.message);
-      }
-    }
-  };
+  //     console.log('Complete data:', response.data);
+  //   } catch (error) {
+  //     if (error.response) {
+  //       console.error('data error!', error.response.data);
+  //     } else if (error.request) {
+  //       console.error('No response:', error.request);
+  //     } else {
+  //       console.error('Error setting:', error.message);
+  //     }
+  //   }
+  // };
 
   const initializeWidget = async (type) => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl = `https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/`;
+    const webhookUrl = "https://webhook.site/4fdd6070-b7d1-427b-934d-f6c825217d8f";
 
     try {
       const Fintoc = await getFintoc();
@@ -59,10 +60,21 @@ const MatchFinanciero = () => {
         webhookUrl: webhookUrl,
         onSuccess: (res) => {   
           let dataId = res.id       
-          console.log('Response:', JSON.stringify(res, null, 2));
+          // console.log('Response:', JSON.stringify(res, null, 2));
           setResponseData(res);
+          console.log("dataIdType:", typeof(dataId))
           console.log("dataId:", dataId)
-          sendPostRequest(dataId);
+          // sendPostRequest(dataId);
+
+
+          createIntegration({ dataId })
+          .then(response => {
+            console.log('Satisfactorio:', response.data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+
         },
         onExit: (res) => {
           console.log("Exit", res);
@@ -98,7 +110,7 @@ const MatchFinanciero = () => {
   const transactions2 = [];
 
   useEffect(() => {
-    console.log("respuesta", responseData?.institution?.name);
+    // console.log("respuesta", responseData?.institution?.name);
   }, [responseData]);
 
 

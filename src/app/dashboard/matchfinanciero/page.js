@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
-import { createIntegration } from '@/api/fintoc.api';
+import { createIntegration,createIntegrationTest } from '@/api/fintoc.api';
 import axios from 'axios';
 
 const MatchFinanciero = () => {
@@ -60,20 +60,24 @@ const MatchFinanciero = () => {
         webhookUrl: webhookUrl,
         onSuccess: (res) => {   
           let dataId = res.id       
-          // console.log('Response:', JSON.stringify(res, null, 2));
           setResponseData(res);
           console.log("dataIdType:", typeof(dataId))
           console.log("dataId:", dataId)
-          // sendPostRequest(dataId);
+          //EJEMPLO DE TEST 
+          createIntegrationTest({dataId})
+          
+           .then(response => {
+           console.log('Paso correctamente el Id de Ejemplo de post de ejemplo', response.data);
+           })
 
+          // createIntegration({ dataId })
 
-          createIntegration({ dataId })
-          .then(response => {
-            console.log('Satisfactorio:', response.data);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
+          // .then(response => {
+          //   console.log('Satisfactorio:', response.data);
+          // })
+          // .catch(error => {
+          //   console.error('Error:', error);
+          // });
 
         },
         onExit: (res) => {

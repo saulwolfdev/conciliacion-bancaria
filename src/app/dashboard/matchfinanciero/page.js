@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
-import { createIntegration,createIntegrationTest } from '@/api/fintoc.api';
-import axios from 'axios';
+import { createIntegration } from '@/api/fintoc.api';
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,25 +20,6 @@ const MatchFinanciero = () => {
       initializeWidget(holderType);
     }
   }, [holderType, isClient]);
-
-  // const sendPostRequest = async (dataId) => {
-  //   try {
-  //     const response = await axios.post('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_integracion_data2/', 
-  //       { id: dataId },
-  //       { headers: { 'Content-Type': 'application/json' } }
-  //     );
-
-  //     console.log('Complete data:', response.data);
-  //   } catch (error) {
-  //     if (error.response) {
-  //       console.error('data error!', error.response.data);
-  //     } else if (error.request) {
-  //       console.error('No response:', error.request);
-  //     } else {
-  //       console.error('Error setting:', error.message);
-  //     }
-  //   }
-  // };
 
   const initializeWidget = async (type) => {
     const product = "movements";
@@ -61,27 +41,17 @@ const MatchFinanciero = () => {
         onSuccess: (res) => {   
           let dataId = res.id       
           setResponseData(res);
-          console.log("dataIdType:", typeof(dataId))
-          console.log("dataId:", dataId)
-          //EJEMPLO DE TEST 
-          createIntegrationTest({dataId})
-          
-           .then(response => {
-           console.log('Paso correctamente el Id de Ejemplo de post de ejemplo', response.data);
-           })
-
-          // createIntegration({ dataId })
-
-          // .then(response => {
-          //   console.log('Satisfactorio:', response.data);
-          // })
-          // .catch(error => {
-          //   console.error('Error:', error);
-          // });
+ 
+          createIntegration(dataId)
+          .then(response => {
+            console.log('Satisfactorio:', response.data);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
 
         },
-        onExit: (res) => {
-          console.log("Exit", res);
+        onExit: () => {          
           console.log("Fintoc exit");
         },
       });
@@ -114,42 +84,8 @@ const MatchFinanciero = () => {
   const transactions2 = [];
 
   useEffect(() => {
-    // console.log("respuesta", responseData?.institution?.name);
+    console.log("respuesta", responseData);
   }, [responseData]);
-
-
-  
-
-  // const sendPostRequestTest = async () => {
-  //   const requestOptions = {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ 
-  //       id: "000",
-  //       userId: "11",
-  //       title: "titulo nuevo",
-  //       body: "algo del body"
-  //     }),
-  //   };
-  
-  //   try {
-  //     const response = await fetch('https://jsonplaceholder.typicode.com/posts', requestOptions);
-      
-  //     if (!response.ok) {
-  //       const error = await response.text();
-  //       throw new Error(error);
-  //     }
-  
-  //     const data = await response.json();
-  //     console.log('Complete data:', data);
-  //   } catch (error) {
-  //     console.error('data error', error);
-  //   }
-  // };
-  
-  // sendPostRequestTest();
-
-
 
   return (
     <>

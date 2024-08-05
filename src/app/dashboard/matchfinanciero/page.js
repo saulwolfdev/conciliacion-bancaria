@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
-import { createIntegration } from '@/api/fintoc.api';
+import { sendPostRequest } from '@/api/fintoc.api'; 
+import AccountsModal from '@/components/AccountsModal';
+
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +12,7 @@ const MatchFinanciero = () => {
   const [isClient, setIsClient] = useState(false);
   const [widget, setWidget] = useState(null);
   const [responseData, setResponseData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -38,18 +41,13 @@ const MatchFinanciero = () => {
         product: product,
         publicKey: publicKey,
         webhookUrl: webhookUrl,
-        onSuccess: (res) => {   
-          let dataId = res.id       
-          setResponseData(res);
- 
-          createIntegration(dataId)
-          .then(response => {
-            console.log('Satisfactorio:', response.data);
-          })
-          .catch(error => {
-            console.error('Error:', error);
-          });
-
+        onSuccess: async (res) => { 
+          let dataId = "link_oObKGalip9eXP8y5"; 
+          const data = await sendPostRequest(dataId);
+          if (data) {
+            setResponseData(data);
+            // setIsModalOpen(true); 
+          }
         },
         onExit: () => {          
           console.log("Fintoc exit");
@@ -87,8 +85,23 @@ const MatchFinanciero = () => {
     console.log("respuesta", responseData);
   }, [responseData]);
 
+  const openModal = () => {    
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {    
+    setIsModalOpen(false);
+  };
+
   return (
     <>
+    <button 
+        className="bg-blue-500 text-white p-2 rounded mt-4"
+        onClick={openModal}
+      >
+        Abrir Modal
+      </button>
+    <AccountsModal isOpen={isModalOpen} onClose={closeModal} data={responseData}/>
       <div className="flex justify-between items-center mb-4">
         <div className="grid grid-cols-3 gap-4 flex-grow">
           <div className="bg-white shadow-md rounded p-4 text-center">

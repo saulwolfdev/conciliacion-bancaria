@@ -1,9 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const BankModal = ({ isOpen, onClose, data }) => {
+const AccountsModal = ({ isOpen, onClose, data, onLoad  }) => {
+  const [selectedAccounts, setSelectedAccounts] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+console.log("selectedAccounts:", selectedAccounts)
   if (!isOpen) return null;
-console.log("dataModal:", data)
-console.log("dataModalAccounts:", data?.data?.accounts);
+
+  const handleCheckboxChange = (accountId) => {
+    setSelectedAccounts((prevSelected) =>
+      prevSelected.includes(accountId)
+        ? prevSelected.filter((id) => id !== accountId)
+        : [...prevSelected, accountId]
+    );
+  };
+
+  const handleSelectAllChange = () => {
+    if (selectAll) {
+      setSelectedAccounts([]);
+    } else {
+      const allAccountIds = data?.data?.accounts.map(account => account.id) || [];
+      setSelectedAccounts(allAccountIds);
+    }
+    setSelectAll(!selectAll);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleRowsPerPageChange = (e) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
+    setCurrentPage(1);
+  };
+
+  const filteredAccounts = data?.data?.accounts.filter(account => 
+    account.number.includes(searchTerm) || 
+    data.data.institution.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const indexOfLastAccount = currentPage * rowsPerPage;
+  const indexOfFirstAccount = indexOfLastAccount - rowsPerPage;
+  const currentAccounts = filteredAccounts?.slice(indexOfFirstAccount, indexOfLastAccount);
+
+  const totalPages = Math.ceil((filteredAccounts?.length || 0) / rowsPerPage);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleLoadClick = () => {
+    onLoad(selectedAccounts);
+    onClose(); 
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white w-11/12 md:w-2/3 lg:w-1/2 xl:w-1/3 p-6 rounded shadow-lg relative">
@@ -13,23 +68,42 @@ console.log("dataModalAccounts:", data?.data?.accounts);
         <h2 className="text-xl font-semibold mb-4">Cuenta corriente</h2>
         <p className="mb-4">Carga la/las cuentas corrientes para el banco seleccionado</p>
         <div className="flex items-center mb-4">
-          <input type="text" placeholder="Search" className="border rounded p-2 w-full" />          
+          <input 
+            type="text" 
+            placeholder="Search" 
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="border rounded p-2 w-full" 
+          />          
         </div>
         <table className="w-full table-auto border-collapse">
           <thead>
             <tr>
-              <th className="border p-2">Banco</th>
+              <th className="border p-2">
+                <input
+                  type="checkbox"
+                  className="mr-2"
+                  checked={selectAll}
+                  onChange={handleSelectAllChange}
+                />
+                Banco
+              </th>
               <th className="border p-2">Número de cuenta</th>
               <th className="border p-2">Moneda</th>
               <th className="border p-2">Saldo</th>
             </tr>
           </thead>
           <tbody>
-            {data && data.data && data.data.accounts && data.data.accounts.length > 0 ? (
-              data.data.accounts.map((account) => (
+            {currentAccounts && currentAccounts.length > 0 ? (
+              currentAccounts.map((account) => (
                 <tr key={account.id}>
-                  <td className="border p-2">
-                    {/* <img src={`/${data.data.institution.id}-logo.png`} alt={data.data.institution.name} className="inline-block mr-2" /> */}
+                  <td className="border p-2 text-center">
+                    <input
+                      type="checkbox"
+                      className="mr-2"
+                      checked={selectedAccounts.includes(account.id)}
+                      onChange={() => handleCheckboxChange(account.id)}
+                    />
                     {data.data.institution.name}
                   </td>
                   <td className="border p-2">{account.number}</td>
@@ -47,23 +121,40 @@ console.log("dataModalAccounts:", data?.data?.accounts);
           </tbody>
         </table>
         <div className="flex justify-between items-center mt-4">
-          <span>Total: {data && data.data && data.data.accounts ? data.data.accounts.length : 0} cuentas</span>
+          <span>Total: {filteredAccounts ? filteredAccounts.length : 0} cuentas</span>
           <div>
             <label className="mr-2">Filas por página:</label>
-            <select className="border p-2">
-              <option>5</option>
-              <option>10</option>
-              <option>15</option>
+            <select value={rowsPerPage} onChange={handleRowsPerPageChange} className="border p-2">
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
             </select>
           </div>
         </div>
+        <div className="flex justify-between items-center mt-4">
+          <button
+            className="bg-gray-200 p-2 rounded mr-2"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Anterior
+          </button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <button
+            className="bg-gray-200 p-2 rounded ml-2"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Siguiente
+          </button>
+        </div>
         <div className="flex justify-end mt-4">
           <button className="bg-gray-200 p-2 rounded mr-2" onClick={onClose}>Cambiar banco</button>
-          <button className="bg-red-500 text-white p-2 rounded">Cargar</button>
+          <button className="bg-red-500 text-white p-2 rounded" onClick={handleLoadClick}>Cargar</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default BankModal;
+export default AccountsModal;

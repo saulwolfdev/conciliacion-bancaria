@@ -13,6 +13,7 @@ const MatchFinanciero = () => {
   const [widget, setWidget] = useState(null);
   const [responseData, setResponseData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAccounts, setSelectedAccounts] = useState([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -93,6 +94,11 @@ const MatchFinanciero = () => {
     setIsModalOpen(false);
   };
 
+  const handleLoadAccounts = (accounts) => {
+    setSelectedAccounts(accounts);
+    console.log("Selected Accounts father:", accounts);
+  };
+  console.log("responseData father:", responseData);
   return (
     <>
     <button 
@@ -101,7 +107,7 @@ const MatchFinanciero = () => {
       >
         Abrir Modal
       </button>
-    <AccountsModal isOpen={isModalOpen} onClose={closeModal} data={responseData}/>
+    <AccountsModal isOpen={isModalOpen} onClose={closeModal} data={responseData} onLoad={handleLoadAccounts}/>
       <div className="flex justify-between items-center mb-4">
         <div className="grid grid-cols-3 gap-4 flex-grow">
           <div className="bg-white shadow-md rounded p-4 text-center">

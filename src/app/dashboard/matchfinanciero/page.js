@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
-import { sendPostRequest } from '@/api/fintoc.api'; 
-import AccountsModal from '@/components/AccountsModal';
+import { sendPostRequest } from "@/api/fintoc.api";
+import AccountsModal from "@/components/AccountsModal";
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +29,7 @@ const MatchFinanciero = () => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl = "https://webhook.site/4fdd6070-b7d1-427b-934d-f6c825217d8f";
+    const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
 
     try {
       const Fintoc = await getFintoc();
@@ -42,15 +42,15 @@ const MatchFinanciero = () => {
         product: product,
         publicKey: publicKey,
         webhookUrl: webhookUrl,
-        onSuccess: async (res) => { 
-          let dataId = "link_oObKGalip9eXP8y5"; 
+        onSuccess: async (res) => {
+          let dataId = "link_oObKGalip9eXP8y5";
           const data = await sendPostRequest(dataId);
           if (data) {
             setResponseData(data);
-            setIsModalOpen(true); 
+            setIsModalOpen(true);
           }
         },
-        onExit: () => {          
+        onExit: () => {
           console.log("Fintoc exit");
         },
       });
@@ -61,7 +61,7 @@ const MatchFinanciero = () => {
       console.error("Error initializing Fintoc widget:", error);
     }
   };
-  
+
   const handleOptionClick = (type) => {
     console.log("holderType:", type);
     setHolderType(type);
@@ -84,8 +84,12 @@ const MatchFinanciero = () => {
 
   useEffect(() => {
     console.log("respuesta", responseData);
-    if (responseData && responseData?.data?.accounts && selectedAccounts.length > 0) {
-      const filtered = responseData?.data?.accounts.filter(account => 
+    if (
+      responseData &&
+      responseData?.data?.accounts &&
+      selectedAccounts.length > 0
+    ) {
+      const filtered = responseData?.data?.accounts.filter((account) =>
         selectedAccounts.includes(account.id)
       );
       setFilteredAccounts(filtered);
@@ -93,11 +97,11 @@ const MatchFinanciero = () => {
     }
   }, [responseData, selectedAccounts]);
 
-  const openModal = () => {    
+  const openModal = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {    
+  const closeModal = () => {
     setIsModalOpen(false);
   };
 
@@ -108,10 +112,43 @@ const MatchFinanciero = () => {
 
   console.log("responseData father:", responseData?.data?.accounts);
   console.log("selectedAccounts father:", selectedAccounts);
-  // console.log("selectedAccounts filtered:", filteredAccounts[0].number);
-  filteredAccounts.map(account => {
+  console.log("selectedAccounts filtered:", filteredAccounts);
+  filteredAccounts.map((account) => {
     console.log("Account number:", account.number);
-});
+  });
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = 'https://inetevo-release.azurewebsites.net/finanzas/get_cuentas_contables/'; 
+      const authToken = 'eyJraWQiOiJaakpmd0V1RW80Ym1aVDBxcUFxS3dwMHY1XC91NHhNbXdGTlRpaUcxZUdYbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkNGI4MjQzOC0xMGUxLTcwYTMtZDI5NC1jMTEwYzRhYzY0ODgiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfOHJOakFteVhzIiwiY29nbml0bzp1c2VybmFtZSI6Imltb3JhbGVzIiwib3JpZ2luX2p0aSI6IjYzNDhjODc3LTUyY2YtNDc3YS05ZGE4LWE4ZDI4MzY5ZmQ5NSIsImF1ZCI6IjI1cGk2N2dzZjg5Y291djJmcGlhbWo4N3NpIiwiZXZlbnRfaWQiOiJkOGNiYTJlMy1iZjUzLTRkZjktOThjMy0wMjUyYjM1NDRhZWYiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcyMzEzMjUwNSwibmFtZSI6IklzYWJlbCBNb3JhbGVzIiwiZXhwIjoxNzIzMTM5NzI3LCJpYXQiOjE3MjMxMzYxMjcsImp0aSI6IjU2YWJiMzNiLWZjMmItNGM2Mi04NWY1LTVhZjcyNDA5Nzg1NyIsImVtYWlsIjoieXRhcGlhQGluZm9ybWF0LmNsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ9.tkiQ4jsheVEYJFeC_Ish8qlwKsVUyWWvNbgvJfP7rDYI_cRwjnOVOmXWl3OaKlZ6cQjjFofbJlbeFS7SQfQCXYuQoBi_Eakmk8l_EfWNqe5_J7fh8i61s2j1iJKTzhgWNnC2-wKM8Cy__uw5ok-9D4wKrti6c01RjA705DWf1Q1bBohsntLVj0F5Ba8XHNoXE3xsIYMjlE-sy7Uckt-7GsBQP1-q3jaXj1ujWatdTlZb57HHfqiES8V1lpUeZbn1gQ2Y4tYOssGDWJLh4LyMEgWHxL24ITOEaY2B6bDtAh6ShFjcqnESiY6UcbdWXO0HfZ1KcgkhCVZgQ2OB5jJUNw';
+
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error en la solicitud: ' + response.status);
+        }
+
+        const data = await response.json();
+        console.log("Datos Cuentas Contables:",data); 
+
+      } catch (error) {
+        console.error('Error:', error); 
+      }
+    };
+
+    fetchData(); 
+  }, []);
+
+
   return (
     <>
       {/* <button 
@@ -120,7 +157,12 @@ const MatchFinanciero = () => {
       >
         Abrir Modal
       </button> */}
-      <AccountsModal isOpen={isModalOpen} onClose={closeModal} data={responseData} onLoad={handleLoadAccounts}/>
+      <AccountsModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        data={responseData}
+        onLoad={handleLoadAccounts}
+      />
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center mb-4">
           <div className="grid grid-cols-3 gap-4 flex-grow">
@@ -144,77 +186,58 @@ const MatchFinanciero = () => {
             Nuevo Banco
           </button>
         </div>
-  
-        <div className="flex mt-6 space-x-4">
-          <div className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]">
-            <div className="flex justify-between items-center mb-4">
+
+        <div className="flex flex-col mt-6 space-y-4">
+  {filteredAccounts.length > 0 ? (
+    filteredAccounts.map((account) => (
+      <div key={account.id} className="flex space-x-4">
+        {['CLP', 'USD'].map((currency) => {
+          const balance = account.currency === currency ? account.balance.available : 0;
+          return (
+            <div
+              key={currency}
+              className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h3 className="text-red-600 text-xl font-bold">
+                    {responseData?.data?.institution?.name}
+                  </h3>
+                  <p className="text-gray-600 mb-4">N° {account.number}</p>
+                  <h2 className="text-3xl font-bold text-blue-700">
+                    {currency === "CLP" ? "$" : "U$"}
+                    {balance.toLocaleString()}
+                  </h2>
+                </div>
+                <div className="flex">
+                  <button className="bg-red-500 text-white p-2 rounded mr-2">
+                    ↻
+                  </button>
+                  <button className="bg-red-500 text-white p-2 rounded">
+                    ...
+                  </button>
+                </div>
+              </div>
               <div>
-                <h3 className="text-red-600 text-xl font-bold">{responseData?.data?.institution?.name}</h3>
-                <p className="text-gray-600 mb-4">N° 977063116</p>
-                <h2 className="text-3xl font-bold text-blue-700">$7.409.824</h2>
-              </div>
-              <div className="flex">
-                <button className="bg-red-500 text-white p-2 rounded mr-2">
-                  ↻
-                </button>
-                <button className="bg-red-500 text-white p-2 rounded">...</button>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-gray-600 mb-2">Últimos movimientos</h4>
-              {transactions1.length > 0 ? (
-                transactions1.map((tx, index) => (
-                  <div key={index} className="bg-red-50 p-2 rounded mb-2">
-                    <span className="block text-red-600 font-semibold">
-                      {tx.amount}
-                    </span>
-                    <span className="block text-gray-600">{tx.description}</span>
-                  </div>
-                ))
-              ) : (
+                <h4 className="text-gray-600 mb-2">Últimos movimientos</h4>
                 <p className="text-gray-500">Sin movimientos</p>
-              )}
-            </div>
-            {/* <p className="text-gray-500 mt-4">Últimos movimientos sin match: 485</p>
-            <button className="bg-red-500 text-white p-2 rounded mt-2">Match financieros</button> */}
-          </div>
-          <div className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]">
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h3 className="text-red-600 text-xl font-bold">{responseData?.data?.institution?.name}</h3>
-                <p className="text-gray-600 mb-4">N° 982939909</p>
-                <h2 className="text-3xl font-bold text-blue-700">U$598,71</h2>
-              </div>
-              <div className="flex">
-                <button className="bg-red-500 text-white p-2 rounded mr-2">
-                  ↻
-                </button>
-                <button className="bg-red-500 text-white p-2 rounded">...</button>
               </div>
             </div>
-            <div>
-              <h4 className="text-gray-600 mb-2">Últimos movimientos</h4>
-              {transactions2.length > 0 ? (
-                transactions2.map((tx, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center bg-red-50 p-2 rounded mb-2"
-                  >
-                    <span className="text-red-600 font-semibold">
-                      {tx.amount}
-                    </span>
-                    <span className="text-gray-600">{tx.description}</span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">Sin movimientos</p>
-              )}
-            </div>
-            {/* <p className="text-gray-500 mt-4">Últimos movimientos sin match: 0</p>
-            <button className="bg-red-500 text-white p-2 rounded mt-2">Match financieros</button> */}
-          </div>
-        </div>
-  
+          );
+        })}
+      </div>
+    ))
+  ) : (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-gray-500 text-2xl text-center">
+        Aún no hay banco cargado
+      </p>
+    </div>
+  )}
+</div>
+
+
+
         {isOpen && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="bg-white rounded-lg p-6 w-96">
@@ -255,7 +278,7 @@ const MatchFinanciero = () => {
         )}
       </div>
     </>
-  ); 
+  );
 };
 
 export default MatchFinanciero;

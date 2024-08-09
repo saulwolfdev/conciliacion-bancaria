@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
 import { sendPostRequest } from "@/api/fintoc.api";
 import AccountsModal from "@/components/AccountsModal";
+// import { cuentasContables } from '@/api/fintoc.mock';
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +30,8 @@ const MatchFinanciero = () => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
+    const webhookUrl =
+      "https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
 
     try {
       const Fintoc = await getFintoc();
@@ -117,37 +119,49 @@ const MatchFinanciero = () => {
     console.log("Account number:", account.number);
   });
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const tenant = 'carmenbajotest';
+  //     const url = 'https://inetevo-release.azurewebsites.net/finanzas/get_cuentas_contables/';
+  //     const authToken = 'eyJraWQiOiJaakpmd0V1RW80Ym1aVDBxcUFxS3dwMHY1XC91NHhNbXdGTlRpaUcxZUdYbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkNGI4MjQzOC0xMGUxLTcwYTMtZDI5NC1jMTEwYzRhYzY0ODgiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfOHJOakFteVhzIiwiY29nbml0bzp1c2VybmFtZSI6Imltb3JhbGVzIiwib3JpZ2luX2p0aSI6IjYzNDhjODc3LTUyY2YtNDc3YS05ZGE4LWE4ZDI4MzY5ZmQ5NSIsImF1ZCI6IjI1cGk2N2dzZjg5Y291djJmcGlhbWo4N3NpIiwiZXZlbnRfaWQiOiJkOGNiYTJlMy1iZjUzLTRkZjktOThjMy0wMjUyYjM1NDRhZWYiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcyMzEzMjUwNSwibmFtZSI6IklzYWJlbCBNb3JhbGVzIiwiZXhwIjoxNzIzMTM5NzI3LCJpYXQiOjE3MjMxMzYxMjcsImp0aSI6IjU2YWJiMzNiLWZjMmItNGM2Mi04NWY1LTVhZjcyNDA5Nzg1NyIsImVtYWlsIjoieXRhcGlhQGluZm9ybWF0LmNsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ9.tkiQ4jsheVEYJFeC_Ish8qlwKsVUyWWvNbgvJfP7rDYI_cRwjnOVOmXWl3OaKlZ6cQjjFofbJlbeFS7SQfQCXYuQoBi_Eakmk8l_EfWNqe5_J7fh8i61s2j1iJKTzhgWNnC2-wKM8Cy__uw5ok-9D4wKrti6c01RjA705DWf1Q1bBohsntLVj0F5Ba8XHNoXE3xsIYMjlE-sy7Uckt-7GsBQP1-q3jaXj1ujWatdTlZb57HHfqiES8V1lpUeZbn1gQ2Y4tYOssGDWJLh4LyMEgWHxL24ITOEaY2B6bDtAh6ShFjcqnESiY6UcbdWXO0HfZ1KcgkhCVZgQ2OB5jJUNw';
 
+  //     try {
+  //       const response = await fetch(url, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Authorization': `Bearer ${authToken}`,
+  //           'Content-Type': 'application/json',
+  //           'X-Tenant': tenant
+  //         }
+  //       });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = 'https://inetevo-release.azurewebsites.net/finanzas/get_cuentas_contables/'; 
-      const authToken = 'eyJraWQiOiJaakpmd0V1RW80Ym1aVDBxcUFxS3dwMHY1XC91NHhNbXdGTlRpaUcxZUdYbz0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkNGI4MjQzOC0xMGUxLTcwYTMtZDI5NC1jMTEwYzRhYzY0ODgiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfOHJOakFteVhzIiwiY29nbml0bzp1c2VybmFtZSI6Imltb3JhbGVzIiwib3JpZ2luX2p0aSI6IjYzNDhjODc3LTUyY2YtNDc3YS05ZGE4LWE4ZDI4MzY5ZmQ5NSIsImF1ZCI6IjI1cGk2N2dzZjg5Y291djJmcGlhbWo4N3NpIiwiZXZlbnRfaWQiOiJkOGNiYTJlMy1iZjUzLTRkZjktOThjMy0wMjUyYjM1NDRhZWYiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcyMzEzMjUwNSwibmFtZSI6IklzYWJlbCBNb3JhbGVzIiwiZXhwIjoxNzIzMTM5NzI3LCJpYXQiOjE3MjMxMzYxMjcsImp0aSI6IjU2YWJiMzNiLWZjMmItNGM2Mi04NWY1LTVhZjcyNDA5Nzg1NyIsImVtYWlsIjoieXRhcGlhQGluZm9ybWF0LmNsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ9.tkiQ4jsheVEYJFeC_Ish8qlwKsVUyWWvNbgvJfP7rDYI_cRwjnOVOmXWl3OaKlZ6cQjjFofbJlbeFS7SQfQCXYuQoBi_Eakmk8l_EfWNqe5_J7fh8i61s2j1iJKTzhgWNnC2-wKM8Cy__uw5ok-9D4wKrti6c01RjA705DWf1Q1bBohsntLVj0F5Ba8XHNoXE3xsIYMjlE-sy7Uckt-7GsBQP1-q3jaXj1ujWatdTlZb57HHfqiES8V1lpUeZbn1gQ2Y4tYOssGDWJLh4LyMEgWHxL24ITOEaY2B6bDtAh6ShFjcqnESiY6UcbdWXO0HfZ1KcgkhCVZgQ2OB5jJUNw';
+  //       if (!response.ok) {
+  //         throw new Error('Error en la solicitud: ' + response.status);
+  //       }
 
-      try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
+  //       const data = await response.json();
+  //       console.log("Datos Cuentas Contables:",data);
 
-        if (!response.ok) {
-          throw new Error('Error en la solicitud: ' + response.status);
-        }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
 
-        const data = await response.json();
-        console.log("Datos Cuentas Contables:",data); 
+  //   fetchData();
+  // }, []);
 
-      } catch (error) {
-        console.error('Error:', error); 
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = cuentasContables;
+  //       console.log("Datos Cuentas Contables:", data);
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
 
-    fetchData(); 
-  }, []);
-
+  //   fetchData();
+  // }, []);
 
   return (
     <>
@@ -188,55 +202,61 @@ const MatchFinanciero = () => {
         </div>
 
         <div className="flex flex-col mt-6 space-y-4">
-  {filteredAccounts.length > 0 ? (
-    filteredAccounts.map((account) => (
-      <div key={account.id} className="flex space-x-4">
-        {['CLP', 'USD'].map((currency) => {
-          const balance = account.currency === currency ? account.balance.available : 0;
-          return (
-            <div
-              key={currency}
-              className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <div>
-                  <h3 className="text-red-600 text-xl font-bold">
-                    {responseData?.data?.institution?.name}
-                  </h3>
-                  <p className="text-gray-600 mb-4">N° {account.number}</p>
-                  <h2 className="text-3xl font-bold text-blue-700">
-                    {currency === "CLP" ? "$" : "U$"}
-                    {balance.toLocaleString()}
-                  </h2>
-                </div>
-                <div className="flex">
-                  <button className="bg-red-500 text-white p-2 rounded mr-2">
-                    ↻
-                  </button>
-                  <button className="bg-red-500 text-white p-2 rounded">
-                    ...
-                  </button>
-                </div>
+          {filteredAccounts.length > 0 ? (
+            filteredAccounts.map((account) => (
+              <div key={account.id} className="flex space-x-4">
+                {["CLP", "USD"].map((currency) => {
+                  const balance =
+                    account.currency === currency
+                      ? account.balance.available
+                      : 0;
+                  return (
+                    <div
+                      key={currency}
+                      className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-red-600 text-xl font-bold">
+                            {responseData?.data?.institution?.name}
+                          </h3>
+                          <p className="text-gray-600 mb-4">
+                            N° {account.number}
+                          </p>
+                          <h2 className="text-3xl font-bold text-blue-700">
+                            {currency === "CLP" ? "$" : "U$"}
+                            {balance.toLocaleString()}
+                          </h2>
+                          <p className="text-gray-400 mb-4">Saldo disponible</p>
+                        </div>
+                        <div className="flex space-x-1">
+                          <button className="bg-red-500 text-white p-2 rounded">
+                            ↻
+                          </button>
+                          <button className="bg-red-500 text-white p-2 rounded">
+                            ...
+                          </button>
+                        </div>
+                      </div>
+                      <h4 className="text-gray-700 font-semibold mb-2">
+                        Últimos movimientos
+                      </h4>
+                      <div className="bg-white shadow-lg p-4 rounded h-32 flex items-center justify-center">
+                        <p className="text-gray-500">Sin movimientos</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-              <div>
-                <h4 className="text-gray-600 mb-2">Últimos movimientos</h4>
-                <p className="text-gray-500">Sin movimientos</p>
-              </div>
+            ))
+          ) : (
+            <div className="flex items-center justify-center h-64">
+              <p className="text-gray-500 text-2xl text-center">
+                Aún no hay banco cargado
+              </p>
             </div>
-          );
-        })}
-      </div>
-    ))
-  ) : (
-    <div className="flex items-center justify-center h-64">
-      <p className="text-gray-500 text-2xl text-center">
-        Aún no hay banco cargado
-      </p>
-    </div>
-  )}
-</div>
-
-
+          )}
+        </div>
 
         {isOpen && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">

@@ -1,5 +1,6 @@
 export const mockData = {
-    "id":"link_oObKGalip9eXP8y5",
+    "data":{
+      "id":"link_oObKGalip9eXP8y5",
     "mode":"live",
     "active":true,
     "object":"link",
@@ -152,4 +153,94 @@ export const mockData = {
        "name":"Banco Santander",
        "country":"cl"
     }
+    }
  }
+
+ // cuentasContables
+
+export const cuentasContables = {
+   error: false,
+   message: "Cuentas contables obtenidas correctamente.",
+   data: [
+       {
+           nombre_cuenta: "BANCOS",
+           numero_cuenta: "1102",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Chile",
+           numero_cuenta: "110210",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Santander",
+           numero_cuenta: "110213",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco BCI",
+           numero_cuenta: "110216",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Estado",
+           numero_cuenta: "110219",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco BICE",
+           numero_cuenta: "110220",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Itau Corpbanca",
+           numero_cuenta: "110222",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Scotiabank Chile",
+           numero_cuenta: "110225",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Scotiabank Azul (BBVA)",
+           numero_cuenta: "110228",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Banco Chile US$",
+           numero_cuenta: "110250",
+           moneda_cuenta: "Dolar Americano"
+       },
+       {
+           nombre_cuenta: "OBLIGACIONES BANCOS C/P",
+           numero_cuenta: "2101",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Obligaciones Bancos C/P",
+           numero_cuenta: "210120",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Obligaciones Bancos C/P (UF)",
+           numero_cuenta: "210125",
+           moneda_cuenta: "Unidad de Fomento"
+       },
+       {
+           nombre_cuenta: "OBLIGACIONES BANCOS L/P",
+           numero_cuenta: "2102",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Obligaciones Bancos L/P",
+           numero_cuenta: "210220",
+           moneda_cuenta: "Moneda Local"
+       },
+       {
+           nombre_cuenta: "Obligaciones Bancos L/P (UF)",
+           numero_cuenta: "210225",
+           moneda_cuenta: "Unidad de Fomento"
+       }
+   ]
+};

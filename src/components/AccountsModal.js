@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { cuentasContables } from "@/api/fintoc.mock";
+import CustomSearchSelect from "@/components/CustomSearchSelect";
 
 const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   const [selectedAccounts, setSelectedAccounts] = useState([]);
@@ -28,10 +29,10 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
 
   const handleCheckboxChange = (accountId) => {
     setSelectedAccounts((prevSelected) => {
-      if (prevSelected.includes(accountId)) {        
+      if (prevSelected.includes(accountId)) {
         setSelectedOption((prev) => {
           const newSelectedOption = { ...prev };
-          delete newSelectedOption[accountId]; 
+          delete newSelectedOption[accountId];
           return newSelectedOption;
         });
         return prevSelected.filter((id) => id !== accountId);
@@ -90,9 +91,9 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
     onClose();
   };
 
-  const handleSelectChange = (accountId, value) => {
+  const handleSelectChange = (accountId, selectedValue) => {
     setSelectedOption((prev) => {
-      const newSelectedOption = { ...prev, [accountId]: value };
+      const newSelectedOption = { ...prev, [accountId]: selectedValue };
 
       setSelectedAccounts((prevSelected) => {
         if (!prevSelected.includes(accountId)) {
@@ -100,7 +101,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
         }
         return prevSelected;
       });
-  
+
       console.log("Updated selectedOption:", newSelectedOption);
       return newSelectedOption;
     });
@@ -149,13 +150,12 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
           </thead>
           <tbody>
             {currentAccounts && currentAccounts.length > 0 ? (
-              currentAccounts.map((account) => {                
-                const filteredAccounts = accountingAccounts.filter(
-                  (cuenta) =>
-                    !Object.values(selectedOption).includes(
-                      cuenta.numero_cuenta
-                    ) || selectedOption[account.id] === cuenta.numero_cuenta
-                );
+              currentAccounts.map((account) => {
+                const options = accountingAccounts.map((cuenta) => ({
+                  value: cuenta.numero_cuenta,
+                  label: `${cuenta.numero_cuenta} - ${cuenta.nombre_cuenta}`,
+                  disabled: Object.values(selectedOption).includes(cuenta.numero_cuenta)
+                }));
 
                 return (
                   <tr key={account.id}>
@@ -173,36 +173,18 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
                     <td className="border p-2">{account.balance.current}</td>
                     <td className="border p-2">{account.balance.available}</td>
                     <td className="border p-2">
-                      <select
-                        value={selectedOption[account.id] || ""}
-                        onChange={(e) =>
-                          handleSelectChange(account.id, e.target.value)
-                        }
-                      >
-                        <option value="">Seleccionar</option>
-                        {accountingAccounts.map((cuenta) => (
-                          <option
-                            key={cuenta.numero_cuenta}
-                            value={cuenta.numero_cuenta}
-                            disabled={
-                              Object.values(selectedOption).includes(
-                                cuenta.numero_cuenta
-                              ) &&
-                              selectedOption[account.id] !==
-                                cuenta.numero_cuenta
-                            }
-                          >
-                            {cuenta.numero_cuenta}
-                          </option>
-                        ))}
-                      </select>
+                      <CustomSearchSelect
+                        options={options}
+                        value={selectedOption[account.id]}
+                        onChange={(selectedValue) => handleSelectChange(account.id, selectedValue)}
+                      />
                     </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td className="border p-2" colSpan="6">
+                <td colSpan="6" className="border p-2 text-center">
                   No hay datos disponibles
                 </td>
               </tr>
@@ -210,11 +192,8 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
           </tbody>
         </table>
         <div className="flex justify-between items-center mt-4">
-          <span>
-            Total: {filteredAccounts ? filteredAccounts.length : 0} cuentas
-          </span>
           <div>
-            <label className="mr-2">Filas por página:</label>
+            <span>Mostrar </span>
             <select
               value={rowsPerPage}
               onChange={handleRowsPerPageChange}

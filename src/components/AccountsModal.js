@@ -10,6 +10,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [accountingAccounts, setAccountingAccounts] = useState([]);
   const [selectedOption, setSelectedOption] = useState({});
+  const [bankAccountsData, setBankAccountsData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +29,12 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   if (!isOpen) return null;
 
   const handleCheckboxChange = (accountId) => {
+    // const account = data?.data?.accounts.find(acc => acc.id === accountId);
+    
+    // if (account) {
+    //   console.log("Numero de cuenta corriente:", account.number);
+    // }
+  
     setSelectedAccounts((prevSelected) => {
       if (prevSelected.includes(accountId)) {
         setSelectedOption((prev) => {
@@ -91,21 +98,46 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
     onClose();
   };
 
-  const handleSelectChange = (accountId, selectedValue) => {
+  const handleSelectChange = (accountId, selectedValue) => {    
+    const account = data?.data?.accounts.find(acc => acc.id === accountId);
+  
+    if (account) {
+      console.log("Número de cuenta corriente:", account.number);
+    }
+
     setSelectedOption((prev) => {
       const newSelectedOption = { ...prev, [accountId]: selectedValue };
-
+  
+      console.log("Número de cuenta contable:", selectedValue);
+  
       setSelectedAccounts((prevSelected) => {
         if (!prevSelected.includes(accountId)) {
+          setBankAccountsData((prevData) => {
+            const updatedData = prevData.filter(
+              (item) => item.id !== account?.number
+            );
+  
+            return [
+              ...updatedData,
+              {
+                id: account?.number,
+                cuenta_contable: selectedValue,
+              },
+            ];
+          });
+  
           return [...prevSelected, accountId];
         }
         return prevSelected;
       });
-
+  
       console.log("Updated selectedOption:", newSelectedOption);
       return newSelectedOption;
     });
   };
+  
+  
+  console.log("bankAccountsData para enviar:", bankAccountsData)
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

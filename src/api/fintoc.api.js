@@ -55,3 +55,15 @@ export const sendPostRequest = async () => {
     }
   }
 };
+
+
+// {
+//   "tipo": 2,
+//   "banco_id": "link_oObKGalip9eXP8y5",
+//   "cuentas_bancarias": [
+//       {
+//           "id": "71479943",
+//           "cuenta_contable": "123123",          
+//       },     
+//   ]
+// }

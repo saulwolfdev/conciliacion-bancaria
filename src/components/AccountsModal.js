@@ -29,12 +29,6 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   if (!isOpen) return null;
 
   const handleCheckboxChange = (accountId) => {
-    // const account = data?.data?.accounts.find(acc => acc.id === accountId);
-    
-    // if (account) {
-    //   console.log("Numero de cuenta corriente:", account.number);
-    // }
-  
     setSelectedAccounts((prevSelected) => {
       if (prevSelected.includes(accountId)) {
         setSelectedOption((prev) => {
@@ -42,23 +36,71 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
           delete newSelectedOption[accountId];
           return newSelectedOption;
         });
+  
+        setBankAccountsData((prevData) => 
+          prevData.filter((item) => item.id !== data?.data?.accounts.find(acc => acc.id === accountId)?.number)
+        );
+  
         return prevSelected.filter((id) => id !== accountId);
       } else {
+        setSelectedOption((prev) => {
+          const selectedValue = prev[accountId];
+          if (selectedValue) {
+            const account = data?.data?.accounts.find(acc => acc.id === accountId);
+  
+            setBankAccountsData((prevData) => {
+              const updatedData = prevData.filter(
+                (item) => item.id !== account?.number
+              );
+  
+              return [
+                ...updatedData,
+                {
+                  id: account?.number,
+                  cuenta_contable: selectedValue,
+                },
+              ];
+            });
+          }
+          return prev;
+        });
+  
         return [...prevSelected, accountId];
       }
     });
   };
+  
 
   const handleSelectAllChange = () => {
-    if (selectAll) {
+    if (selectAll) {      
       setSelectedAccounts([]);
-    } else {
-      const allAccountIds =
-        data?.data?.accounts.map((account) => account.id) || [];
+      setSelectedOption({});
+      setBankAccountsData([]);
+    } else {      
+      const allAccountIds = data?.data?.accounts.map((account) => account.id) || [];
       setSelectedAccounts(allAccountIds);
+  
+      const updatedOptions = {};
+      const updatedBankAccountsData = [];
+  
+      allAccountIds.forEach((accountId) => {
+        const account = data?.data?.accounts.find((acc) => acc.id === accountId);
+        updatedOptions[accountId] = selectedOption[accountId] || "";
+  
+        if (account && selectedOption[accountId]) {
+          updatedBankAccountsData.push({
+            id: account.number,
+            cuenta_contable: selectedOption[accountId],
+          });
+        }
+      });
+  
+      setSelectedOption(updatedOptions);
+      setBankAccountsData(updatedBankAccountsData);
     }
     setSelectAll(!selectAll);
   };
+  
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -104,7 +146,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
     if (account) {
       console.log("Número de cuenta corriente:", account.number);
     }
-
+  
     setSelectedOption((prev) => {
       const newSelectedOption = { ...prev, [accountId]: selectedValue };
   
@@ -112,29 +154,30 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   
       setSelectedAccounts((prevSelected) => {
         if (!prevSelected.includes(accountId)) {
-          setBankAccountsData((prevData) => {
-            const updatedData = prevData.filter(
-              (item) => item.id !== account?.number
-            );
-  
-            return [
-              ...updatedData,
-              {
-                id: account?.number,
-                cuenta_contable: selectedValue,
-              },
-            ];
-          });
-  
           return [...prevSelected, accountId];
         }
         return prevSelected;
+      });
+  
+      setBankAccountsData((prevData) => {
+        const updatedData = prevData.filter(
+          (item) => item.id !== account?.number
+        );
+  
+        return [
+          ...updatedData,
+          {
+            id: account?.number,
+            cuenta_contable: selectedValue,
+          },
+        ];
       });
   
       console.log("Updated selectedOption:", newSelectedOption);
       return newSelectedOption;
     });
   };
+  
   
   
   console.log("bankAccountsData para enviar:", bankAccountsData)

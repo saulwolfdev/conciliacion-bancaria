@@ -64,7 +64,7 @@ export const sendPostRequest = async () => {
 //       {
 //           "id": "71479943",
 //           "cuenta_contable": "123123",   
-                     
+//           "linea_credito": 1,       
 //       },     
 //   ]
 // }

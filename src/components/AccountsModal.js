@@ -182,6 +182,40 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   
   console.log("bankAccountsData para enviar:", bankAccountsData)
 
+  const handleSubmit = async () => {
+    const payload = {
+      tipo: 2,
+      banco_id: "link_oObKGalip9eXP8y5",
+      cuentas_bancarias: bankAccountsData.map(account => ({
+        id: account.id,
+        cuenta_contable: account.cuenta_contable,
+        linea_credito: account.id, 
+      })),
+    };
+
+    console.log("Payload completo:", payload);
+  
+    try {
+      const response = await fetch('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_crear_banco/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log("Response data:", data);
+    } catch (error) {
+      console.error("Error al enviar los datos:", error);
+    }
+  };
+  
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white w-11/12 md:w-4/5 lg:w-2/3 xl:w-1/2 p-6 rounded shadow-lg relative">
@@ -308,6 +342,12 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
             onClick={handleLoadClick}
           >
             Cargar
+          </button>
+          <button
+            className="bg-green-500 text-white p-2 rounded"
+            onClick={handleSubmit}
+          >
+            Enviar
           </button>
         </div>
       </div>

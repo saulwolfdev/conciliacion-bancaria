@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { XCircleIcon } from '@heroicons/react/24/outline';
 import { cuentasContables } from "@/api/fintoc.mock";
 import CustomSearchSelect from "@/components/CustomSearchSelect";
 import { postBankData } from "@/api/postBankData"; 
 
-const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
+const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
   const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,6 +13,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   const [accountingAccounts, setAccountingAccounts] = useState([]);
   const [selectedOption, setSelectedOption] = useState({});
   const [bankAccountsData, setBankAccountsData] = useState([]);
+  // const [lineCredit, setLineCredit] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,33 +183,51 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
   }; 
   
   console.log("bankAccountsData para enviar:", bankAccountsData)
+
+  const formatCurrency = (value, currency) => {
+    return new Intl.NumberFormat("es-CL", {
+      style: "currency",
+      currency: currency,
+    }).format(value);
+  };
  
+  console.log("datos de data:", data?.data?.accounts)
+
+  
+   
+      // const lineOfCreditAccounts = data.data.accounts.filter(account => account.type === "line_of_credit");
+      // console.log("Cuentas de crédito:", lineOfCreditAccounts);
+    
+ console.log("lineOfCredit:", lineOfCredit)
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white w-11/12 md:w-4/5 lg:w-2/3 xl:w-1/2 p-4 rounded shadow-lg relative">
+      <div className="bg-white rounded-lg shadow-lg relative p-4 w-11/12 md:w-4/5 lg:w-2/3 xl:w-1/2">
       <button
-        className="absolute top-2 right-4 text-gray-500 hover:text-gray-700 text-2xl"
-        onClick={onClose}
-      >
-        &times;
-      </button>
+  className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+  onClick={onClose}
+>
+<XCircleIcon className="h-8 w-8" /> 
+</button>
         <h2 className="text-lg font-semibold mb-3">Cuenta corriente</h2>
         <p className="mb-3 text-sm text-gray-700">
           Carga la/las cuentas corrientes para el banco seleccionado
         </p>
+
         <div className="flex items-center mb-3">
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Buscar"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="border rounded p-2 w-full text-sm"
+            className="border rounded-md p-2 w-full text-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        <table className="w-full table-auto border-collapse text-sm">
-          <thead>
+
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th className="border p-2 text-left">
+              <th className="px-6 py-3">
                 <input
                   type="checkbox"
                   className="mr-2"
@@ -216,11 +236,11 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
                 />
                 Banco
               </th>
-              <th className="border p-2 text-left">Número de cuenta</th>
-              <th className="border p-2 text-left">Moneda</th>
-              <th className="border p-2 text-left">Saldo Actual</th>
-              <th className="border p-2 text-left">Saldo disponible</th>
-              <th className="border p-2 text-left">Cuentas Contables</th>
+              <th className="px-6 py-3">Número de cuenta</th>
+              <th className="px-6 py-3">Moneda</th>
+              <th className="px-6 py-3">Saldo Actual</th>
+              <th className="px-6 py-3">Saldo disponible</th>
+              <th className="px-6 py-3">Cuentas Contables</th>
             </tr>
           </thead>
           <tbody>
@@ -229,12 +249,15 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
                 const options = accountingAccounts.map((cuenta) => ({
                   value: cuenta.numero_cuenta,
                   label: `${cuenta.numero_cuenta} - ${cuenta.nombre_cuenta}`,
-                  disabled: Object.values(selectedOption).includes(cuenta.numero_cuenta)
+                  disabled: Object.values(selectedOption).includes(cuenta.numero_cuenta),
                 }));
-  
+
                 return (
-                  <tr key={account.id}>
-                    <td className="border p-2 text-left">
+                  <tr
+                    key={account.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-4">
                       <input
                         type="checkbox"
                         className="mr-2"
@@ -243,11 +266,15 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
                       />
                       {data.data.institution.name}
                     </td>
-                    <td className="border p-2">{account.number}</td>
-                    <td className="border p-2">{account.currency}</td>
-                    <td className="border p-2">{account.balance.current}</td>
-                    <td className="border p-2">{account.balance.available}</td>
-                    <td className="border p-2">
+                    <td className="px-6 py-4">{account.number}</td>
+                    <td className="px-6 py-4">{account.currency}</td>
+                    <td className="px-6 py-4">
+                      {formatCurrency(account.balance.current, account.currency)}
+                    </td>
+                    <td className="px-6 py-4">
+                      {formatCurrency(account.balance.available, account.currency)}
+                    </td>
+                    <td className="px-6 py-4">
                       <CustomSearchSelect
                         options={options}
                         value={selectedOption[account.id]}
@@ -258,7 +285,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
                 );
               })
             ) : (
-              <tr>
+              <tr className="text-center h-32">
                 <td colSpan="6" className="border p-2 text-center text-sm text-gray-600">
                   No hay datos disponibles
                 </td>
@@ -266,52 +293,52 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad }) => {
             )}
           </tbody>
         </table>
+
         <div className="flex justify-end items-center mt-4">
-  <div className="text-sm mr-4">
-    <span>Filas por página: </span>
-    <select
-      value={rowsPerPage}
-      onChange={handleRowsPerPageChange}
-      className="p-1 text-sm focus:ring-0 focus:border-transparent border-0"
-    >
-      <option value={5}>5</option>
-      <option value={10}>10</option>
-      <option value={15}>15</option>
-    </select>
-  </div>
-  <div className="flex items-center text-sm">
-    <span className="mr-2">
-      {1}-{rowsPerPage} de {totalPages}
-    </span>
-    <button
-      className="p-1.5 rounded text-sm mr-2 hover:bg-gray-200 focus:outline-none"
-      disabled={currentPage === 1}
-      onClick={() => handlePageChange(currentPage - 1)}
-    >
-      &lt;
-    </button>
-    <button
-      className="p-1.5 rounded text-sm hover:bg-gray-200 focus:outline-none"
-      disabled={currentPage === totalPages}
-      onClick={() => handlePageChange(currentPage + 1)}
-    >
-      &gt;
-    </button>
-  </div>
-</div>
+          <div className="text-sm mr-4">
+            <span>Filas por página: </span>
+            <select
+              value={rowsPerPage}
+              onChange={handleRowsPerPageChange}
+              className="p-1 text-sm focus:ring-0 focus:border-transparent border-0"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+            </select>
+          </div>
+          <div className="flex items-center text-sm">
+            <span className="mr-2">
+              {1}-{rowsPerPage} de {totalPages}
+            </span>
+            <button
+              className="p-1.5 rounded text-sm mr-2 hover:bg-gray-200 focus:outline-none"
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              &lt;
+            </button>
+            <button
+              className="p-1.5 rounded text-sm hover:bg-gray-200 focus:outline-none"
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              &gt;
+            </button>
+          </div>
+        </div>
 
-<div className="flex justify-end mt-4">
-  <button className="border border-red-500 text-red-500 p-1.5 rounded mr-2 text-sm" onClick={onClose}>
-    Cambiar banco
-  </button>
-  <button
-    className="bg-red-500 text-white p-1.5 rounded text-sm"
-    onClick={handleLoadClick}
-  >
-    Cargar
-  </button>          
-</div>
-
+        <div className="flex justify-end mt-4">
+          <button
+            className="border border-red-500 text-red-500 p-1.5 rounded mr-2 text-sm"
+            onClick={onClose}
+          >
+            Cambiar banco
+          </button>
+          <button className="bg-red-500 text-white p-1.5 rounded text-sm" onClick={handleLoadClick}>
+            Cargar
+          </button>
+        </div>
       </div>
     </div>
   );

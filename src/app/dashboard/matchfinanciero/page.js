@@ -14,6 +14,9 @@ const MatchFinanciero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [filteredAccounts, setFilteredAccounts] = useState([]);
+  const [lineCredit, setLineCredit] = useState(null);
+  const [valueOptions, setValueOptions] = useState(null);
+  const [valueLineOfCredit, setValueLineOfCredit] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -47,6 +50,7 @@ const MatchFinanciero = () => {
           const data = await sendPostRequest(dataId);
           if (data) {
             setResponseData(data);
+            setLineCredit(data.data.accounts.filter(account => account.type === "line_of_credit"))
             setIsModalOpen(true);
           }
         },
@@ -106,6 +110,16 @@ const MatchFinanciero = () => {
     console.log("Account number:", account.number);
   });  
 
+  console.log("datos filtrados:", lineCredit)
+
+  const handleSelectChange = (selectedValue, type) => {
+    if (type === "options") {
+      setValueOptions(selectedValue);
+    } else if (type === "lineOfCredit") {
+      setValueLineOfCredit(selectedValue);
+    }
+  };
+
   return (
     <>      
       <AccountsModal
@@ -113,6 +127,10 @@ const MatchFinanciero = () => {
         onClose={closeModal}
         data={responseData}
         onLoad={handleLoadAccounts}
+        lineOfCredit={lineCredit}
+        valueOptions={valueOptions} // Pasar valueOptions
+        valueLineOfCredit={valueLineOfCredit} // Pasar valueLineOfCredit
+        onChange={handleSelectChange} // Pasar handleSelectChange
       />
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center mb-4">

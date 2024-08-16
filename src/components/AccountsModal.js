@@ -13,7 +13,6 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
   const [accountingAccounts, setAccountingAccounts] = useState([]);
   const [selectedOption, setSelectedOption] = useState({});
   const [bankAccountsData, setBankAccountsData] = useState([]);
-  // const [lineCredit, setLineCredit] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,14 +190,8 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
     }).format(value);
   };
  
-  console.log("datos de data:", data?.data?.accounts)
-
-  
-   
-      // const lineOfCreditAccounts = data.data.accounts.filter(account => account.type === "line_of_credit");
-      // console.log("Cuentas de crédito:", lineOfCreditAccounts);
-    
- console.log("lineOfCredit:", lineOfCredit)
+  console.log("datos de data:", data?.data?.accounts)    
+  console.log("lineOfCredit:", lineOfCredit)
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

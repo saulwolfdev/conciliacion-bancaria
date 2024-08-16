@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import { cuentasContables } from "@/api/fintoc.mock";
+import { dashboard } from "@/api/fintoc.mock";
 import CustomSearchSelect from "@/components/CustomSearchSelect";
 import { postBankData } from "@/api/postBankData"; 
 
@@ -10,9 +11,10 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [accountingAccounts, setAccountingAccounts] = useState([]);
+  const [accountingAccounts, setAccountingAccounts] = useState([]); 
   const [selectedOption, setSelectedOption] = useState({});
   const [bankAccountsData, setBankAccountsData] = useState([]);
+  const [selectedAccountNames, setSelectedAccountNames] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,20 +168,33 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
         const updatedData = prevData.filter(
           (item) => item.id !== account?.number
         );
-  
-        return [
-          ...updatedData,
-          {
-            id: account?.number,
-            cuenta_contable: selectedValue,
-          },
-        ];
+
+        const selectedLineOfCredit = selectedAccountNames[accountId]; 
+        const lineOfCreditNumber = selectedLineOfCredit ? selectedLineOfCredit.split(' - ')[1] : ''; 
+
+        const existingAccountIndex = prevData.findIndex(item => item.id === account?.number);
+        const updatedAccount = existingAccountIndex !== -1 ? prevData[existingAccountIndex] : {
+          id: account?.number,
+          cuenta_contable: selectedValue,
+          linea_credito: lineOfCreditNumber
+        };
+
+        updatedAccount.cuenta_contable = selectedValue;
+        updatedAccount.linea_credito = lineOfCreditNumber; 
+
+        if (existingAccountIndex !== -1) {
+          const updatedPrevData = [...prevData];
+          updatedPrevData[existingAccountIndex] = updatedAccount;
+          return updatedPrevData;
+        } else {
+          return [...prevData, updatedAccount];
+        }
       });
   
       console.log("Updated selectedOption:", newSelectedOption);
       return newSelectedOption;
     });
-  }; 
+  };
   
   console.log("bankAccountsData para enviar:", bankAccountsData)
 
@@ -193,15 +208,40 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
   console.log("datos de data:", data?.data?.accounts)    
   console.log("lineOfCredit:", lineOfCredit)
 
+  const handleAccountSelectChange = (event, accountId) => { 
+    setSelectedAccountNames((prev) => ({
+      ...prev, 
+      [accountId]: event.target.value
+    }));
+
+    setBankAccountsData((prevData) => {
+      const updatedData = prevData.filter(
+        (item) => item.id !== data?.data?.accounts.find(acc => acc.id === accountId)?.number
+      );
+
+      const selectedLineOfCredit = event.target.value;
+      const lineOfCreditNumber = selectedLineOfCredit ? selectedLineOfCredit.split(' - ')[1] : '';
+
+      return [
+        ...updatedData,
+        {
+          id: data?.data?.accounts.find(acc => acc.id === accountId)?.number,
+          cuenta_contable: selectedOption[accountId] || '',
+          linea_credito: lineOfCreditNumber 
+        },
+      ];
+    });
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg shadow-lg relative p-4 w-11/12 md:w-4/5 lg:w-2/3 xl:w-1/2">
+      <div className="bg-white rounded-lg shadow-lg relative p-4 w-11/12 md:w-4/5 lg:w-2/3 xl:w-1/1">
       <button
-  className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
-  onClick={onClose}
->
-<XCircleIcon className="h-8 w-8" /> 
-</button>
+        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+        onClick={onClose}
+      >
+      <XCircleIcon className="h-8 w-8" /> 
+      </button>
         <h2 className="text-lg font-semibold mb-3">Cuenta corriente</h2>
         <p className="mb-3 text-sm text-gray-700">
           Carga la/las cuentas corrientes para el banco seleccionado
@@ -234,6 +274,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
               <th className="px-6 py-3">Saldo Actual</th>
               <th className="px-6 py-3">Saldo disponible</th>
               <th className="px-6 py-3">Cuentas Contables</th>
+              <th className="px-6 py-3">Linea de Credito</th>
             </tr>
           </thead>
           <tbody>
@@ -273,6 +314,25 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
                         value={selectedOption[account.id]}
                         onChange={(selectedValue) => handleSelectChange(account.id, selectedValue)}
                       />
+                    </td>
+                    <td className="px-6 py-4">
+                    <select
+                        value={selectedAccountNames[account.id] || ''} 
+                        onChange={(event) => handleAccountSelectChange(event, account.id)}
+                        className="ml-2 border rounded-md p-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="">Seleccione una cuenta</option>
+                        {lineOfCredit?.map((item) => (
+                          <option 
+                            key={item.id} 
+                            value={`${item.name} - ${item.number}`}
+                            disabled={Object.values(selectedAccountNames).includes(`${item.name} - ${item.number}`)} 
+                            className={Object.values(selectedAccountNames).includes(`${item.name} - ${item.number}`) ? 'text-gray-500' : ''} 
+                          >
+                            {item.name} - {item.number}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                   </tr>
                 );

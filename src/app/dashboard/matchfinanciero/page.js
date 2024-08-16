@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
 import { sendPostRequest } from "@/api/fintoc.api";
+import { dashboard } from "@/api/fintoc.mock";
 import AccountsModal from "@/components/AccountsModal";
 
 const MatchFinanciero = () => {
@@ -15,6 +16,7 @@ const MatchFinanciero = () => {
   const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [filteredAccounts, setFilteredAccounts] = useState([]);
   const [lineCredit, setLineCredit] = useState(null);
+  const [dataDashboard, setDataDashboard] = useState([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -25,6 +27,20 @@ const MatchFinanciero = () => {
       initializeWidget(holderType);
     }
   }, [holderType, isClient]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = dashboard;
+        setDataDashboard(data.data);
+        console.log("Datos Dashboard:", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const initializeWidget = async (type) => {
     const product = "movements";
@@ -43,11 +59,15 @@ const MatchFinanciero = () => {
         product: product,
         publicKey: publicKey,
         webhookUrl: webhookUrl,
+        
         onSuccess: async (res) => {
           let dataId = "link_oObKGalip9eXP8y5";
           const data = await sendPostRequest(dataId);
-          if (data) {
-            setResponseData(data);
+          if (data) {            
+            const filteredAccount = data.data.accounts.filter(account => 
+              ["checking_account", "savings_account", "sight_account", "rut_account"].includes(account.type)
+            );
+            setResponseData({ ...data, data: { ...data.data, accounts: filteredAccount } });
             setLineCredit(data.data.accounts.filter(account => account.type === "line_of_credit"))
             setIsModalOpen(true);
           }
@@ -110,6 +130,8 @@ const MatchFinanciero = () => {
 
   console.log("datos filtrados:", lineCredit)
 
+  console.log("dataDashboard api:", dataDashboard)
+
   return (
     <>      
       <AccountsModal
@@ -143,61 +165,80 @@ const MatchFinanciero = () => {
           </button>
         </div>
 
-        <div className="flex flex-col mt-6 space-y-4">
-          {filteredAccounts.length > 0 ? (
-            filteredAccounts.map((account) => (
-              <div key={account.id} className="flex space-x-4">
-                {["CLP", "USD"].map((currency) => {
-                  const balance =
-                    account.currency === currency
-                      ? account.balance.available
-                      : 0;
-                  return (
-                    <div
-                      key={currency}
-                      className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]"
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <div>
-                          <h3 className="text-red-600 text-xl font-bold">
-                            {responseData?.data?.institution?.name}
-                          </h3>
-                          <p className="text-gray-600 mb-4">
-                            N° {account.number}
-                          </p>
-                          <h2 className="text-3xl font-bold text-blue-700">
-                            {currency === "CLP" ? "$" : "U$"}
-                            {balance.toLocaleString()}
-                          </h2>
-                          <p className="text-gray-400 mb-4">Saldo disponible</p>
+        <div className="flex flex-col mt-6 space-y-4">          
+            {filteredAccounts.length > 0 ? (
+              dataDashboard.map((account) => (
+                <div key={account.id} className="flex space-x-4">
+                  {["CLP", "USD"].map((currency) => {
+                    const balance =
+                      account.moneda === (currency === "CLP" ? 1 : 2)
+                        ? account.monto_disponible
+                        : 0;
+                    return (
+                      <div
+                        key={currency}
+                        className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]"
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-red-600 text-xl font-bold">
+                              {account.banco.nombre}
+                            </h3>
+                            <p className="text-gray-600 mb-4">
+                              N° {account.numero}
+                            </p>
+                            <h2 className="text-3xl font-bold text-blue-700">
+                              {currency === "CLP" ? "$" : "U$"}
+                              {balance.toLocaleString()}
+                            </h2>
+                            <p className="text-gray-400 mb-4">Saldo disponible</p>
+                          </div>
+                          <div className="flex space-x-1">
+                            <button className="bg-red-500 text-white p-2 rounded">
+                              ↻
+                            </button>
+                            <button className="bg-red-500 text-white p-2 rounded">
+                              ...
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex space-x-1">
-                          <button className="bg-red-500 text-white p-2 rounded">
-                            ↻
-                          </button>
-                          <button className="bg-red-500 text-white p-2 rounded">
-                            ...
-                          </button>
+                        <h4 className="text-gray-700 font-semibold mb-2">
+                          Últimos movimientos
+                        </h4>
+                        <div className="bg-white shadow-lg p-4 rounded h-32 overflow-y-auto">
+                          {account.movimientos.length > 0 ? (
+                            account.movimientos.map((movimiento, index) => (
+                              <div key={index} className="flex justify-between mb-2">
+                                <div>
+                                  <p className="text-gray-500">
+                                    {movimiento.cargos > 0 ? '+' : '-'}
+                                    {parseFloat(movimiento.cargos || movimiento.abonos).toLocaleString()}
+                                  </p>
+                                  <p className="text-gray-700">{movimiento.descripcion}</p>
+                                </div>
+                                <div>
+                                  <p className={`text-${movimiento.cargos > 0 ? 'red' : 'green'}-500`}>
+                                    {movimiento.cargos > 0 ? 'Cargo' : 'Abono'}
+                                  </p>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-gray-500">Sin movimientos</p>
+                          )}
                         </div>
                       </div>
-                      <h4 className="text-gray-700 font-semibold mb-2">
-                        Últimos movimientos
-                      </h4>
-                      <div className="bg-white shadow-lg p-4 rounded h-32 flex items-center justify-center">
-                        <p className="text-gray-500">Sin movimientos</p>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-64">
+                <p className="text-gray-500 text-2xl text-center">
+                  Aún no hay banco cargado
+                </p>
               </div>
-            ))
-          ) : (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-gray-500 text-2xl text-center">
-                Aún no hay banco cargado
-              </p>
-            </div>
-          )}
+            )}            
         </div>
 
         {isOpen && (

@@ -61,9 +61,9 @@ const MatchFinanciero = () => {
         webhookUrl: webhookUrl,
         
         onSuccess: async (res) => {
-          let dataId = res;
+          let dataId = res.id;
           //let dataId = "link_oObKGalip9eXP8y5";
-          console.log("datos res:", res)
+          console.log("Respuesta ID data:", dataId)
           const data = await sendPostRequest(dataId);
           if (data) {            
             const filteredAccount = data.data.accounts.filter(account => 

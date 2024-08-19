@@ -46,7 +46,7 @@ const MatchFinanciero = () => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
+    const webhookUrl ="https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/";
 
     try {
       const Fintoc = await getFintoc();
@@ -61,7 +61,9 @@ const MatchFinanciero = () => {
         webhookUrl: webhookUrl,
         
         onSuccess: async (res) => {
-          let dataId = "link_oObKGalip9eXP8y5";
+          let dataId = res;
+          //let dataId = "link_oObKGalip9eXP8y5";
+          console.log("datos res:", res)
           const data = await sendPostRequest(dataId);
           if (data) {            
             const filteredAccount = data.data.accounts.filter(account => 

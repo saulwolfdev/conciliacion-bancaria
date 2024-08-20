@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import { cuentasContables } from "@/api/fintoc.mock";
-import { dashboard } from "@/api/fintoc.mock";
 import CustomSearchSelect from "@/components/CustomSearchSelect";
 import { postBankData } from "@/api/postBankData"; 
 
-const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
+const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit, onCancel }) => {
   const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -274,7 +273,9 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
               <th className="px-6 py-3">Saldo Actual</th>
               <th className="px-6 py-3">Saldo disponible</th>
               <th className="px-6 py-3">Cuentas Contables</th>
-              <th className="px-6 py-3">Linea de Credito</th>
+              {lineOfCredit?.length > 0 && (                
+                  <th className="px-6 py-3">Línea de Crédito</th>                
+              )}
             </tr>
           </thead>
           <tbody>
@@ -315,7 +316,8 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
                         onChange={(selectedValue) => handleSelectChange(account.id, selectedValue)}
                       />
                     </td>
-                    <td className="px-6 py-4">
+                    {lineOfCredit?.length > 0 && (
+               <td className="px-6 py-4">
                     <select
                         value={selectedAccountNames[account.id] || ''} 
                         onChange={(event) => handleAccountSelectChange(event, account.id)}
@@ -334,6 +336,7 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
                         ))}
                       </select>
                     </td>
+              )}
                   </tr>
                 );
               })
@@ -384,11 +387,14 @@ const AccountsModal = ({ isOpen, onClose, data, onLoad, lineOfCredit }) => {
         <div className="flex justify-end mt-4">
           <button
             className="border border-red-500 text-red-500 p-1.5 rounded mr-2 text-sm"
-            onClick={onClose}
+            onClick={onCancel}
           >
             Cambiar banco
           </button>
-          <button className="bg-red-500 text-white p-1.5 rounded text-sm" onClick={handleLoadClick}>
+          <button 
+            className="bg-red-500 text-white p-1.5 rounded text-sm" 
+            onClick={handleLoadClick}
+          >
             Cargar
           </button>
         </div>

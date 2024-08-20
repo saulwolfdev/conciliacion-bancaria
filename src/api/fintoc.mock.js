@@ -608,3 +608,374 @@ export const dashboard = {
        }
    ]
 }
+
+// mock cartolas
+
+export const cartolas = {
+    "message": null,
+    "data": [
+        {
+            "id": 165272,
+            "fecha": "2020-07-06",
+            "cartola": 7,
+            "descripcion": "",
+            "comentario": "",
+            "referencia": "7",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -71727.0,
+            "transaccion": "",
+            "estado": "Manual",
+            "estado_id": 2,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": true,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [
+                    {
+                        "cartola": 7,
+                        "fecha": "2020-07-06",
+                        "referencia": "7",
+                        "monto": -71727.0,
+                        "moneda_id": 1,
+                        "es_match": false
+                    }
+                ],
+                "comprobante": [
+                    {
+                        "comprobante": "2020-07-01-0001",
+                        "tipo": "Egreso",
+                        "fecha": "2020-07-06",
+                        "vencimiento": "2020-07-06",
+                        "referencia": "1",
+                        "glosa": "Gastos bancarios",
+                        "monto": -85355.0,
+                        "moneda_id": 1
+                    }
+                ]
+            },
+            "cuenta_corriente": {
+                "id": 1578,
+                "nombre": "BANCO SECURITY - 916977987"
+            }
+        },
+        {
+            "id": 165273,
+            "fecha": "2020-07-06",
+            "cartola": 7,
+            "descripcion": "",
+            "comentario": "",
+            "referencia": "7",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -13628.0,
+            "transaccion": "",
+            "estado": "Manual",
+            "estado_id": 2,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": true,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [
+                    {
+                        "cartola": 7,
+                        "fecha": "2020-07-06",
+                        "referencia": "7",
+                        "monto": -13628.0,
+                        "moneda_id": 1,
+                        "es_match": false
+                    }
+                ],
+                "comprobante": [
+                    {
+                        "comprobante": "2020-07-01-0001",
+                        "tipo": "Egreso",
+                        "fecha": "2020-07-06",
+                        "vencimiento": "2020-07-06",
+                        "referencia": "1",
+                        "glosa": "Gastos bancarios",
+                        "monto": -85355.0,
+                        "moneda_id": 1
+                    }
+                ]
+            },
+            "cuenta_corriente": {
+                "id": 1578,
+                "nombre": "BANCO SECURITY - 916977987"
+            }
+        },
+        {
+            "id": 170292,
+            "fecha": "2020-08-03",
+            "cartola": 8,
+            "descripcion": "",
+            "comentario": "",
+            "referencia": "8",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -1213.0,
+            "transaccion": "",
+            "estado": "Manual",
+            "estado_id": 2,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": true,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [
+                    {
+                        "cartola": 8,
+                        "fecha": "2020-08-03",
+                        "referencia": "8",
+                        "monto": -1213.0,
+                        "moneda_id": 1,
+                        "es_match": false
+                    }
+                ],
+                "comprobante": [
+                    {
+                        "comprobante": "2020-08-01-0001",
+                        "tipo": "Egreso",
+                        "fecha": "2020-08-31",
+                        "vencimiento": "2020-08-31",
+                        "referencia": "8",
+                        "glosa": "Gastos bancarios",
+                        "monto": -85272.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Movimientos Security 08 2020",
+                        "monto": -1213.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Cierre Cuenta Security",
+                        "monto": 133626.0,
+                        "moneda_id": 1
+                    }
+                ]
+            },
+            "cuenta_corriente": {
+                "id": 1578,
+                "nombre": "BANCO SECURITY - 916977987"
+            }
+        },
+        {
+            "id": 170293,
+            "fecha": "2020-08-05",
+            "cartola": 8,
+            "descripcion": "",
+            "comentario": "",
+            "referencia": "8",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -71657.0,
+            "transaccion": "",
+            "estado": "Manual",
+            "estado_id": 2,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": true,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [
+                    {
+                        "cartola": 8,
+                        "fecha": "2020-08-05",
+                        "referencia": "8",
+                        "monto": -71657.0,
+                        "moneda_id": 1,
+                        "es_match": false
+                    }
+                ],
+                "comprobante": [
+                    {
+                        "comprobante": "2020-08-01-0001",
+                        "tipo": "Egreso",
+                        "fecha": "2020-08-31",
+                        "vencimiento": "2020-08-31",
+                        "referencia": "8",
+                        "glosa": "Gastos bancarios",
+                        "monto": -85272.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Movimientos Security 08 2020",
+                        "monto": -1213.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Cierre Cuenta Security",
+                        "monto": 133626.0,
+                        "moneda_id": 1
+                    }
+                ]
+            },
+            "cuenta_corriente": {
+                "id": 1578,
+                "nombre": "BANCO SECURITY - 916977987"
+            }
+        },
+        {
+            "id": 170294,
+            "fecha": "2020-08-05",
+            "cartola": 8,
+            "descripcion": "",
+            "comentario": "",
+            "referencia": "8",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -13615.0,
+            "transaccion": "",
+            "estado": "Manual",
+            "estado_id": 2,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": true,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [
+                    {
+                        "cartola": 8,
+                        "fecha": "2020-08-05",
+                        "referencia": "8",
+                        "monto": -13615.0,
+                        "moneda_id": 1,
+                        "es_match": false
+                    }
+                ],
+                "comprobante": [
+                    {
+                        "comprobante": "2020-08-01-0001",
+                        "tipo": "Egreso",
+                        "fecha": "2020-08-31",
+                        "vencimiento": "2020-08-31",
+                        "referencia": "8",
+                        "glosa": "Gastos bancarios",
+                        "monto": -85272.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Movimientos Security 08 2020",
+                        "monto": -1213.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Cierre Cuenta Security",
+                        "monto": 133626.0,
+                        "moneda_id": 1
+                    }
+                ]
+            },
+            "cuenta_corriente": {
+                "id": 1578,
+                "nombre": "BANCO SECURITY - 916977987"
+            }
+        },
+        {
+            "id": 170295,
+            "fecha": "2020-08-14",
+            "cartola": 8,
+            "descripcion": "",
+            "comentario": "",
+            "referencia": "8",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": 133626.0,
+            "transaccion": "",
+            "estado": "Manual",
+            "estado_id": 2,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": true,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [
+                    {
+                        "cartola": 8,
+                        "fecha": "2020-08-14",
+                        "referencia": "8",
+                        "monto": 133626.0,
+                        "moneda_id": 1,
+                        "es_match": false
+                    }
+                ],
+                "comprobante": [
+                    {
+                        "comprobante": "2020-08-01-0001",
+                        "tipo": "Egreso",
+                        "fecha": "2020-08-31",
+                        "vencimiento": "2020-08-31",
+                        "referencia": "8",
+                        "glosa": "Gastos bancarios",
+                        "monto": -85272.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Movimientos Security 08 2020",
+                        "monto": -1213.0,
+                        "moneda_id": 1
+                    },
+                    {
+                        "comprobante": "2020-08-01-0009",
+                        "tipo": "Traspaso",
+                        "fecha": "2020-08-03",
+                        "vencimiento": "2020-08-03",
+                        "referencia": "8",
+                        "glosa": "Cierre Cuenta Security",
+                        "monto": 133626.0,
+                        "moneda_id": 1
+                    }
+                ]
+            },
+            "cuenta_corriente": {
+                "id": 1578,
+                "nombre": "BANCO SECURITY - 916977987"
+            }
+        }
+    ],
+    "totales": []
+}

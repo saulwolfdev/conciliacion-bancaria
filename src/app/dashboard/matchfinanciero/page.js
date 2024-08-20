@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getFintoc } from "@fintoc/fintoc-js";
 import { sendPostRequest } from "@/api/fintoc.api";
 import { dashboard } from "@/api/fintoc.mock";
@@ -13,10 +13,12 @@ const MatchFinanciero = () => {
   const [widget, setWidget] = useState(null);
   const [responseData, setResponseData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(null);
   const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [filteredAccounts, setFilteredAccounts] = useState([]);
   const [lineCredit, setLineCredit] = useState(null);
   const [dataDashboard, setDataDashboard] = useState([]);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -28,17 +30,32 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = dashboard;
+  //       setDataDashboard(data.data);
+  //       console.log("Datos Dashboard:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = dashboard;
+        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
+        const data = await response.json();
         setDataDashboard(data.data);
         console.log("Datos Dashboard:", data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-
+  
     fetchData();
   }, []);
 
@@ -47,7 +64,7 @@ const MatchFinanciero = () => {
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
     const webhookUrl ="https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/";
-
+    // const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
     try {
       const Fintoc = await getFintoc();
       if (widget) {
@@ -75,7 +92,11 @@ const MatchFinanciero = () => {
           }
         },
         onExit: () => {
-          console.log("Fintoc exit");
+          console.log("Fintoc exit");          
+          if (widget) {
+            widget.destroy();
+            setWidget(null);
+          }
         },
       });
       setWidget(newWidget);
@@ -87,7 +108,7 @@ const MatchFinanciero = () => {
   };
 
   const handleOptionClick = (type) => {
-    console.log("holderType:", type);
+    console.log("holderType:", type);    
     setHolderType(type);
   };
 
@@ -118,6 +139,26 @@ const MatchFinanciero = () => {
     setIsModalOpen(false);
   };
 
+  const toggleDropdown = (id) => {
+    setIsDropdownOpen(prevId => prevId === id ? null : id);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {      
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(null);
+      }
+    }
+    
+    if (isDropdownOpen !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   const handleLoadAccounts = (accounts) => {
     setSelectedAccounts(accounts);
     console.log("Selected Accounts father:", accounts);
@@ -134,11 +175,21 @@ const MatchFinanciero = () => {
 
   console.log("dataDashboard api:", dataDashboard)
 
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    if (widget) {
+      widget.destroy();
+      setWidget(null);
+    }
+    setIsOpen(true); 
+  };
+
   return (
     <>      
       <AccountsModal
         isOpen={isModalOpen}
         onClose={closeModal}
+        onCancel={handleCancel}
         data={responseData}
         onLoad={handleLoadAccounts}
         lineOfCredit={lineCredit}
@@ -147,11 +198,21 @@ const MatchFinanciero = () => {
         <div className="flex justify-between items-center mb-4">
           <div className="grid grid-cols-3 gap-4 flex-grow">
             <div className="bg-white shadow-md rounded p-4 text-center">
-              <h2 className="text-2xl font-bold text-blue-700">$7.409.824</h2>
+              <h2 className="text-2xl font-bold text-blue-700">                
+                {`$${dataDashboard
+                  .filter(account => account.moneda === 1)
+                  .reduce((acc, account) => acc + account.monto_disponible, 0)
+                  .toLocaleString()}`}
+              </h2>
               <p className="text-gray-500">Saldo Consolidado Pesos</p>
             </div>
             <div className="bg-white shadow-md rounded p-4 text-center">
-              <h2 className="text-2xl font-bold text-blue-700">$0</h2>
+              <h2 className="text-2xl font-bold text-blue-700">
+                {`$${dataDashboard
+                  .filter(account => account.moneda === 2)
+                  .reduce((acc, account) => acc + account.monto_disponible, 0)
+                  .toLocaleString()}`}
+              </h2>
               <p className="text-gray-500">Saldo Consolidado Dolares</p>
             </div>
             <div className="bg-white shadow-md rounded p-4 text-center">
@@ -160,7 +221,7 @@ const MatchFinanciero = () => {
             </div>
           </div>
           <button
-            className="bg-red-500 text-white p-2 rounded h-full ml-4"
+            className="bg-customGreen text-white p-2 rounded h-full ml-4"
             onClick={() => setIsOpen(true)}
           >
             Nuevo Banco
@@ -168,79 +229,133 @@ const MatchFinanciero = () => {
         </div>
 
         <div className="flex flex-col mt-6 space-y-4">          
-            {filteredAccounts.length > 0 ? (
-              dataDashboard.map((account) => (
-                <div key={account.id} className="flex space-x-4">
-                  {["CLP", "USD"].map((currency) => {
-                    const balance =
-                      account.moneda === (currency === "CLP" ? 1 : 2)
-                        ? account.monto_disponible
-                        : 0;
-                    return (
-                      <div
-                        key={currency}
-                        className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]"
-                      >
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <h3 className="text-red-600 text-xl font-bold">
-                              {account.banco.nombre}
-                            </h3>
-                            <p className="text-gray-600 mb-4">
-                              N° {account.numero}
-                            </p>
-                            <h2 className="text-3xl font-bold text-blue-700">
-                              {currency === "CLP" ? "$" : "U$"}
-                              {balance.toLocaleString()}
-                            </h2>
-                            <p className="text-gray-400 mb-4">Saldo disponible</p>
-                          </div>
-                          <div className="flex space-x-1">
-                            <button className="bg-red-500 text-white p-2 rounded">
-                              ↻
-                            </button>
-                            <button className="bg-red-500 text-white p-2 rounded">
-                              ...
-                            </button>
-                          </div>
+        {filteredAccounts.length > 0 ? (
+          dataDashboard.map((account) => {    
+            const currencySymbol = account.moneda === 1 ? "CLP" : "USD";
+            const balance = account.monto_disponible;
+            return (
+              <div key={account.id} className="flex space-x-4">       
+                <div className="bg-white shadow-md rounded p-6 flex-1 min-w-[280px]">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-red-600 text-xl font-bold">
+                        {account.banco.nombre}
+                      </h3>
+                      <p className="text-gray-600 mb-4">
+                        N° {account.numero}
+                      </p>
+                      <div className="mb-6">
+                        <h2 className="text-3xl font-bold text-blue-700">
+                          {currencySymbol === "CLP" ? "$" : "U$"}
+                          {balance.toLocaleString()}
+                        </h2>
+                        <p className="text-gray-400">Saldo disponible</p>
+                      </div>
+                      <div className="flex justify-between space-x-6">
+                        <div className="mr-20">
+                          <h2 className="text-2xl text-blue-700">
+                            {currencySymbol === "CLP" ? "$" : "U$"}
+                            {account.monto_contable.toLocaleString()}
+                          </h2>
+                          <p className="text-gray-400">Saldo contable</p>
                         </div>
-                        <h4 className="text-gray-700 font-semibold mb-2">
-                          Últimos movimientos
-                        </h4>
-                        <div className="bg-white shadow-lg p-4 rounded h-32 overflow-y-auto">
-                          {account.movimientos.length > 0 ? (
-                            account.movimientos.map((movimiento, index) => (
-                              <div key={index} className="flex justify-between mb-2">
-                                <div>
-                                  <p className="text-gray-500">
-                                    {movimiento.cargos > 0 ? '+' : '-'}
-                                    {parseFloat(movimiento.cargos || movimiento.abonos).toLocaleString()}
-                                  </p>
-                                  <p className="text-gray-700">{movimiento.descripcion}</p>
-                                </div>
-                                <div>
-                                  <p className={`text-${movimiento.cargos > 0 ? 'red' : 'green'}-500`}>
-                                    {movimiento.cargos > 0 ? 'Cargo' : 'Abono'}
-                                  </p>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="text-gray-500">Sin movimientos</p>
-                          )}
+                        <div>
+                          <h2 className="text-2xl text-blue-700">
+                            {currencySymbol === "CLP" ? "$" : "U$"}
+                            {(account.linea_credito || 0).toLocaleString()}
+                          </h2>
+                          <p className="text-gray-400">Saldo línea de crédito</p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-64">
-                <p className="text-gray-500 text-2xl text-center">
-                  Aún no hay banco cargado
-                </p>
+                    </div>
+                    
+                    <div className="flex space-x-1 relative">
+                      <button className="bg-customGreen text-white p-2 rounded">
+                        ↻
+                      </button>
+                      <button 
+                        onClick={() => toggleDropdown(account.id)}
+                        className="bg-white text-customGreen p-2 rounded border border-customGreen"
+                      >
+                        ...
+                      </button>
+                      {isDropdownOpen === account.id && ( 
+                        <div 
+                          ref={dropdownRef}
+                          className="absolute right-0 mt-11 w-48 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
+                        >
+                          <div className="py-1">
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                              Migrar a Sincronización
+                            </a>
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                              Actualizar
+                            </a>
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                              Match
+                            </a>
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                              Movimientos
+                            </a>
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                              Eliminar
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+              <h4 className="text-gray-700 font-semibold mb-2">Últimos movimientos</h4>
+              <div className="bg-white shadow-lg p-4 mt-4 rounded h-32 overflow-y-hide">
+                {account.movimientos.length > 0 ? (
+                  account.movimientos.map((movimiento, index) => (
+                    <div key={index} className="flex justify-between mb-2">
+                      <div>
+                        <p className={movimiento.cargos > 0 ? 'text-green-500 font-bold' : 'text-red-500 font-bold'}>
+                          {movimiento.cargos > 0 ? '+' : '-'}
+                          ${parseFloat(movimiento.cargos || movimiento.abonos).toLocaleString()}
+                        </p>
+                        <p className="text-gray-500">{movimiento.nombre_contacto}</p>
+                      </div>
+                      <div>
+                        <p className={`text-${movimiento.cargos > 0 ? 'green' : 'red'}-500`}>
+                          {movimiento.cargos > 0 ? 'Cargo' : 'Abono'}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex justify-center mt-8">
+                    <p className="text-gray-500">Sin movimientos</p>
+                  </div>
+                )}
               </div>
-            )}            
+
+              <div className="flex justify-end mt-4">
+                <button className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600">
+                  Ver cartolas
+                </button>
+              </div>
+
+              <div className="flex justify-between mt-4">
+                <p className="text-red-500">Últimos movimientos sin match: 7</p>
+                <button className="bg-customGreen text-white px-4 py-2 rounded">
+                  Match financiero
+                </button>
+              </div>
+            </div>
+          </div>
+
+            );
+          })
+          ) : (
+            <div className="flex items-center justify-center h-64">
+              <p className="text-gray-500 text-2xl text-center">
+                Aún no hay banco cargado
+              </p>
+            </div>
+        )}         
         </div>
 
         {isOpen && (

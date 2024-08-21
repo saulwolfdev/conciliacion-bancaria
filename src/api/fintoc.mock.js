@@ -979,3 +979,1395 @@ export const cartolas = {
     ],
     "totales": []
 }
+
+export const balance = {
+   data:{
+    "banco": {
+        "id": 114566,
+        "codigo": "014",
+        "nombre": "Banco Scotiabank",
+        "tipo": 3
+    },
+    "saldo_inicial": -14656185,
+    "saldo_banco": -15147445,
+    "saldo_uwigo": -15147445,
+    "diferencia": 0,
+    "moneda_id": 1,
+    "total_conciliar": 658,
+    "total_cargos": "-125562393.000000",
+    "total_abonos": "130735724.000000",
+    "total_anular": 43,
+    "cuenta_bancaria": {
+        "numero": "977063116",
+        "automatica": true,
+        "sincronizacion": "2024-08-20T14:34:38.739",
+        "cuenta_contable": {
+            "nombre": "Banco Scotiabank nro 977063116",
+            "codigo": "110205"
+        }
+    },
+    "saldos": {
+        "saldo_inicial": "-14656185.000000",
+        "saldo_final": "-15147445.000000",
+        "cargos": "20517505.000000",
+        "abonos": "20026245.000000"
+    }
+   }
+}
+
+//Mock Listar
+
+export const listar = {
+    data: [
+        {
+            "id": 1592769,
+            "fecha": "2024-08-01",
+            "cartola": 202408,
+            "descripcion": "TEF 11471927-7 Max Cummins D",
+            "comentario": "Medidor. Dpto A-L , El Golf.",
+            "referencia": "4217546310",
+            "rut_titular": "11.471.927-7",
+            "nombre_titular": "Max Cummins Ducci",
+            "monto": -150000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592766,
+            "fecha": "2024-08-01",
+            "cartola": 202408,
+            "descripcion": "eCOMMERCE MERPAGO GLOBALKER",
+            "comentario": null,
+            "referencia": "13025770",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -46560,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592767,
+            "fecha": "2024-08-01",
+            "cartola": 202408,
+            "descripcion": "TEF 12555901-8 Gabriel Eduardo",
+            "comentario": "Materiales acido Dpto A-L , El Golf",
+            "referencia": "4216321255",
+            "rut_titular": "12.555.901-8",
+            "nombre_titular": "Eduardo Gabriel Sanhueza Rubilar",
+            "monto": -13560,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592768,
+            "fecha": "2024-08-01",
+            "cartola": 202408,
+            "descripcion": "TEF  8713773-2 Cecilia Diaz Ps",
+            "comentario": "2 de 2 Psicologa Helicoptero",
+            "referencia": "4216323227",
+            "rut_titular": "8.713.773-2",
+            "nombre_titular": "Cecilia Ivonne Diaz Unanue",
+            "monto": -63000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592770,
+            "fecha": "2024-08-01",
+            "cartola": 202408,
+            "descripcion": "COBRO COMISION SCOTIAWEB",
+            "comentario": null,
+            "referencia": "4217893642",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -22359,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592765,
+            "fecha": "2024-08-01",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA CLUB DE GOLF LOS",
+            "comentario": null,
+            "referencia": "19996540",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -16060,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592771,
+            "fecha": "2024-08-02",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA CLUB DE GOLF LOS SAN",
+            "comentario": null,
+            "referencia": "",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -11330,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592772,
+            "fecha": "2024-08-02",
+            "cartola": 202408,
+            "descripcion": "GIRO REDBANC OTRO BANCO",
+            "comentario": null,
+            "referencia": "",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -200000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592773,
+            "fecha": "2024-08-02",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA SALONES HUGO GUERSAN",
+            "comentario": null,
+            "referencia": "",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -12000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1592774,
+            "fecha": "2024-08-02",
+            "cartola": 202408,
+            "descripcion": "eCOMMERCE MERPAGO RIGELSPA Las",
+            "comentario": null,
+            "referencia": "",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -22590,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600130,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 24025153-1 Felicia Corpora",
+            "comentario": "Aseo Ago 24  Cummins Arquitectos",
+            "referencia": "4225840164",
+            "rut_titular": "24.025.153-1",
+            "nombre_titular": "Felisia Ysabel Corporan",
+            "monto": -120000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600131,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 24025153-1 Felicia Corpora",
+            "comentario": "Aseo Jul 24",
+            "referencia": "4225850601",
+            "rut_titular": "24.025.153-1",
+            "nombre_titular": "Felisia Ysabel Corporan",
+            "monto": -120000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600132,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 24888425-8 Mirtha Lopez Ca",
+            "comentario": "Rem Jul 24 Casa Malaga",
+            "referencia": "4225839492",
+            "rut_titular": "24.888.425-8",
+            "nombre_titular": "Mirtha Gaby Lopez Sanchez",
+            "monto": -600000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600133,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 19128959-5 Humberto Chacan",
+            "comentario": "Rem Jul 24 Humberto Chacana",
+            "referencia": "4225839490",
+            "rut_titular": "19.128.959-5",
+            "nombre_titular": "Humberto Esteban Chacana Martinez",
+            "monto": -420000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600135,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF  6379466-K Patricia Hurtad",
+            "comentario": "Casa Malaga ago 24",
+            "referencia": "4225839488",
+            "rut_titular": "6.379.466-K",
+            "nombre_titular": "Maria Patricia Ana Hurtado Vargas",
+            "monto": -1500000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600134,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 25409362-9 Jesus Hidalgo",
+            "comentario": "Rem Jul 24  Jesus Hidalgo",
+            "referencia": "4225840162",
+            "rut_titular": "25.409.362-9",
+            "nombre_titular": "Jesus Alberto Hidalgo Gonzalez",
+            "monto": -750000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600137,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "IVA POR COMISION/CARGOS",
+            "comentario": null,
+            "referencia": "4226277550",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -1424,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600136,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "COMISION DEBITO INTERNACIONAL",
+            "comentario": null,
+            "referencia": "4226277549",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -7493,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600123,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA VILAPERT",
+            "comentario": null,
+            "referencia": "19420896",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -16940,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600124,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "eCOMME Inter. APPLE.COM/BILL",
+            "comentario": null,
+            "referencia": "55095244",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -8711,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600125,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 12555901-8 Gabriel Eduardo",
+            "comentario": "Materiales Dpto A-L , El Golf.",
+            "referencia": "4222496490",
+            "rut_titular": "12.555.901-8",
+            "nombre_titular": "Eduardo Gabriel Sanhueza Rubilar",
+            "monto": -50831,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600126,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "eCOMMERCE PAYU    UBER EATS",
+            "comentario": null,
+            "referencia": "14356404",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -18159,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600127,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "eCOMMERCE PAYU    UBER EATS",
+            "comentario": null,
+            "referencia": "14354387",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -15908,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600128,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA VILAPERT",
+            "comentario": null,
+            "referencia": "15139413",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -6820,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600129,
+            "fecha": "2024-08-05",
+            "cartola": 202408,
+            "descripcion": "TEF 77611846-K BM ABOGADOS LIM",
+            "comentario": "SIN USO",
+            "referencia": "166993509",
+            "rut_titular": "77.611.846-K",
+            "nombre_titular": "Bm Abogados Limitada",
+            "monto": 6450000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600148,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "TEF  4132304-3 Lavaseco Gertru",
+            "comentario": "Max Cummins D",
+            "referencia": "4227341852",
+            "rut_titular": "4.132.304-3",
+            "nombre_titular": "Sergio Gilberto Quiroz Iturralde",
+            "monto": -47500,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600138,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA VILAPERT",
+            "comentario": null,
+            "referencia": "19453592",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -15600,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600139,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA MACONLINE CASA CO",
+            "comentario": null,
+            "referencia": "22431012",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -119990,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600140,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA NUEVA COSTANERA 3",
+            "comentario": null,
+            "referencia": "23818668",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -1500,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600141,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA CASA COSTANERA LC",
+            "comentario": null,
+            "referencia": "23266894",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -13750,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600142,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA MALL CASA COSTANE",
+            "comentario": null,
+            "referencia": "22739337",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -1990,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600143,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA MAC",
+            "comentario": null,
+            "referencia": "21089364",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -27990,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600144,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA MALL CASA COSTANE",
+            "comentario": null,
+            "referencia": "22723689",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -4480,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600145,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "eCOMMERCE MERPAGO 2PRODUCTO",
+            "comentario": null,
+            "referencia": "13079086",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -58075,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600146,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "TEF 10030600-K Francisca Izqui",
+            "comentario": "Vespa. Rev n1 y n2.",
+            "referencia": "4227070181",
+            "rut_titular": "10.030.600-K",
+            "nombre_titular": "Francisca Izquierdo Herreros",
+            "monto": -92000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600147,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "TEF 77501872-0 Peluqueria Joah",
+            "comentario": "Max Cummins D.",
+            "referencia": "4227223642",
+            "rut_titular": "77.501.872-0",
+            "nombre_titular": "Vitruvio Spa",
+            "monto": -52000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600149,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "TEF 80565900-9 Yolito Balard H",
+            "comentario": "Pastelones acceso Dpto A-L , El Golf",
+            "referencia": "4227324025",
+            "rut_titular": "80.565.900-9",
+            "nombre_titular": "Yolito Balart Hermanos Limitada",
+            "monto": -616678,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600150,
+            "fecha": "2024-08-06",
+            "cartola": 202408,
+            "descripcion": "TEF 12555901-8 Gabriel Eduardo",
+            "comentario": "Materiales gabriel Dpto A-L , El Golf",
+            "referencia": "4227432830",
+            "rut_titular": "12.555.901-8",
+            "nombre_titular": "Eduardo Gabriel Sanhueza Rubilar",
+            "monto": -42458,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600151,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA CLUB DE GOLF LOS",
+            "comentario": null,
+            "referencia": "18155380",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -17490,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600152,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA NUEVA COSTANERA 3",
+            "comentario": null,
+            "referencia": "22843596",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -700,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600161,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "TEF 76927160-0 STUDIO GROUP SP",
+            "comentario": null,
+            "referencia": "4229666806",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": 255660,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600162,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "TEF 22290903-1 Mara Cummins H",
+            "comentario": "Mara Cummins H",
+            "referencia": "4230463820",
+            "rut_titular": "22.290.903-1",
+            "nombre_titular": "Mara Cummins Hurtado",
+            "monto": -25000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600153,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA MALL CASA COSTANE",
+            "comentario": null,
+            "referencia": "22135271",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -4280,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600154,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA MIGO COSTANERA",
+            "comentario": null,
+            "referencia": "21291780",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -19800,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600155,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA FLORES DE OCOA",
+            "comentario": null,
+            "referencia": "20985948",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -55961,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600156,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA ERIC KAYSER EL GO",
+            "comentario": null,
+            "referencia": "23704471",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -3200,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600157,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "PAC SEGUROS DE SALUD     30045",
+            "comentario": null,
+            "referencia": "4229368799",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -194628,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600158,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA CLINICA ALEMANA S",
+            "comentario": null,
+            "referencia": "11289844",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -88582,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600159,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "eCOMMERCE PAYU    UBER EATS",
+            "comentario": null,
+            "referencia": "8887495",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -40000,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },
+        {
+            "id": 1600160,
+            "fecha": "2024-08-07",
+            "cartola": 202408,
+            "descripcion": "REDCOMPRA C. VERDE C. COLON",
+            "comentario": null,
+            "referencia": "14962043",
+            "rut_titular": null,
+            "nombre_titular": null,
+            "monto": -19615,
+            "transaccion": "",
+            "estado": "Sin Conciliar",
+            "estado_id": 4,
+            "moneda_id": 1,
+            "editar": false,
+            "es_match": false,
+            "es_manual": false,
+            "es_periodo": false,
+            "detalle": {
+                "cartola": [],
+                "comprobante": []
+            },
+            "cuenta_corriente": {
+                "id": 7399,
+                "nombre": "Banco Scotiabank - 977063116"
+            }
+        },   
+    ]
+}

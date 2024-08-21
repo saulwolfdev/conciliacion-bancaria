@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from 'next/navigation';
 import { getFintoc } from "@fintoc/fintoc-js";
 import { sendPostRequest } from "@/api/fintoc.api";
 import { dashboard } from "@/api/fintoc.mock";
@@ -19,6 +20,11 @@ const MatchFinanciero = () => {
   const [lineCredit, setLineCredit] = useState(null);
   const [dataDashboard, setDataDashboard] = useState([]);
   const dropdownRef = useRef(null);
+  const router = useRouter();
+
+  const handleVerCartolas = () => {
+    router.push('/dashboard/matchfinanciero/cartolas'); 
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -262,7 +268,7 @@ const MatchFinanciero = () => {
                         <div>
                           <h2 className="text-2xl text-blue-700">
                             {currencySymbol === "CLP" ? "$" : "U$"}
-                            {(account.linea_credito || 0).toLocaleString()}
+                            {(account.linea_credito.saldo_total || 0).toLocaleString()}
                           </h2>
                           <p className="text-gray-400">Saldo línea de crédito</p>
                         </div>
@@ -333,14 +339,20 @@ const MatchFinanciero = () => {
               </div>
 
               <div className="flex justify-end mt-4">
-                <button className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600">
+                <button
+                onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos')}
+                className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600"
+                >
                   Ver cartolas
                 </button>
               </div>
 
               <div className="flex justify-between mt-4">
                 <p className="text-red-500">Últimos movimientos sin match: 7</p>
-                <button className="bg-customGreen text-white px-4 py-2 rounded">
+                <button 
+                onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=match')}
+                className="bg-customGreen text-white px-4 py-2 rounded"
+                >
                   Match financiero
                 </button>
               </div>

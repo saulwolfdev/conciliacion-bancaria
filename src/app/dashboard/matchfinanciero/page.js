@@ -209,8 +209,7 @@ const MatchFinanciero = () => {
         change: ' ' 
       },
       { 
-        name: 'Euros', 
-        // Asignar el valor formateado a una variable
+        name: 'Euros',         
         value: (0).toLocaleString("es-CL", { style: "currency", currency: "EUR" }), 
         change: ' ' 
       },
@@ -257,8 +256,8 @@ const MatchFinanciero = () => {
           </button>
         </div> 
 
-        <div className="flex flex-col mt-6 space-y-4">          
-        {filteredAccounts.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">        
+         {filteredAccounts.length > 0 ? (
           dataDashboard.map((account) => {    
             const currencySymbol = account.moneda === 1 ? "CLP" : "USD";
             const balance = account.monto_disponible;
@@ -280,8 +279,9 @@ const MatchFinanciero = () => {
                         </h2>
                         <p className="text-gray-400">Saldo disponible</p>
                       </div>
-                      <div className="flex justify-between space-x-6">
-                        <div className="mr-20">
+                      
+                      <div className="flex flex-col space-y-4 md:flex-row md:space-x-6 items-center"> 
+                        <div className="mr-12 mt-4 md:mr-0">
                           <h2 className="text-2xl text-blue-700">
                             {currencySymbol === "CLP" ? "$" : "U$"}
                             {account.monto_contable.toLocaleString()}
@@ -335,63 +335,65 @@ const MatchFinanciero = () => {
                     </div>
                   </div>
 
-              <h4 className="text-gray-700 font-semibold mb-2">Últimos movimientos</h4>
-              <div className="bg-white shadow-lg p-4 mt-4 rounded h-32 overflow-y-hide">
-                {account.movimientos.length > 0 ? (
-                  account.movimientos.map((movimiento, index) => (
-                    <div key={index} className="flex justify-between mb-2">
-                      <div>
-                        <p className={movimiento.cargos > 0 ? 'text-green-500 font-bold' : 'text-red-500 font-bold'}>
-                          {movimiento.cargos > 0 ? '+' : '-'}
-                          ${parseFloat(movimiento.cargos || movimiento.abonos).toLocaleString()}
-                        </p>
-                        <p className="text-gray-500">{movimiento.nombre_contacto}</p>
+                <h4 className="text-gray-700 font-semibold mb-2">Últimos movimientos</h4>
+                <div className="bg-white shadow-lg p-4 mt-4 rounded h-40 overflow-y-hide">
+                  {account.movimientos.length > 0 ? (
+                    account.movimientos.map((movimiento, index) => (
+                      <div key={index} className="flex justify-between mb-2">
+                        <div>
+                          <p className={movimiento.cargos > 0 ? 'text-green-500 font-bold' : 'text-red-500 font-bold'}>
+                            {movimiento.cargos > 0 ? '+' : '-'}
+                            ${parseFloat(movimiento.cargos || movimiento.abonos).toLocaleString()}
+                          </p>
+                          <p className="text-gray-500">{movimiento.nombre_contacto}</p>
+                        </div>
+                        <div>
+                          <p className={`text-${movimiento.cargos > 0 ? 'green' : 'red'}-500`}>
+                            {movimiento.cargos > 0 ? 'Cargo' : 'Abono'}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className={`text-${movimiento.cargos > 0 ? 'green' : 'red'}-500`}>
-                          {movimiento.cargos > 0 ? 'Cargo' : 'Abono'}
-                        </p>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="flex justify-center mt-8">
+                      <p className="text-gray-500">Sin movimientos</p>
                     </div>
-                  ))
-                ) : (
-                  <div className="flex justify-center mt-8">
-                    <p className="text-gray-500">Sin movimientos</p>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <div className="flex justify-end mt-4">
-                <button
-                onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos')}
-                className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600"
-                >
-                  Ver cartolas
-                </button>
-              </div>
+                <div className="flex justify-end mt-4">
+                  <button
+                  onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos')}
+                  className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600"
+                  >
+                    Ver cartolas
+                  </button>
+                </div>
 
-              <div className="flex justify-between mt-4">
-                <p className="text-red-500">Últimos movimientos sin match: 7</p>
-                <button 
-                onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=match')}
-                className="bg-customGreen text-white px-4 py-2 rounded"
-                >
+                <div className="flex justify-between mt-4">
+                  <p className="text-red-500">Últimos movimientos sin match: 7</p>
+                  <button 
+                  onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=match')}
+                    className="bg-customGreen text-white px-4 py-2 rounded"
+                  >
                   Match financiero
-                </button>
-              </div>
-            </div>
-          </div>
+                  </button>
+                    </div>
+                  </div>
+                </div>
 
-            );
-          })
-          ) : (
-            <div className="flex items-center justify-center h-64">
-              <p className="text-gray-500 text-2xl text-center">
-                Aún no hay banco cargado
-              </p>
-            </div>
-        )}         
-        </div>
+                  );
+                })
+                ) : (
+                  <div className="col-span-1 md:col-span-2 flex flex-col mt-6 space-y-4">
+                    <div className="flex items-center justify-center h-64">
+                      <p className="text-gray-500 text-2xl text-center">
+                        Aún no hay banco cargado
+                      </p>
+                    </div>
+                  </div>
+                )}         
+              </div>
 
         {isOpen && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">

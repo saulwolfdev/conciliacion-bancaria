@@ -175,46 +175,50 @@ const Cartolas = () => {
             </div>
           </div>
          
-          <div className="flex items-center justify-between mt-4">
-            <span className="text-sm text-gray-700">
-              Mostrando {(currentPage - 1) * itemsPerPage + 1} a{" "}
-              {Math.min(currentPage * itemsPerPage, dataListar?.length)} de{" "}
-              {dataListar?.length} registros
-            </span>
-            <div className="inline-flex -space-x-px">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
-                aria-label="Anterior"
-              >
-                Anterior
-              </button>
-              {[...Array(totalPages)].map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handlePageChange(index + 1)}
-                  className={`px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 
-                ${
-                  currentPage === index + 1
-                    ? "bg-white border-gray-400 text-black shadow-md"
-                    : "bg-white text-gray-500"
-                }`}
-                  aria-label={`Página ${index + 1}`}
-                >
-                  {index + 1}
-                </button>
-              ))}
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
-                aria-label="Próximo"
-              >
-                Próximo
-              </button>
-            </div>
-          </div>
+          <div className="flex flex-col gap-4 mt-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col items-center md:items-start">       
+        <span className="text-sm text-gray-700">
+          Mostrando {(currentPage - 1) * itemsPerPage + 1} a{" "}
+          {Math.min(currentPage * itemsPerPage, dataListar?.length)} de{" "}
+          {dataListar?.length} registros
+        </span>
+      </div>
+      <div className="flex flex-col items-center md:inline-flex md:-space-x-px">         
+        <div className="flex justify-center">           
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+            aria-label="Anterior"
+          >
+            Anterior
+          </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 
+              ${
+                currentPage === index + 1
+                  ? "bg-white border-gray-400 text-black shadow-md"
+                  : "bg-white text-gray-500"
+              }`}
+              aria-label={`Página ${index + 1}`}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+            aria-label="Próximo"
+          >
+            Próximo
+          </button>
+        </div>
+      </div>
+    </div>
         </div>
       ),
     },
@@ -235,7 +239,7 @@ const Cartolas = () => {
   };
 
   return (
-    <>
+    <div className="container md:w-1/1 md:px-16"> 
       <Tabs
         tabs={tabs} 
         defaultTab={activeTab} 
@@ -244,7 +248,7 @@ const Cartolas = () => {
       <div>
         {tabs.find((tab) => tab.name === activeTab)?.content}
       </div>
-    </>
+    </div>
   );
 };
 

@@ -190,6 +190,33 @@ const MatchFinanciero = () => {
     setIsOpen(true); 
   };
 
+  const stats = dataDashboard && dataDashboard.length > 0
+  ? [
+      { 
+        name: 'Pesos', 
+        value: dataDashboard
+          .filter(account => account.moneda === 1)
+          .reduce((acc, account) => acc + account.monto_disponible, 0)
+          .toLocaleString("es-CL", { style: "currency", currency: "CLP" }),
+        change: ' ' 
+      },
+      { 
+        name: 'Dolares', 
+        value: dataDashboard
+          .filter(account => account.moneda === 2)
+          .reduce((acc, account) => acc + account.monto_disponible, 0)
+          .toLocaleString("es-CL", { style: "currency", currency: "USD" }), 
+        change: ' ' 
+      },
+      { 
+        name: 'Euros', 
+        // Asignar el valor formateado a una variable
+        value: (0).toLocaleString("es-CL", { style: "currency", currency: "EUR" }), 
+        change: ' ' 
+      },
+    ]
+  : [];
+
   return (
     <>      
       <AccountsModal
@@ -201,38 +228,34 @@ const MatchFinanciero = () => {
         lineOfCredit={lineCredit}
       />
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-4">
-          <div className="grid grid-cols-3 gap-4 flex-grow">
-            <div className="bg-white shadow-md rounded p-4 text-center">
-              <h2 className="text-2xl font-bold text-blue-700">                
-                {`$${dataDashboard
-                  .filter(account => account.moneda === 1)
-                  .reduce((acc, account) => acc + account.monto_disponible, 0)
-                  .toLocaleString()}`}
-              </h2>
-              <p className="text-gray-500">Saldo Consolidado Pesos</p>
-            </div>
-            <div className="bg-white shadow-md rounded p-4 text-center">
-              <h2 className="text-2xl font-bold text-blue-700">
-                {`$${dataDashboard
-                  .filter(account => account.moneda === 2)
-                  .reduce((acc, account) => acc + account.monto_disponible, 0)
-                  .toLocaleString()}`}
-              </h2>
-              <p className="text-gray-500">Saldo Consolidado Dolares</p>
-            </div>
-            <div className="bg-white shadow-md rounded p-4 text-center">
-              <h2 className="text-2xl font-bold text-blue-700">$0</h2>
-              <p className="text-gray-500">Saldo Consolidado Euros</p>
-            </div>
+        <div className="flex flex-col justify-between items-center mb-4 sm:flex-row"> 
+          <div className="grid grid-cols-1 gap-4 flex-grow md:grid-cols-3 sm:grid-cols-1 mb-4">
+            {stats.map((stat) => (
+              stat.value !== undefined && (
+                <div
+                  key={stat.name}
+                  className="bg-white shadow-md rounded p-4 text-center"
+                >
+                  <div className="flex flex-col items-center">
+                    <h2 className="text-4xl font-bold text-blue-700">
+                      {stat.value}
+                    </h2>
+                    <p className="text-gray-500 mt-2">
+                      Saldo Consolidado {stat.name}
+                    </p>
+                  </div>
+                </div>
+              )
+            ))}
           </div>
+
           <button
-            className="bg-customGreen text-white p-2 rounded h-full ml-4"
+            className="bg-customGreen text-white p-2 rounded h-full ml-4 sm:ml-4" 
             onClick={() => setIsOpen(true)}
           >
             Nuevo Banco
           </button>
-        </div>
+        </div> 
 
         <div className="flex flex-col mt-6 space-y-4">          
         {filteredAccounts.length > 0 ? (

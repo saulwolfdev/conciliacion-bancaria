@@ -13,6 +13,15 @@ const Cartolas = () => {
   const [activeTab, setActiveTab] = useState(tabFromUrl || "movimientos");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 25;
+  
+  const stats = dataBalance && dataBalance.saldos 
+  ? [
+      { name: 'Saldo Inicial', value: dataBalance.saldos.saldo_inicial.toLocaleString("es-CL", { style: "currency", currency: "CLP" }), change: ' ' },
+      { name: 'Saldo Final', value: dataBalance.saldos.saldo_final.toLocaleString("es-CL", { style: "currency", currency: "CLP" }), change: ' ' },
+      { name: 'Cargos', value: dataBalance.saldos.cargos.toLocaleString("es-CL", { style: "currency", currency: "CLP" }), change: ' ' },
+      { name: 'Abonos', value: dataBalance.saldos.abonos.toLocaleString("es-CL", { style: "currency", currency: "CLP" }), change: ' ' },
+    ]
+  : [];
 
   useEffect(() => {
     if (tabFromUrl) {
@@ -65,50 +74,27 @@ const Cartolas = () => {
 
   const tabs = [
     {
-      id: "movimientos",
+      name: "movimientos",
       label: "Movimientos",
       content: (
         <div>
           {dataBalance && dataBalance.saldos && (
             <div className="mt-4">
-              <div className="flex justify-around">
-                <span className="text-gray-500">
-                  Saldo Inicial:{" "}
-                  <span className="font-bold">
-                    {parseInt(dataBalance.saldos.saldo_inicial).toLocaleString("es-CL", {
-                      style: "currency",
-                      currency: "CLP",
-                    })}
-                  </span>
-                </span>
-                <span className="text-gray-500">
-                  Saldo Final:{" "}
-                  <span className="font-bold">
-                    {parseInt(dataBalance.saldos.saldo_final).toLocaleString("es-CL", {
-                      style: "currency",
-                      currency: "CLP",
-                    })}
-                  </span>
-                </span>
-                <span className="text-gray-500">
-                  Cargos:{" "}
-                  <span className="font-bold">
-                    {parseInt(dataBalance.saldos.cargos).toLocaleString("es-CL", {
-                      style: "currency",
-                      currency: "CLP",
-                    })}
-                  </span>
-                </span>
-                <span className="text-gray-500">
-                  Abonos:{" "}
-                  <span className="font-bold">
-                    {parseInt(dataBalance.saldos.abonos).toLocaleString("es-CL", {
-                      style: "currency",
-                      currency: "CLP",
-                    })}
-                  </span>
-                </span>
-              </div>
+              <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 lg:grid-cols-4">
+                {stats.map((stat) => (
+                  stat.value !== undefined && (
+                    <div
+                      key={stat.name}
+                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 bg-white px-4 py-4 sm:px-6 xl:px-8"
+                    >
+                      <dt className="text-sm font-medium leading-6 text-gray-500">{stat.name}</dt>
+                      <dd className="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900">                       
+                        {parseFloat(stat.value).toLocaleString("es-CL", { style: "currency", currency: "CLP" })}
+                      </dd>
+                    </div>
+                  )
+                ))}
+              </dl>
             </div>
           )}
           <div className="mt-6">
@@ -231,18 +217,33 @@ const Cartolas = () => {
       ),
     },
     {
-      id: "match",
+      name: "match",
       label: "Match Financieros",
       content: <div>Contenido de Match Financieros</div>,
     },
     {
-      id: "anular",
+      name: "anular",
       label: "Anular Movimientos",
       content: <div>Contenido de Anular Movimientos</div>,
     },
   ];
 
-  return <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />;
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+  };
+
+  return (
+    <>
+      <Tabs
+        tabs={tabs} 
+        defaultTab={activeTab} 
+        onTabChange={handleTabChange}
+      />
+      <div>
+        {tabs.find((tab) => tab.name === activeTab)?.content}
+      </div>
+    </>
+  );
 };
 
 export default Cartolas;

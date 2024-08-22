@@ -98,6 +98,7 @@ const Cartolas = () => {
             </div>
           )}
           <div className="mt-6">
+          <div className="container overflow-x-auto">
             <table className="min-w-full border border-gray-200">
               <thead className="bg-red-50">
                 <tr>
@@ -128,7 +129,7 @@ const Cartolas = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentData.map((item, index) => (
+                {currentData.map((item, index) => (                  
                   <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-1 whitespace-nowrap text-gray-600 text-sm">
                       {item.fecha.split("-").reverse().join("/")}
@@ -171,6 +172,7 @@ const Cartolas = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
          
           <div className="flex items-center justify-between mt-4">

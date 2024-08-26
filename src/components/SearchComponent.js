@@ -1,36 +1,46 @@
 "use client";
 import React, { useState } from 'react';
 
-const SearchComponent = ({ data, label, inputId, onSearch }) => {
+const SearchComponent = ({ data, label, inputId, onSearch, searchType }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-    if (event.target.value.trim() === '') {      
-      onSearch(data); 
-    } else {      
-      const filteredData = data?.filter((item) => {       
-        switch (true) {
-          case item.fecha && item.fecha.toLowerCase().includes(searchTerm.toLowerCase()):
-            return true;
-          case item.rut_titular.toLowerCase().includes(searchTerm.toLowerCase()):
-            return true;
-          case item.nombre_titular.toLowerCase().includes(searchTerm.toLowerCase()):
-            return true;
-          case item.descripcion.toLowerCase().includes(searchTerm.toLowerCase()):
-            return true;
-          case item.referencia.toLowerCase().includes(searchTerm.toLowerCase()):
-            return true;
-          case item.monto.toString().includes(searchTerm):
-            return true;
-          case item.estado.toLowerCase().includes(searchTerm.toLowerCase()):
-            return true;
-          default:
-            return false; 
-        }
-      });
-      onSearch(filteredData); 
+    let value = event.target.value;
+    if (searchType === 'monto') {     
+      value = value.replace(/[^0-9,]/g, '');
+      value = formatNumber(value);
     }
+    setSearchTerm(value);
+
+    if (value.trim() === '') {
+      onSearch(data);
+    } else {
+      const filteredData = data?.filter((item) => {
+        if (searchType === 'general') {
+          return (
+            (item.fecha && item.fecha.toLowerCase().includes(value.toLowerCase())) ||
+            (item.rut_titular && item.rut_titular.toLowerCase().includes(value.toLowerCase())) ||
+            (item.nombre_titular && item.nombre_titular.toLowerCase().includes(value.toLowerCase())) ||
+            (item.descripcion && item.descripcion.toLowerCase().includes(value.toLowerCase())) ||
+            (item.referencia && item.referencia.toLowerCase().includes(value.toLowerCase())) ||
+            (item.monto && item.monto.toString().includes(value)) ||
+            (item.estado && item.estado.toLowerCase().includes(value.toLowerCase()))
+          );
+        } else if (searchType === 'monto') {
+          return item.monto && item.monto.toString().includes(value.replace(/\./g, '').replace(',', '.'));
+        }
+        return false;
+      });
+      onSearch(filteredData);
+    }
+  };
+
+  const formatNumber = (num) => {
+    if (!num) return '';    
+    num = num.replace(/\./g, '');    
+    const parts = num.split(',');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return parts.join(',');
   };
 
   return (
@@ -43,9 +53,10 @@ const SearchComponent = ({ data, label, inputId, onSearch }) => {
           id={inputId}
           value={searchTerm}
           onChange={handleSearch}
-          className="block w-full rounded-md border-0 py-1.5 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />        
-      </div>      
+          className={`block w-full rounded-md border-0 py-1.5 ${searchType === 'monto' ? 'pr-2 text-right' : 'pl-2 pr-14'} text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+          placeholder={searchType === 'monto' ? '0,00' : 'Búsqueda libre'}
+        />
+      </div>
     </div>
   );
 };

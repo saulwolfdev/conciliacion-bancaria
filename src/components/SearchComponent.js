@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from 'react';
 
-const SearchComponent = ({ data, label, inputId, onSearch, searchType }) => {
+const SearchComponent = ({ data, label, inputId, onSearch, searchType, searchSign }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (event) => {
     let value = event.target.value;
     if (searchType === 'monto') {     
-      value = value.replace(/[^0-9,]/g, '');
+      value = value.replace(/[^0-9,-]/g, '');
       value = formatNumber(value);
     }
     setSearchTerm(value);
@@ -27,7 +27,14 @@ const SearchComponent = ({ data, label, inputId, onSearch, searchType }) => {
             (item.estado && item.estado.toLowerCase().includes(value.toLowerCase()))
           );
         } else if (searchType === 'monto') {
-          return item.monto && item.monto.toString().includes(value.replace(/\./g, '').replace(',', '.'));
+          const formattedValue = value.replace(/\./g, '').replace(',', '.');
+          if (searchSign === 'positive') {
+            return item.monto && item.monto.toString().includes(formattedValue) && !item.monto.toString().startsWith('-');
+          } else if (searchSign === 'negative') {
+            return item.monto && item.monto.toString().includes(formattedValue) && item.monto.toString().startsWith('-');
+          } else {
+            return item.monto && item.monto.toString().includes(formattedValue);
+          }
         }
         return false;
       });

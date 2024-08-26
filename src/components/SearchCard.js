@@ -17,10 +17,10 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
           <SearchComponent data={dataListar} label="Búsqueda libre" inputId="search-free" onSearch={handleSearch} searchType="general"/>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <SearchComponent data={dataListar} label="Monto mínimo" inputId="search-min" onSearch={handleSearch} searchType="monto" />
+          <SearchComponent data={dataListar} label="Monto mínimo" inputId="search-min" onSearch={handleSearch} searchType="monto" searchSign="positive"/>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <SearchComponent data={dataListar} label="Monto máximo" inputId="search-max" onSearch={handleSearch} searchType="monto"/>
+          <SearchComponent data={dataListar} label="Monto máximo" inputId="search-max" onSearch={handleSearch} searchType="monto" searchSign="negative"/>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
           <SearchComponent data={dataListar} label="Fecha Inicio" inputId="search-start-date" onSearch={handleSearch} />

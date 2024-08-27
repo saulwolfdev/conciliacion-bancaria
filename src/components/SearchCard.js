@@ -1,13 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchComponent from "@/components/SearchComponent";
 
-const SearchCard = ({ onSearchChange, dataListar }) => {
-    const [filteredData, setFilteredData] = useState([]);
+const SearchCard = ({ onSearchChange, dataListar }) => {  
+  // const [filteredData, setFilteredData] = useState(dataListar);
+  const [minAmount, setMinAmount] = useState('');
+  const [maxAmount, setMaxAmount] = useState('');
 
-    const handleSearch = (filteredItems) => {
-      setFilteredData(filteredItems);
-      onSearchChange(filteredItems);
-    };
+  useEffect(() => {
+    handleSearch();
+  }, [minAmount, maxAmount]);
+
+  const handleSearch = (filteredData) => {
+    let filteredItems = filteredData || dataListar;
+  
+    const min = parseFloat(minAmount.replace(/\./g, '').replace(',', '.')) || -Infinity;
+    const max = parseFloat(maxAmount.replace(/\./g, '').replace(',', '.')) || Infinity;
+  
+    if (minAmount) {
+      filteredItems = filteredItems.filter(item => {
+        const absMonto = Math.abs(parseFloat(item.monto));
+        return absMonto >= Math.abs(min);
+      });
+    }
+  
+    if (maxAmount) {
+      filteredItems = filteredItems.filter(item => {
+        const absMonto = Math.abs(parseFloat(item.monto));
+        return absMonto <= Math.abs(max);
+      });
+    }
+  
+    onSearchChange(filteredItems);
+  };
+
+  const handleMinAmountChange = (value) => {
+    setMinAmount(value);
+  };
+
+  const handleMaxAmountChange = (value) => {
+    setMaxAmount(value);
+  };
 
   return (
     <div className="bg-white p-6 shadow-md rounded-lg mt-6 mb-4">
@@ -17,10 +49,22 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
           <SearchComponent data={dataListar} label="Búsqueda libre" inputId="search-free" onSearch={handleSearch} searchType="general"/>
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <SearchComponent data={dataListar} label="Monto mínimo" inputId="search-min" onSearch={handleSearch} searchType="monto" searchSign="positive"/>
+          <SearchComponent
+              label="Monto mínimo"
+              inputId="search-min"
+              onSearch={handleMinAmountChange}
+              searchType="amount"
+              amountType="min"
+            />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <SearchComponent data={dataListar} label="Monto máximo" inputId="search-max" onSearch={handleSearch} searchType="monto" searchSign="negative"/>
+          <SearchComponent
+              label="Monto máximo"
+              inputId="search-max"
+              onSearch={handleMaxAmountChange}
+              searchType="amount"
+              amountType="max"
+            />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
           <SearchComponent data={dataListar} label="Fecha Inicio" inputId="search-start-date" onSearch={handleSearch} />

@@ -79,44 +79,10 @@ const Cartolas = () => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = listar;
-  //       setDataListar(data.data);
-  //       console.log("Datos listar:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);  
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            cuenta_bancaria_id: 10,
-            fecha_inicio: "",
-            fecha_termino: "",
-            descripcion: "",
-            monto_minimo: "",
-            monto_maximo: "",
-            estados: [1, 2, 3]
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('La solicitud falló');
-        }
-
-        const data = await response.json();
+        const data = listar;
         setDataListar(data.data);
         console.log("Datos listar:", data);
       } catch (error) {
@@ -127,9 +93,45 @@ const Cartolas = () => {
     fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //             cuenta_bancaria_id: 10,
+  //             fecha_inicio: "",
+  //             fecha_termino: "",
+  //             descripcion: "",
+  //             monto_minimo: "",
+  //             monto_maximo: "",
+  //             estados: [1, 2, 3],
+  //           }),
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("La solicitud falló");
+  //       }
+
+  //       const data = await response.json();
+  //       setDataListar(data.data);
+  //       console.log("Datos listar:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     if (dataListar) {
-      setFilteredData(dataListar); 
+      setFilteredData(dataListar);
     }
   }, [dataListar]);
 
@@ -214,8 +216,8 @@ const Cartolas = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>                  
-                  {(filteredData.length > 0
+                <tbody>
+                  {(filteredData?.length > 0
                     ? filteredData.slice(
                         (currentPage - 1) * itemsPerPage,
                         currentPage * itemsPerPage
@@ -278,10 +280,13 @@ const Cartolas = () => {
                       </td>
                       <td className="px-6 py-2 whitespace-nowrap text-sm"></td>
                     </tr>
-                  ))}                  
-                  {filteredData.length === 0 && (
+                  ))}
+                  {filteredData?.length === 0 && (
                     <tr>
-                      <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
+                      <td
+                        colSpan={8}
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
                         No se encontraron resultados.
                       </td>
                     </tr>
@@ -300,17 +305,19 @@ const Cartolas = () => {
               </span>
             </div>
             <div className="flex flex-col items-center md:inline-flex md:-space-x-px">
-              <div className="flex justify-center">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
-                  aria-label="Anterior"
-                >
-                  Anterior
-                </button>
-                {[...Array(Math.ceil(filteredData.length / itemsPerPage))].map(
-                  (_, index) => (
+              {filteredData && filteredData.length > 0 && (
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+                    aria-label="Anterior"
+                  >
+                    Anterior
+                  </button>
+                  {[
+                    ...Array(Math.ceil(filteredData.length / itemsPerPage)),
+                  ].map((_, index) => (
                     <button
                       key={index}
                       onClick={() => handlePageChange(index + 1)}
@@ -320,24 +327,24 @@ const Cartolas = () => {
                           ? "bg-white border-gray-400 text-black shadow-md"
                           : "bg-white text-gray-500"
                       }`}
-                             aria-label={`Página ${index + 1}`}
-                            >
-                              {index + 1}
-                            </button>
-                          )
-                        )}
-                    <button
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={
-                        currentPage ===
-                        Math.ceil(filteredData.length / itemsPerPage)
-                      }
-                      className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
-                      aria-label="Próximo"
+                      aria-label={`Página ${index + 1}`}
                     >
-                      Próximo
+                      {index + 1}
                     </button>
-              </div>
+                  ))}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={
+                      currentPage ===
+                      Math.ceil(filteredData.length / itemsPerPage)
+                    }
+                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+                    aria-label="Próximo"
+                  >
+                    Próximo
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

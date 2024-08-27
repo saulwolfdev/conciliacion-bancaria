@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import SearchComponent from "@/components/SearchComponent";
+import SearchComponent from "@/components/SearchComponent";  
+import DateSearchComponent from "@/components/DateSearchComponent"; 
 
 const SearchCard = ({ onSearchChange, dataListar }) => {  
-  // const [filteredData, setFilteredData] = useState(dataListar);
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
+  const [filteredData, setFilteredData] = useState(dataListar);
 
   useEffect(() => {
     handleSearch();
@@ -30,6 +31,7 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
       });
     }
   
+    setFilteredData(filteredItems);
     onSearchChange(filteredItems);
   };
 
@@ -39,6 +41,10 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
 
   const handleMaxAmountChange = (value) => {
     setMaxAmount(value);
+  };
+
+  const handleDateSearch = (filteredItems) => {
+    handleSearch(filteredItems);
   };
 
   return (
@@ -67,10 +73,22 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
             />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <SearchComponent data={dataListar} label="Fecha Inicio" inputId="search-start-date" onSearch={handleSearch} />
+          <DateSearchComponent
+            data={dataListar}
+            label="Fecha Inicio"
+            inputId="date-search-start"
+            onSearch={handleDateSearch}
+            type="start"
+          />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <SearchComponent data={dataListar} label="Fecha Término" inputId="search-end-date" onSearch={handleSearch} />
+          <DateSearchComponent
+            data={dataListar}
+            label="Fecha Término"
+            inputId="date-search-end"
+            onSearch={handleDateSearch}
+            type="end"
+          />
         </div>
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
           <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">Estados</label>

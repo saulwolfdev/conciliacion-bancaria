@@ -1,40 +1,57 @@
-"use client";
-import React, { useState, useEffect } from 'react';
-import DatePicker, { registerLocale } from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import es from 'date-fns/locale/es';
+import React, { useState } from 'react';
+import Datepicker from 'react-tailwindcss-datepicker';
 
-registerLocale('es', es);
+const DateSearchComponent = ({ data, label, inputId, onSearch }) => {
+  const [value, setValue] = useState({ startDate: null, endDate: null });
 
-const DateSearchComponent = ({ data, label, inputId, onSearch, type }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const handleValueChange = (newValue) => {
+    let startDate = newValue.startDate ? new Date(newValue.startDate) : null;
+    const endDate = newValue.endDate ? new Date(newValue.endDate) : null;
 
-  useEffect(() => {
-    if (selectedDate) {
-      handleSearch();
+    const uiStartDate = new Date(startDate);
+
+    if (startDate) {
+      startDate.setDate(startDate.getDate() - 1);
     }
-  }, [selectedDate]);
 
-  const handleSearch = () => {
+    console.log('Start Date (UI):', uiStartDate);
+    console.log('Start Date (Filtro):', startDate);
+
+    console.log('End Date:', endDate);
+
+    setValue({ startDate: uiStartDate, endDate });
+
     const filteredData = data?.filter((item) => {
       const itemDate = new Date(item.fecha);
-      return type === 'start' ? itemDate >= selectedDate : itemDate <= selectedDate;
+      console.log('Item Date:', itemDate);
+
+      return (startDate ? itemDate >= startDate : true) && (endDate ? itemDate <= endDate : true);
     });
 
+    console.log('Filtered Data:', filteredData);
     onSearch(filteredData);
   };
 
   return (
     <div>
       <label htmlFor={inputId} className="block text-sm font-medium leading-6 text-gray-900">{label}</label>
-      <div className="relative mt-2 flex items-center">
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          placeholderText={type === 'start' ? "Fecha Inicio" : "Fecha Término"}
-          dateFormat="dd/MM/yyyy"
-          locale="es"
-          className="block w-full rounded-md border-0 py-1.5 pl-2 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      <div className="relative mt-1 flex items-center">
+        <Datepicker
+          primaryColor={"green"}
+          value={value}
+          onChange={handleValueChange}
+          placeholderText="Selecciona una fecha"
+          displayFormat="DD/MM/YYYY"          
+          inputClassName="w-full rounded-md border border-gray-300 py-2 pl-2 pr-14 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          popperPlacement="bottom-start"
+          popperModifiers={[
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 10],
+              },
+            },
+          ]}
         />
       </div>
     </div>

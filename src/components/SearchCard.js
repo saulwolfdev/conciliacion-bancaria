@@ -72,24 +72,15 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
               amountType="max"
             />
         </div>
-        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
+        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 px-2 mb-4">
           <DateSearchComponent
             data={dataListar}
-            label="Fecha Inicio"
+            label="Fecha: Inicio ~ Termino"
             inputId="date-search-start"
             onSearch={handleDateSearch}
             type="start"
           />
-        </div>
-        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
-          <DateSearchComponent
-            data={dataListar}
-            label="Fecha Término"
-            inputId="date-search-end"
-            onSearch={handleDateSearch}
-            type="end"
-          />
-        </div>
+        </div>       
         <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/6 px-2 mb-4">
           <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">Estados</label>
           <select id="status" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
@@ -97,6 +88,7 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
           </select>
         </div>
       </div>
+      
     </div>
   );
 };

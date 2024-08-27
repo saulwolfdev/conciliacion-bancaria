@@ -257,7 +257,7 @@ const MatchFinanciero = () => {
         </div> 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">        
-         {filteredAccounts.length > 0 ? (
+         {dataDashboard.length > 0 ? (
           dataDashboard.map((account) => {    
             const currencySymbol = account.moneda === 1 ? "CLP" : "USD";
             const balance = account.monto_disponible;
@@ -269,10 +269,10 @@ const MatchFinanciero = () => {
                       <h3 className="text-red-600 text-xl font-bold">
                         {account.banco.nombre}
                       </h3>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-gray-600 mb-2">
                         N° {account.numero}
                       </p>
-                      <div className="mb-6">
+                      <div className="mb-2">
                         <h2 className="text-3xl font-bold text-blue-700">
                           {currencySymbol === "CLP" ? "$" : "U$"}
                           {balance.toLocaleString()}
@@ -335,8 +335,8 @@ const MatchFinanciero = () => {
                     </div>
                   </div>
 
-                <h4 className="text-gray-700 font-semibold mb-2">Últimos movimientos</h4>
-                <div className="bg-white shadow-lg p-4 mt-4 rounded h-40 overflow-y-hide">
+                <h4 className="text-gray-700 font-semibold mb-0">Últimos movimientos</h4>
+                <div className="bg-white shadow-lg p-4 mt-2 rounded h-35 overflow-y-hide">
                   {account.movimientos.length > 0 ? (
                     account.movimientos.map((movimiento, index) => (
                       <div key={index} className="flex justify-between mb-2">
@@ -361,7 +361,7 @@ const MatchFinanciero = () => {
                   )}
                 </div>
 
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-end mt-2">
                   <button
                   onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos')}
                   className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600"
@@ -370,7 +370,7 @@ const MatchFinanciero = () => {
                   </button>
                 </div>
 
-                <div className="flex justify-between mt-4">
+                <div className="flex justify-between mt-2">
                   <p className="text-red-500">Últimos movimientos sin match: 7</p>
                   <button 
                   onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=match')}

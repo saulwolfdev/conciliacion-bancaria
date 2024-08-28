@@ -273,7 +273,7 @@ const MatchFinanciero = () => {
                         N° {account.numero}
                       </p>
                       <div className="mb-2">
-                        <h2 className="text-3xl font-bold text-blue-700">
+                        <h2 className="text-2xl font-bold text-blue-700">
                           {currencySymbol === "CLP" ? "$" : "U$"}
                           {balance.toLocaleString()}
                         </h2>
@@ -281,15 +281,15 @@ const MatchFinanciero = () => {
                       </div>
                       
                       <div className="flex flex-col space-y-4 md:flex-row md:space-x-6 items-center"> 
-                        <div className="mr-12 mt-4 md:mr-0">
-                          <h2 className="text-2xl text-blue-700">
+                        <div className="mr-12 mt-2 md:mr-0">
+                          <h2 className="text-1xl text-blue-700">
                             {currencySymbol === "CLP" ? "$" : "U$"}
                             {account.monto_contable.toLocaleString()}
                           </h2>
                           <p className="text-gray-400">Saldo contable</p>
                         </div>
                         <div>
-                          <h2 className="text-2xl text-blue-700">
+                          <h2 className="text-1xl text-blue-700">
                             {currencySymbol === "CLP" ? "$" : "U$"}
                             {(account.linea_credito.saldo_total || 0).toLocaleString()}
                           </h2>

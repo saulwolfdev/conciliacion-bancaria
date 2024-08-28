@@ -38,6 +38,7 @@ const DateSearchComponent = ({ data, label, inputId, onSearch }) => {
       <div className="relative mt-2 flex items-center">
         <Datepicker
           primaryColor={"green"}
+          showShortcuts={true}
           value={value}
           onChange={handleValueChange}
           placeholderText="Selecciona una fecha"

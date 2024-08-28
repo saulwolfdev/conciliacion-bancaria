@@ -35,14 +35,15 @@ const DateSearchComponent = ({ data, label, inputId, onSearch }) => {
   return (
     <div>
       <label htmlFor={inputId} className="block text-sm font-medium leading-6 text-gray-900">{label}</label>
-      <div className="relative mt-1 flex items-center">
+      <div className="relative mt-2 flex items-center">
         <Datepicker
           primaryColor={"green"}
           value={value}
           onChange={handleValueChange}
           placeholderText="Selecciona una fecha"
-          displayFormat="DD/MM/YYYY"          
-          inputClassName="w-full rounded-md border border-gray-300 py-2 pl-2 pr-14 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          displayFormat="DD/MM/YYYY"
+          inputClassName="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-14 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+
           popperPlacement="bottom-start"
           popperModifiers={[
             {

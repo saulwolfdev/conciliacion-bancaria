@@ -79,46 +79,12 @@ const Cartolas = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = listar;
-        setDataListar(data.data);
-        console.log("Datos listar:", data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  //para usar dataListar desde mock
 
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({
-  //             cuenta_bancaria_id: 10,
-  //             fecha_inicio: "",
-  //             fecha_termino: "",
-  //             descripcion: "",
-  //             monto_minimo: "",
-  //             monto_maximo: "",
-  //             estados: [1, 2, 3],
-  //           }),
-  //         }
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error("La solicitud falló");
-  //       }
-
-  //       const data = await response.json();
+  //       const data = listar;
   //       setDataListar(data.data);
   //       console.log("Datos listar:", data);
   //     } catch (error) {
@@ -128,6 +94,42 @@ const Cartolas = () => {
 
   //   fetchData();
   // }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              cuenta_bancaria_id: 10,
+              fecha_inicio: "",
+              fecha_termino: "",
+              descripcion: "",
+              monto_minimo: "",
+              monto_maximo: "",
+              estados: [1, 2, 3],
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("La solicitud falló");
+        }
+
+        const data = await response.json();
+        setDataListar(data.data);
+        console.log("Datos listar:", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (dataListar) {

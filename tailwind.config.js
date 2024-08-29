@@ -4,7 +4,7 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js" // Agrega esta línea
+    "./node_modules/react-tailwindcss-datepicker/dist/index.esm.{js,ts}",
   ],
   darkMode: 'class',
   theme: {

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import { useSearchParams } from "next/navigation";
 import { balance, listar } from "@/api/fintoc.mock";
 import Tabs from "@/components/Tabs";
 import SearchCard from "@/components/SearchCard";
+import BreadCrumbs from "@/components/BreadCrumbs";
 
 const Cartolas = () => {
   const [dataBalance, setDataBalance] = useState(null);
@@ -15,6 +17,22 @@ const Cartolas = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
   const [filteredData, setFilteredData] = useState(dataListar || []);
+  const router = useRouter();
+
+  const pages = [
+    { name: 'Bancos', href: '/dashboard/matchfinanciero', current: false },
+    { name: 'Match', href: '/dashboard/matchfinanciero/', current: true } 
+  ];
+
+  const updateBreadcrumb = () => {    
+    const currentPath = router.pathname;
+    pages[0].current = currentPath === '/dashboard/bancos'; 
+    pages[1].current = currentPath === '/dashboard/bancos/match';
+  };
+
+  useEffect(() => {
+    updateBreadcrumb();
+  }, [router.pathname]);
 
   const stats =
     dataBalance && dataBalance.saldos
@@ -81,46 +99,10 @@ const Cartolas = () => {
 
   //para usar dataListar desde mock
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = listar;
-  //       setDataListar(data.data);
-  //       console.log("Datos listar:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              cuenta_bancaria_id: 10,
-              fecha_inicio: "",
-              fecha_termino: "",
-              descripcion: "",
-              monto_minimo: "",
-              monto_maximo: "",
-              estados: [1, 2, 3],
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("La solicitud falló");
-        }
-
-        const data = await response.json();
+        const data = listar;
         setDataListar(data.data);
         console.log("Datos listar:", data);
       } catch (error) {
@@ -130,6 +112,42 @@ const Cartolas = () => {
 
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //             cuenta_bancaria_id: 10,
+  //             fecha_inicio: "",
+  //             fecha_termino: "",
+  //             descripcion: "",
+  //             monto_minimo: "",
+  //             monto_maximo: "",
+  //             estados: [1, 2, 3],
+  //           }),
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error("La solicitud falló");
+  //       }
+
+  //       const data = await response.json();
+  //       setDataListar(data.data);
+  //       console.log("Datos listar:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (dataListar) {
@@ -370,6 +388,7 @@ const Cartolas = () => {
 
   return (
     <div className="container md:w-1/1 md:px-16">
+      <BreadCrumbs pages={pages} />   
       <Tabs tabs={tabs} defaultTab={activeTab} onTabChange={handleTabChange} />
       <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>
     </div>

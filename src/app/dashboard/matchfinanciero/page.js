@@ -6,6 +6,7 @@ import { getFintoc } from "@fintoc/fintoc-js";
 import { sendPostRequest } from "@/api/fintoc.api";
 import { dashboard } from "@/api/fintoc.mock";
 import AccountsModal from "@/components/AccountsModal";
+import BreadCrumbs from "@/components/BreadCrumbs";
 
 const MatchFinanciero = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,10 @@ const MatchFinanciero = () => {
     router.push('/dashboard/matchfinanciero/cartolas'); 
   };
 
+  const pages = [
+    { name: 'Bancos', href: '/dashboard/matchfinanciero', current: true }, 
+  ];
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -36,34 +41,34 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = dashboard;
-  //       setDataDashboard(data.data);
-  //       console.log("Datos Dashboard:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
-        const data = await response.json();
+        const data = dashboard;
         setDataDashboard(data.data);
         console.log("Datos Dashboard:", data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-  
+
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
+  //       const data = await response.json();
+  //       setDataDashboard(data.data);
+  //       console.log("Datos Dashboard:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, []);
 
   const initializeWidget = async (type) => {
     const product = "movements";
@@ -217,7 +222,8 @@ const MatchFinanciero = () => {
   : [];
 
   return (
-    <>      
+    <div className="container md:w-1/1 md:px-16">   
+      <BreadCrumbs pages={pages} />   
       <AccountsModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -434,7 +440,7 @@ const MatchFinanciero = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

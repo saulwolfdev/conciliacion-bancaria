@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
-const DateSearchComponent = ({ data, label, inputId, onSearch }) => {
-  const [value, setValue] = useState({ startDate: null, endDate: null });
+const DateSearchComponent = ({ data, label, inputId, onSearch }) => { 
+  const today = new Date();
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const [value, setValue] = useState({ startDate: startOfMonth, endDate: endOfMonth });
 
   const handleValueChange = (newValue) => {
     let startDate = newValue.startDate ? new Date(newValue.startDate) : null;
@@ -39,12 +43,12 @@ const DateSearchComponent = ({ data, label, inputId, onSearch }) => {
         <Datepicker
           primaryColor={"green"}
           showShortcuts={true}
+          startFrom={startOfMonth}
           value={value}
           onChange={handleValueChange}
           placeholderText="Selecciona una fecha"
           displayFormat="DD/MM/YYYY"
           inputClassName="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-14 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
-
           popperPlacement="bottom-start"
           popperModifiers={[
             {

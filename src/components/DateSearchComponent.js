@@ -1,40 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
+import { fetchDataBalance } from "@/api/fetchDataBalance";
 
-const DateSearchComponent = ({ data, label, inputId, onSearch }) => { 
+const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance }) => { 
   const today = new Date();
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-  const [value, setValue] = useState({ startDate: startOfMonth, endDate: endOfMonth });
+  const [value, setValue] = useState({ startDate: startOfMonth, endDate: endOfMonth });  
 
   const handleValueChange = (newValue) => {
-    let startDate = newValue.startDate ? new Date(newValue.startDate) : null;
+    const startDate = newValue.startDate ? new Date(newValue.startDate) : null;
     const endDate = newValue.endDate ? new Date(newValue.endDate) : null;
 
-    const uiStartDate = new Date(startDate);
-
-    if (startDate) {
-      startDate.setDate(startDate.getDate() - 1);
-    }
-
-    console.log('Start Date (UI):', uiStartDate);
-    console.log('Start Date (Filtro):', startDate);
-
-    console.log('End Date:', endDate);
-
-    setValue({ startDate: uiStartDate, endDate });
+    setValue({ startDate, endDate });
 
     const filteredData = data?.filter((item) => {
       const itemDate = new Date(item.fecha);
-      console.log('Item Date:', itemDate);
-
       return (startDate ? itemDate >= startDate : true) && (endDate ? itemDate <= endDate : true);
     });
 
-    console.log('Filtered Data:', filteredData);
     onSearch(filteredData);
   };
+
+  useEffect(() => {
+    const fetchAndSetData = async () => {
+      try {
+        const data = await fetchDataBalance(value.startDate, value.endDate);
+        console.log("Datos balance:", data);
+        setDataBalance(data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchAndSetData();
+  }, [value]);
 
   return (
     <div>

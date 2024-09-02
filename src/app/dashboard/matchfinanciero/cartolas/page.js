@@ -1,45 +1,38 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
 import { useSearchParams } from "next/navigation";
 import { balance, listar } from "@/api/fintoc.mock";
 import Tabs from "@/components/Tabs";
 import SearchCard from "@/components/SearchCard";
 import BreadCrumbs from "@/components/BreadCrumbs";
+import SelectWithSearch from "@/components/SelectWithSearch";
+import { fetchDataBalance } from "@/api/fetchDataBalance";
 
 const Cartolas = () => {
   const [dataBalance, setDataBalance] = useState(null);
   const [dataListar, setDataListar] = useState(null);
+  const [dataTotals, setDataTotals] = useState(null);
   const searchParams = useSearchParams();
   const tabFromUrl = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(tabFromUrl || "movimientos");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
-  const [filteredData, setFilteredData] = useState(dataListar || []);
-  const router = useRouter();
+  const [filteredData, setFilteredData] = useState(dataListar || []);  
+
+  
 
   const pages = [
-    { name: 'Bancos', href: '/dashboard/matchfinanciero', current: false },
-    { name: 'Match', href: '/dashboard/matchfinanciero/', current: true } 
+    { name: 'Bancos', href: '/dashboard/matchfinanciero/', current: false },
+    { name: 'Match Financiero', href: '/dashboard/matchfinanciero/cartolas?tab=movimientos', current: true } 
   ];
 
-  const updateBreadcrumb = () => {    
-    const currentPath = router.pathname;
-    pages[0].current = currentPath === '/dashboard/bancos'; 
-    pages[1].current = currentPath === '/dashboard/bancos/match';
-  };
-
-  useEffect(() => {
-    updateBreadcrumb();
-  }, [router.pathname]);
-
   const stats =
-    dataBalance && dataBalance.saldos
+    dataBalance && dataBalance?.data?.saldos
       ? [
           {
             name: "Saldo Inicial",
-            value: dataBalance.saldos.saldo_inicial.toLocaleString("es-CL", {
+            value: dataBalance?.data?.saldos?.saldo_inicial.toLocaleString("es-CL", {
               style: "currency",
               currency: "CLP",
             }),
@@ -47,7 +40,7 @@ const Cartolas = () => {
           },
           {
             name: "Saldo Final",
-            value: dataBalance.saldos.saldo_final.toLocaleString("es-CL", {
+            value: dataBalance?.data?.saldos?.saldo_final.toLocaleString("es-CL", {
               style: "currency",
               currency: "CLP",
             }),
@@ -55,7 +48,7 @@ const Cartolas = () => {
           },
           {
             name: "Cargos",
-            value: dataBalance.saldos.cargos.toLocaleString("es-CL", {
+            value: dataBalance?.data?.saldos?.cargos.toLocaleString("es-CL", {
               style: "currency",
               currency: "CLP",
             }),
@@ -63,7 +56,7 @@ const Cartolas = () => {
           },
           {
             name: "Abonos",
-            value: dataBalance.saldos.abonos.toLocaleString("es-CL", {
+            value: dataBalance?.data?.saldos?.abonos.toLocaleString("es-CL", {
               style: "currency",
               currency: "CLP",
             }),
@@ -71,6 +64,8 @@ const Cartolas = () => {
           },
         ]
       : [];
+
+      console.log("Calculated stats:", stats);
 
   const handleSearchChange = (data) => {
     setFilteredData(data);
@@ -83,46 +78,29 @@ const Cartolas = () => {
     }
   }, [tabFromUrl]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = balance;
-        setDataBalance(data.data);
-        console.log("Datos balance:", data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
 
-    fetchData();
-  }, []);
-
-  //para usar dataListar desde mock
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = listar;
-        setDataListar(data.data);
-        console.log("Datos listar:", data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+   //para usar balance desde mock
 
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({
+  //       const data = balance;
+  //       setDataBalance(data.data);
+  //       console.log("Datos balance:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const body = {
   //             cuenta_bancaria_id: 10,
   //             fecha_inicio: "",
   //             fecha_termino: "",
@@ -130,16 +108,35 @@ const Cartolas = () => {
   //             monto_minimo: "",
   //             monto_maximo: "",
   //             estados: [1, 2, 3],
-  //           }),
-  //         }
-  //       );
+  //       };
 
-  //       if (!response.ok) {
-  //         throw new Error("La solicitud falló");
-  //       }
+  //       const response = await fetch('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard_balance/', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify(body)
+  //       });
 
-  //       const data = await response.json();
+  //       const data = await response.json(); 
+  //       // setDataBalance(data.data);
+  //       console.log("Datos balance:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  //para usar dataListar desde mock
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = listar;
   //       setDataListar(data.data);
+  //       setDataTotals(data)
   //       console.log("Datos listar:", data);
   //     } catch (error) {
   //       console.error("Error:", error);
@@ -148,6 +145,46 @@ const Cartolas = () => {
 
   //   fetchData();
   // }, []);
+
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              cuenta_bancaria_id: 10,
+              fecha_inicio: "",
+              fecha_termino: "",
+              descripcion: "",
+              monto_minimo: "",
+              monto_maximo: "",
+              estados: [1, 2, 3],
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("La solicitud falló");
+        }
+
+        const data = await response.json();
+        setDataListar(data.data);
+        setDataTotals(data)
+        console.log("Datos listar:", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     if (dataListar) {
@@ -170,6 +207,8 @@ const Cartolas = () => {
     setCurrentPage(page);
   };
 
+console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.saldo_inicial )
+
   const tabs = [
     {
       name: "movimientos",
@@ -179,8 +218,10 @@ const Cartolas = () => {
           <SearchCard
             onSearchChange={handleSearchChange}
             dataListar={dataListar}
+            dataBalance={dataBalance} 
+            setDataBalance={setDataBalance}
           />
-          {dataBalance && dataBalance.saldos && (
+          {dataBalance && dataBalance?.data?.saldos && (
             <div className="mt-4">
               <dl className="mx-auto grid grid-cols-1 gap-px bg-gray-900/5 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map(
@@ -386,9 +427,40 @@ const Cartolas = () => {
     setActiveTab(tabName);
   };
 
+
+  const formatCurrency = (number) => {
+    if (isNaN(number)) {
+      return '$0';
+    }
+    const formattedNumber = Math.abs(number).toLocaleString('es-CL');
+    return '$' + formattedNumber;
+  };
+ 
+  const totales = dataTotals?.totales;
+  console.log("dataTotals revision:", dataTotals);
+  console.log("totales:", totales);
+  console.log("filteredData:", filteredData)
+  const totalCargos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_cargos : "N/A";
+  const totalAbonos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_abonos : "N/A";
+
   return (
     <div className="container md:w-1/1 md:px-16">
-      <BreadCrumbs pages={pages} />   
+      <BreadCrumbs pages={pages} />
+      <SelectWithSearch dataListar={dataListar} />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+        <div className="card bg-white p-4 rounded shadow">
+          <div className="text-lg font-semibold">Agosto 2024</div>
+          <div className="text-sm text-gray-500">Periodo</div>
+        </div>
+        <div className="card bg-white p-4 rounded shadow">
+          <div className="text-lg font-semibold">{formatCurrency(totalCargos)}</div>
+          <div className="text-sm text-gray-500">Cargos</div>
+        </div>
+        <div className="card bg-white p-4 rounded shadow">
+          <div className="text-lg font-semibold">{formatCurrency(totalAbonos)}</div>
+          <div className="text-sm text-gray-500">Abonos</div>
+        </div>
+      </div>
       <Tabs tabs={tabs} defaultTab={activeTab} onTabChange={handleTabChange} />
       <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>
     </div>

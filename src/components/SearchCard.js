@@ -3,15 +3,17 @@ import SearchComponent from "@/components/SearchComponent";
 import DateSearchComponent from "@/components/DateSearchComponent"; 
 import MultiSelectDropdown from "@/components/MultiSelectDropdown"; 
 
-const SearchCard = ({ onSearchChange, dataListar }) => {  
+const SearchCard = ({ onSearchChange, dataListar, dataBalance, setDataBalance }) => {  
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
   const [filteredData, setFilteredData] = useState(dataListar);
+  // const [dataBalance, setDataBalance] = useState([]); 
+  
 
   useEffect(() => {
     handleSearch();
-  }, [minAmount, maxAmount]);
-
+  }, [minAmount, maxAmount, dataBalance]);
+console.log("balanceData cob datos en padre:", dataBalance)
   const handleSearch = (filteredData) => {
     let filteredItems = filteredData || dataListar;
   
@@ -90,6 +92,7 @@ const SearchCard = ({ onSearchChange, dataListar }) => {
             label="Fecha: desde~hasta"
             inputId="date-search-start"
             onSearch={handleDateSearch}
+            setDataBalance={setDataBalance} 
             type="start"
           />
         </div>       

@@ -232,7 +232,7 @@ const MatchFinanciero = () => {
         onLoad={handleLoadAccounts}
         lineOfCredit={lineCredit}
       />
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 mt-8">
         <div className="flex flex-col justify-between items-center mb-4 sm:flex-row"> 
           <div className="grid grid-cols-1 gap-4 flex-grow md:grid-cols-3 sm:grid-cols-1 mb-4">
             {stats.map((stat) => (
@@ -278,7 +278,7 @@ const MatchFinanciero = () => {
                       <p className="text-gray-600 mb-2">
                         N° {account.numero}
                       </p>
-                      <div className="mb-2">
+                      <div className="mb-0">
                         <h2 className="text-2xl font-bold text-blue-700">
                           {currencySymbol === "CLP" ? "$" : "U$"}
                           {balance.toLocaleString()}
@@ -287,7 +287,7 @@ const MatchFinanciero = () => {
                       </div>
                       
                       <div className="flex flex-col space-y-4 md:flex-row md:space-x-6 items-center"> 
-                        <div className="mr-12 mt-2 md:mr-0">
+                        <div className="mr-12 mt-4 md:mr-0">
                           <h2 className="text-1xl text-blue-700">
                             {currencySymbol === "CLP" ? "$" : "U$"}
                             {account.monto_contable.toLocaleString()}
@@ -326,10 +326,10 @@ const MatchFinanciero = () => {
                             <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                               Actualizar
                             </a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=match')}>
                               Match
                             </a>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos')}>
                               Movimientos
                             </a>
                             <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">

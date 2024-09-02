@@ -53,10 +53,10 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
           className="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm overflow-hidden"
         >
           <span className="text-sm overflow-hidden text-ellipsis whitespace-nowrap pr-4">
-            {selectedItems?.length} items seleccionados
+            {selectedItems?.length} ítems seleccionados
           </span>
           <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-            <svg className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg className={`h-4 w-4 text-gray-400 transform ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5.293 7.293a1 1 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 010-1.414z" clipRule="evenodd" />
             </svg>
           </span>
@@ -92,7 +92,6 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
       </div>
     </div>
   );
-  
 };
 
 export default MultiSelectDropdown;

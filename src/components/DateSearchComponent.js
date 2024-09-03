@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 import { fetchDataBalance } from "@/api/fetchDataBalance";
+import { fetchDataListar } from "@/api/fetchDataListar";
 
-const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance }) => { 
+const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, setDataListar, setDataTotals }) => { 
   const today = new Date();
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
+//   const [dataListar, setDataListar] = useState(null);
+// console.log("traspaso de dataListar:", dataListar)
   const [value, setValue] = useState({ startDate: startOfMonth, endDate: endOfMonth });  
 
   const handleValueChange = (newValue) => {
@@ -37,9 +40,28 @@ const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance })
     fetchAndSetData();
   }, [value]);
 
+  useEffect(() => {
+    const fetchSetDataListar = async () => {
+      try {
+        const data = await fetchDataListar(value.startDate, value.endDate);
+        console.log("Datos listar:", data);
+        setDataListar(data.data);
+        setDataTotals(data)
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchSetDataListar();
+  }, [value]);
+
   return (
     <div>
-      <label htmlFor={inputId} className="block text-sm font-medium leading-6 text-gray-900">{label}</label>
+      <div className="flex items-center justify-between">
+        <label htmlFor={inputId} className="block text-sm font-medium leading-6 text-gray-900 overflow-hidden text-ellipsis whitespace-nowrap">
+          {label}
+        </label>
+      </div>
       <div className="relative mt-2 flex items-center">
         <Datepicker
           primaryColor={"green"}

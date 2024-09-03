@@ -3,10 +3,12 @@ import SearchComponent from "@/components/SearchComponent";
 import DateSearchComponent from "@/components/DateSearchComponent"; 
 import MultiSelectDropdown from "@/components/MultiSelectDropdown"; 
 
-const SearchCard = ({ onSearchChange, dataListar, dataBalance, setDataBalance }) => {  
+const SearchCard = ({ onSearchChange, dataBalance, setDataBalance, dataListar, setDataListar, setDataTotals }) => {  
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
+  // const [dataListar, setDataListar] = useState(null);
   const [filteredData, setFilteredData] = useState(dataListar);
+  // console.log("traspaso de dataListar:", dataListar)
   // const [dataBalance, setDataBalance] = useState([]); 
   
 
@@ -93,6 +95,8 @@ console.log("balanceData cob datos en padre:", dataBalance)
             inputId="date-search-start"
             onSearch={handleDateSearch}
             setDataBalance={setDataBalance} 
+            setDataListar={setDataListar}
+            setDataTotals={setDataTotals}
             type="start"
           />
         </div>       

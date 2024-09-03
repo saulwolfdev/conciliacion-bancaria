@@ -49,9 +49,11 @@ const SearchComponent = ({ data, label, inputId, onSearch, searchType, amountTyp
 
   return (
     <div>
-      <label htmlFor={inputId} className="block text-sm font-medium leading-6 text-gray-900">
-        {label}
-      </label>
+      <div className="flex items-center justify-between">
+        <label htmlFor={inputId} className="block text-sm font-medium leading-6 text-gray-900 overflow-hidden text-ellipsis whitespace-nowrap">
+          {label}
+        </label>
+      </div>
       <div className="relative mt-2 flex items-center">
         <input
           type="text"

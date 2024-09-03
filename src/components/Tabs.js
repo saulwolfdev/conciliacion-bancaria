@@ -10,7 +10,7 @@ const Tabs = ({ tabs, defaultTab, onTabChange }) => {
   };
 
   return (
-    <div>
+    <div className="mt-4">
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">Select a tab</label>
         <select

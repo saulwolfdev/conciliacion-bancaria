@@ -48,19 +48,27 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
   return (
     <div className="relative w-full mt-2" ref={dropdownRef}>
       <div className="relative">
-        <button
-          onClick={toggleDropdown}
-          className="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm overflow-hidden"
-        >
-          <span className="text-sm overflow-hidden text-ellipsis whitespace-nowrap pr-4">
-            {selectedItems?.length} ítems seleccionados
-          </span>
-          <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-            <svg className={`h-4 w-4 text-gray-400 transform ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M5.293 7.293a1 1 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </span>
-        </button>
+          <button
+            onClick={toggleDropdown}
+            className="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-0 py-2 text-left focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm overflow-hidden relative cursor-pointer"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm overflow-hidden text-ellipsis whitespace-nowrap pr-4" >
+                {selectedItems?.length} ítems seleccionados
+              </span>
+              <span className="flex items-center pr-2 pointer-events-none">
+                <svg
+                  className={`w-4 h-4 transform ${isOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </span>
+            </div>
+          </button>
         {isOpen && (
           <div className="absolute mt-1 w-full rounded-md bg-white shadow-lg z-10">
             <input
@@ -70,9 +78,9 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
             />
-            <div className="flex justify-between p-1">
-              <button onClick={handleSelectAll} className="bg-blue-500 text-white px-2 py-2 rounded-md mr-1 text-xs">Seleccionar Todo</button>
-              <button onClick={handleDeselectAll} className="bg-red-500 text-white px-2 py-2 rounded-md text-xs">Deseleccionar Todo</button>
+            <div className="flex flex-col 2xl:flex-row justify-between p-1">
+              <button onClick={handleSelectAll} className="bg-blue-500 text-white px-2 py-2 rounded-md mb-1 sm:mb-0 sm:mr-1 mb-2 text-xs mt-1">Seleccionar Todo</button>
+              <button onClick={handleDeselectAll} className="bg-red-500 text-white px-2 py-2 rounded-md text-xs mt-1">Deseleccionar Todo</button>
             </div>
             <ul className="max-h-30 overflow-auto w-full">
               {filteredOptions.map(option => (

@@ -20,22 +20,28 @@ const Cartolas = () => {
   const itemsPerPage = 20;
   const [filteredData, setFilteredData] = useState(dataListar || []);  
 
-  
-
   const pages = [
     { name: 'Bancos', href: '/dashboard/matchfinanciero/', current: false },
     { name: 'Match Financiero', href: '/dashboard/matchfinanciero/cartolas?tab=movimientos', current: true } 
   ];
+
+  const saldoInicial = dataBalance?.data?.saldos?.saldo_inicial;
+  const formattedSaldoInicial = typeof saldoInicial !== 'string'
+  ? parseFloat(saldoInicial?.toLocaleString("es-CL", {
+      style: "currency",
+      currency: "CLP",
+    }).replace(/\$|CLP|\./g, ''))
+  : saldoInicial?.toLocaleString("es-CL", {
+      style: "currency",
+      currency: "CLP",
+    });
 
   const stats =
     dataBalance && dataBalance?.data?.saldos
       ? [
           {
             name: "Saldo Inicial",
-            value: dataBalance?.data?.saldos?.saldo_inicial.toLocaleString("es-CL", {
-              style: "currency",
-              currency: "CLP",
-            }),
+            value:`${formattedSaldoInicial}`,
             change: " ",
           },
           {
@@ -149,42 +155,42 @@ const Cartolas = () => {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              cuenta_bancaria_id: 10,
-              fecha_inicio: "",
-              fecha_termino: "",
-              descripcion: "",
-              monto_minimo: "",
-              monto_maximo: "",
-              estados: [1, 2, 3],
-            }),
-          }
-        );
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //             cuenta_bancaria_id: 10,
+  //             fecha_inicio: "",
+  //             fecha_termino: "",
+  //             descripcion: "",
+  //             monto_minimo: "",
+  //             monto_maximo: "",
+  //             estados: [1, 2, 3],
+  //           }),
+  //         }
+  //       );
 
-        if (!response.ok) {
-          throw new Error("La solicitud falló");
-        }
+  //       if (!response.ok) {
+  //         throw new Error("La solicitud falló");
+  //       }
 
-        const data = await response.json();
-        setDataListar(data.data);
-        setDataTotals(data)
-        console.log("Datos listar:", data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+  //       const data = await response.json();
+  //       setDataListar(data.data);
+  //       setDataTotals(data)
+  //       console.log("Datos listar funcionando:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (dataListar) {
@@ -218,8 +224,10 @@ console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.sa
           <SearchCard
             onSearchChange={handleSearchChange}
             dataListar={dataListar}
+            setDataListar={setDataListar}
             dataBalance={dataBalance} 
             setDataBalance={setDataBalance}
+            setDataTotals={setDataTotals}
           />
           {dataBalance && dataBalance?.data?.saldos && (
             <div className="mt-4">
@@ -346,7 +354,8 @@ console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.sa
                     <tr>
                       <td
                         colSpan={8}
-                        className="px-6 py-4 text-center text-gray-500"
+                        // className="px-6 py-4 text-center text-gray-500"
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500"
                       >
                         No se encontraron resultados.
                       </td>
@@ -443,13 +452,21 @@ console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.sa
   const totalCargos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_cargos : "N/A";
   const totalAbonos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_abonos : "N/A";
 
+  const getCurrentMonthYear = () => {
+    const date = new Date();
+    const month = date.toLocaleString('default', { month: 'long' });
+    const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
+    const year = date.getFullYear();
+    return `${capitalizedMonth} ${year}`;
+  };
+
   return (
     <div className="container md:w-1/1 md:px-16">
       <BreadCrumbs pages={pages} />
       <SelectWithSearch dataListar={dataListar} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
         <div className="card bg-white p-4 rounded shadow">
-          <div className="text-lg font-semibold">Agosto 2024</div>
+          <div className="text-lg font-semibold">{getCurrentMonthYear()}</div>
           <div className="text-sm text-gray-500">Periodo</div>
         </div>
         <div className="card bg-white p-4 rounded shadow">

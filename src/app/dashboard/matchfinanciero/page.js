@@ -41,38 +41,38 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = dashboard;
-        setDataDashboard(data.data);
-        console.log("Datos Dashboard:", data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
-  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
-  //       const data = await response.json();
+  //       const data = dashboard;
   //       setDataDashboard(data.data);
   //       console.log("Datos Dashboard:", data);
   //     } catch (error) {
   //       console.error("Error:", error);
   //     }
   //   };
-  
+
   //   fetchData();
   // }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
+        const data = await response.json();
+        setDataDashboard(data.data);
+        console.log("Datos Dashboard:", data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
   const initializeWidget = async (type) => {
     const product = "movements";
-    const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
+    const publicKey = "my-key";
     const domain = window.location.hostname;
     const webhookUrl ="https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/";
     // const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
@@ -185,6 +185,8 @@ const MatchFinanciero = () => {
   console.log("datos filtrados:", lineCredit)
 
   console.log("dataDashboard api:", dataDashboard)
+  const numeros = dataDashboard.map(item => item.numero);
+  console.log(numeros);
 
   const handleCancel = () => {
     setIsModalOpen(false);

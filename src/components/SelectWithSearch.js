@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const SelectWithSearch = ({ dataListar }) => {
+const SelectWithSearch = ({ dataListar, accountNumber }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (dataListar && accountNumber) {
+      const defaultAccount = dataListar.find(item => {
+        const numeroExtraido = item.cuenta_corriente.nombre.match(/\d+/)[0];
+        return numeroExtraido === accountNumber;
+      });
+      if (defaultAccount) {
+        setSelectedAccount(defaultAccount);
+      }
+    }
+  }, [dataListar, accountNumber]);
 
   const filteredData = dataListar?.filter(item =>
     item?.cuenta_corriente?.nombre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -20,6 +32,8 @@ const SelectWithSearch = ({ dataListar }) => {
   const handleSelect = (item) => {
     setSelectedAccount(item);
     setIsOpen(false);
+    const numeroExtraido = item.cuenta_corriente.nombre.match(/\d+/)[0];
+    console.log("numeroExtraido", numeroExtraido);
   };
 
   const handleClickOutside = (event) => {
@@ -64,7 +78,6 @@ const SelectWithSearch = ({ dataListar }) => {
                 className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleSelect(item)}
               >
-                {/* <img src="path/to/icon.png" alt="icon" className="w-6 h-6 mr-2" /> */}
                 <span>{item.cuenta_corriente.nombre} {item.cuenta_corriente.numero}</span>
               </div>
             ))}

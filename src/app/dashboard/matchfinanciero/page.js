@@ -72,7 +72,7 @@ const MatchFinanciero = () => {
 
   const initializeWidget = async (type) => {
     const product = "movements";
-    const publicKey = "my-key";
+    const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
     const webhookUrl ="https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/";
     // const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
@@ -370,12 +370,15 @@ const MatchFinanciero = () => {
                 </div>
 
                 <div className="flex justify-end mt-2">
-                  <button
-                  onClick={() => router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos')}
+                <button
+                  onClick={() => {
+                    localStorage.setItem('accountNumber', account.numero);
+                    router.push('/dashboard/matchfinanciero/cartolas?tab=movimientos');
+                  }}
                   className="bg-transparent px-4 py-2 rounded text-blue-500 hover:text-blue-600 focus:text-blue-600"
-                  >
-                    Ver cartolas
-                  </button>
+                >
+                  Ver cartolas
+                </button>
                 </div>
 
                 <div className="flex justify-between mt-2">

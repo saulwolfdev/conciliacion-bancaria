@@ -17,9 +17,15 @@ const Cartolas = () => {
   const tabFromUrl = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(tabFromUrl || "movimientos");
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredData, setFilteredData] = useState(dataListar || []);
+  const [accountNumber, setAccountNumber] = useState(null);  
   const itemsPerPage = 20;
-  const [filteredData, setFilteredData] = useState(dataListar || []);  
 
+  useEffect(() => {
+    const numero = localStorage.getItem('accountNumber');
+    setAccountNumber(numero);
+  }, []);
+console.log("accountNumber desde cartolas page:", accountNumber)
   const pages = [
     { name: 'Bancos', href: '/dashboard/matchfinanciero/', current: false },
     { name: 'Match Financiero', href: '/dashboard/matchfinanciero/cartolas?tab=movimientos', current: true } 
@@ -463,7 +469,7 @@ console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.sa
   return (
     <div className="container md:w-1/1 md:px-16">
       <BreadCrumbs pages={pages} />
-      <SelectWithSearch dataListar={dataListar} />
+      <SelectWithSearch dataListar={dataListar} accountNumber={accountNumber} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
         <div className="card bg-white p-4 rounded shadow">
           <div className="text-lg font-semibold">{getCurrentMonthYear()}</div>

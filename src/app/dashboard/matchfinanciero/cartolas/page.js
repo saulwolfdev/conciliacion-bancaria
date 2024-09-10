@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { balance, listar } from "@/api/fintoc.mock";
+import { balance, listar,cuentasCorrientes } from "@/api/fintoc.mock";
 import Tabs from "@/components/Tabs";
 import SearchCard from "@/components/SearchCard";
 import BreadCrumbs from "@/components/BreadCrumbs";
@@ -19,6 +19,9 @@ const Cartolas = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState(dataListar || []);
   const [accountNumber, setAccountNumber] = useState(null);  
+  const [selectedRut, setSelectedRut] = useState(null);
+  const [filteredRutData, setFilteredRutData] = useState([]);
+  const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState([]);
   const itemsPerPage = 20;
 
   useEffect(() => {
@@ -221,11 +224,13 @@ console.log("accountNumber desde cartolas page:", accountNumber)
 
 console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.saldo_inicial )
 
-const rutTitulares = dataListar?.map(item => item.rut_titular);
+const rutTitulares = [...new Set(dataListar?.map(item => item.rut_titular))];
 
 const handleClick = (rut) => {
-  console.log("Elemento clicado");
-  alert(rut);
+  setSelectedRut(rut);
+  const filtered = dataListar.filter(item => item.rut_titular === rut);
+  setFilteredRutData(filtered);
+  setFilteredCuentasCorrientes(cuentasCorrientes.data);
 };
 
   const tabs = [
@@ -438,12 +443,12 @@ const handleClick = (rut) => {
       label: "Match Financieros",
       content: (
         <div className="flex w-full mt-4">
-          <div className="flex-1 bg-gray-100 p-4 flex justify-center items-center">
+          <div className="flex-1 bg-gray-100 p-4 flex flex-col items-start justify-start">
             <ul>
               {rutTitulares?.map((rut, index) => (
-                <li 
-                  className="mb-2 cursor-pointer" 
-                  key={index} 
+                <li
+                  className={`mb-2 cursor-pointer ${selectedRut === rut ? 'bg-blue-500 text-white' : 'hover:bg-gray-300'}`}
+                  key={index}
                   onClick={() => handleClick(rut)}
                 >
                   {rut}
@@ -452,10 +457,22 @@ const handleClick = (rut) => {
             </ul>
           </div>
           <div className="flex-1 bg-gray-200 p-4">
-            2
+            {filteredRutData?.map((item, index) => (
+              <div key={index} className="mb-2 p-2 border-b border-gray-300">
+                <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                <p><strong>Referencia:</strong> {item.referencia}</p>
+                <p><strong>Fecha:</strong> {item.fecha}</p>
+              </div>
+            ))}
           </div>
           <div className="flex-1 bg-gray-300 p-4">
-            3
+            {filteredCuentasCorrientes?.map((item, index) => (
+              <div key={index} className="mb-2 p-2 border-b border-gray-300">
+                <p><strong>Referencia:</strong> {item.referencia_his}</p>
+                <p><strong>Monto:</strong> {item.valor_moneda_nacional}</p>
+                <p><strong>Fecha:</strong> {item.fecha_comprobante_his}</p>
+              </div>
+            ))}
           </div>
         </div>
       ),

@@ -22,7 +22,7 @@ const MatchFinanciero = () => {
   const [dataDashboard, setDataDashboard] = useState([]);
   const dropdownRef = useRef(null);
   const router = useRouter();
-
+console.log("dataDashboard nuevo URL:", dataDashboard)
   const handleVerCartolas = () => {
     router.push('/dashboard/matchfinanciero/cartolas'); 
   };
@@ -41,40 +41,45 @@ const MatchFinanciero = () => {
     }
   }, [holderType, isClient]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = dashboard;
-  //       setDataDashboard(data.data);
-  //       console.log("Datos Dashboard:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
-        const data = await response.json();
+        const data = dashboard;
         setDataDashboard(data.data);
         console.log("Datos Dashboard:", data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-  
+
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://4591-191-113-111-228.ngrok-free.app/tesoreria/api/bancos/api_banco_dashboard/", {
+  //         headers: {
+  //           "ngrok-skip-browser-warning": "true"
+  //         }
+  //       });
+  //       const data = await response.json();
+  //       setDataDashboard(data.data);
+  //       console.log("Datos Dashboard:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, []);
+  
 
   const initializeWidget = async (type) => {
     const product = "movements";
     const publicKey = "pk_live_1mLo7fccgUhV2TEYfzonwnEywbEbZzxv";
     const domain = window.location.hostname;
-    const webhookUrl ="https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_pendiente/";
+    const webhookUrl ="https://4591-191-113-111-228.ngrok-free.app/tesoreria/api/bancos/api_banco_pendiente/";
     // const webhookUrl ="https://webhook.site/#!/view/240cb15c-7da5-4c3a-b86d-f41610ed261f";
     try {
       const Fintoc = await getFintoc();
@@ -89,8 +94,8 @@ const MatchFinanciero = () => {
         webhookUrl: webhookUrl,
         
         onSuccess: async (res) => {
-          let dataId = res.id;
-          //let dataId = "link_oObKGalip9eXP8y5";
+          // let dataId = res.id;
+          let dataId = "link_oObKGalip9eXP8y5";
           console.log("Respuesta ID data:", dataId)
           const data = await sendPostRequest(dataId);
           if (data) {            

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 import { fetchDataBalance } from "@/api/fetchDataBalance";
 import { fetchDataListar } from "@/api/fetchDataListar";
+import { balance, listar } from "@/api/fintoc.mock";
 
 const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, setDataListar, setDataTotals }) => { 
   const today = new Date();
@@ -26,32 +27,64 @@ const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, s
     onSearch(filteredData);
   };
 
+  // useEffect(() => {
+  //   const fetchAndSetData = async () => {
+  //     try {
+  //       const data = await fetchDataBalance(value.startDate, value.endDate);
+  //       console.log("Datos balance:", data);
+  //       setDataBalance(data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchAndSetData();
+  // }, [value]);
+
   useEffect(() => {
     const fetchAndSetData = async () => {
-      try {
-        const data = await fetchDataBalance(value.startDate, value.endDate);
+      try {        
+        const data = balance;
         console.log("Datos balance:", data);
-        setDataBalance(data);
+        setDataBalance(data.data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-
+  
     fetchAndSetData();
   }, [value]);
 
+  // useEffect(() => {
+  //   const fetchSetDataListar = async () => {
+  //     try {
+  //       const data = await fetchDataListar(value.startDate, value.endDate);
+  //       console.log("Datos listar:", data);
+  //       setDataListar(data.data);
+  //       setDataTotals(data)
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+
+  //   fetchSetDataListar();
+  // }, [value]);
+
+
+  //para usar dataListar desde mock
+
   useEffect(() => {
     const fetchSetDataListar = async () => {
-      try {
-        const data = await fetchDataListar(value.startDate, value.endDate);
+      try {        
+        const data = listar; 
         console.log("Datos listar:", data);
         setDataListar(data.data);
-        setDataTotals(data)
+        setDataTotals(data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-
+  
     fetchSetDataListar();
   }, [value]);
 

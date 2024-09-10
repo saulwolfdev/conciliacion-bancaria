@@ -221,6 +221,13 @@ console.log("accountNumber desde cartolas page:", accountNumber)
 
 console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.saldo_inicial )
 
+const rutTitulares = dataListar?.map(item => item.rut_titular);
+
+const handleClick = (rut) => {
+  console.log("Elemento clicado");
+  alert(rut);
+};
+
   const tabs = [
     {
       name: "movimientos",
@@ -429,7 +436,29 @@ console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.sa
     {
       name: "match",
       label: "Match Financieros",
-      content: <div>Contenido de Match Financieros</div>,
+      content: (
+        <div className="flex w-full mt-4">
+          <div className="flex-1 bg-gray-100 p-4 flex justify-center items-center">
+            <ul>
+              {rutTitulares?.map((rut, index) => (
+                <li 
+                  className="mb-2 cursor-pointer" 
+                  key={index} 
+                  onClick={() => handleClick(rut)}
+                >
+                  {rut}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex-1 bg-gray-200 p-4">
+            2
+          </div>
+          <div className="flex-1 bg-gray-300 p-4">
+            3
+          </div>
+        </div>
+      ),
     },
     {
       name: "anular",

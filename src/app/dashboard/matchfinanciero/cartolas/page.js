@@ -224,7 +224,20 @@ console.log("accountNumber desde cartolas page:", accountNumber)
 
 console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.saldo_inicial )
 
-const rutTitulares = [...new Set(dataListar?.map(item => item.rut_titular))];
+const headlines = Array.from(
+  new Map(
+    dataListar
+      ?.filter(item => item.rut_titular && item.nombre_titular)
+      .map(item => [item.rut_titular, { nombre_titular: item.nombre_titular }])
+  )
+).map(([rut_titular, { nombre_titular }]) => ({ rut_titular, nombre_titular }));
+
+const UnmatchedCount = dataListar?.reduce((acc, item) => {
+  if (item.estado === "Sin Conciliar") {
+    acc[item.rut_titular] = (acc[item.rut_titular] || 0) + 1;
+  }
+  return acc;
+}, {});
 
 const handleClick = (rut) => {
   setSelectedRut(rut);
@@ -443,28 +456,32 @@ const handleClick = (rut) => {
       label: "Match Financieros",
       content: (
         <div className="flex w-full mt-4">
-          <div className="flex-1 bg-gray-100 p-4 flex flex-col items-start justify-start">
-            <ul>
-              {rutTitulares?.map((rut, index) => (
-                <li
-                  className={`mb-2 cursor-pointer ${selectedRut === rut ? 'bg-blue-500 text-white' : 'hover:bg-gray-300'}`}
-                  key={index}
-                  onClick={() => handleClick(rut)}
-                >
-                  {rut}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex-1 bg-gray-200 p-4">
-            {filteredRutData?.map((item, index) => (
-              <div key={index} className="mb-2 p-2 border-b border-gray-300">
-                <p><strong>Nombre:</strong> {item.nombre_titular}</p>
-                <p><strong>Referencia:</strong> {item.referencia}</p>
-                <p><strong>Fecha:</strong> {item.fecha}</p>
+         <div className="flex-1 bg-gray-100 p-4 flex flex-col items-start justify-start">
+            {headlines?.map(({ rut_titular, nombre_titular }) => (
+              <div
+                className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'}`}
+                key={rut_titular}
+                onClick={() => handleClick(rut_titular)}
+              >
+                <div className="font-bold">{rut_titular}</div>
+                <div>{nombre_titular}</div>                
+                <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
               </div>
             ))}
           </div>
+          
+          <div className="flex-1 bg-gray-200 p-4">
+            {filteredRutData?.map((item, index) => (
+              <div key={index} className="mb-2 p-2 border-b border-gray-300">
+                <p><strong>Monto:</strong> {item.monto}</p>
+                <p><strong>Fecha:</strong> {item.fecha}</p>
+                <p><strong>Referencia:</strong> {item.referencia}</p>
+                <p><strong>Rut:</strong> {item.rut_titular}</p>
+                <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+              </div>
+            ))}
+          </div>
+          
           <div className="flex-1 bg-gray-300 p-4">
             {filteredCuentasCorrientes?.map((item, index) => (
               <div key={index} className="mb-2 p-2 border-b border-gray-300">

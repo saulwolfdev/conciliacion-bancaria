@@ -481,26 +481,26 @@ const handleClickDescripcion = (descripcion) => {
       content: (
         <div className="flex w-full mt-4">
           <div className="flex-1 bg-gray-100 p-4 flex flex-col items-start justify-start">
-            <div className="mb-4">
-              <label className="mr-4">
+            <div className="mb-6">
+              <label className="cursor-pointer mr-4">
                 <input
                   type="radio"
                   name="rutOption"
                   value="conRut"
                   checked={showRut}
                   onChange={() => setShowRut(true)}
-                  className="mr-2"
+                  className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                 />
                 Con RUT
               </label>
-              <label>
+              <label className="cursor-pointer">
                 <input
                   type="radio"
                   name="rutOption"
                   value="sinRut"
                   checked={!showRut}
                   onChange={() => setShowRut(false)}
-                  className="mr-2"
+                  className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                 />
                 Sin RUT
               </label>

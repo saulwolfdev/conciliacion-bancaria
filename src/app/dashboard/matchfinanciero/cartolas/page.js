@@ -20,8 +20,11 @@ const Cartolas = () => {
   const [filteredData, setFilteredData] = useState(dataListar || []);
   const [accountNumber, setAccountNumber] = useState(null);  
   const [selectedRut, setSelectedRut] = useState(null);
+  const [selectedDescripcion, setSelectedDescripcion] = useState(null);
   const [filteredRutData, setFilteredRutData] = useState([]);
+  const [filteredDescripcion, setFilteredDescripcion] = useState([]);
   const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState([]);
+  const [showRut, setShowRut] = useState(true);
   const itemsPerPage = 20;
 
   useEffect(() => {
@@ -234,15 +237,36 @@ const headlines = Array.from(
 
 const UnmatchedCount = dataListar?.reduce((acc, item) => {
   if (item.estado === "Sin Conciliar") {
-    acc[item.rut_titular] = (acc[item.rut_titular] || 0) + 1;
+    if (item.rut_titular) {
+      acc[item.rut_titular] = (acc[item.rut_titular] || 0) + 1;
+    }
+    if (item.descripcion) {
+      acc[item.descripcion] = (acc[item.descripcion] || 0) + 1;
+    }
   }
   return acc;
 }, {});
 
-const handleClick = (rut) => {
+const headlinesData = Array.from(
+  new Map(
+    dataListar
+      ?.filter(item => item.descripcion && item.rut_titular === null && item.nombre_titular === null)
+      .map(item => [item.descripcion])
+  )
+).map(([descripcion]) => ({ descripcion }));
+
+
+const handleClickRut = (rut) => {
   setSelectedRut(rut);
   const filtered = dataListar.filter(item => item.rut_titular === rut);
   setFilteredRutData(filtered);
+  setFilteredCuentasCorrientes(cuentasCorrientes.data);
+};
+
+const handleClickDescripcion = (descripcion) => {
+  setSelectedDescripcion(descripcion);
+  const filteredDescripcion = dataListar.filter(item => item.descripcion === descripcion);
+  setFilteredDescripcion(filteredDescripcion)
   setFilteredCuentasCorrientes(cuentasCorrientes.data);
 };
 
@@ -456,32 +480,82 @@ const handleClick = (rut) => {
       label: "Match Financieros",
       content: (
         <div className="flex w-full mt-4">
-         <div className="flex-1 bg-gray-100 p-4 flex flex-col items-start justify-start">
-            {headlines?.map(({ rut_titular, nombre_titular }) => (
-              <div
-                className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'}`}
-                key={rut_titular}
-                onClick={() => handleClick(rut_titular)}
-              >
-                <div className="font-bold">{rut_titular}</div>
-                <div>{nombre_titular}</div>                
-                <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
-              </div>
-            ))}
+          <div className="flex-1 bg-gray-100 p-4 flex flex-col items-start justify-start">
+            <div className="mb-4">
+              <label className="mr-4">
+                <input
+                  type="radio"
+                  name="rutOption"
+                  value="conRut"
+                  checked={showRut}
+                  onChange={() => setShowRut(true)}
+                  className="mr-2"
+                />
+                Con RUT
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="rutOption"
+                  value="sinRut"
+                  checked={!showRut}
+                  onChange={() => setShowRut(false)}
+                  className="mr-2"
+                />
+                Sin RUT
+              </label>
+            </div>
+            {showRut ? (
+              headlines?.map(({ rut_titular, nombre_titular }) => (
+                <div
+                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'}`}
+                  key={rut_titular}
+                  onClick={() => handleClickRut(rut_titular)}
+                >
+                  <div className="font-bold">{rut_titular}</div>
+                  <div>{nombre_titular}</div>
+                  <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+                </div>
+              ))
+            ) : (
+              headlinesData?.map(({ descripcion, estado }) => (
+                <div
+                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedDescripcion === descripcion ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'}`}
+                  key={descripcion}
+                  onClick={() => handleClickDescripcion(descripcion)}
+                >
+                  <div className="font-bold">{descripcion}</div>
+                  <div>{estado}</div>
+                  <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[descripcion] || 0}</p>
+                </div>
+              ))
+            )}
           </div>
-          
+
           <div className="flex-1 bg-gray-200 p-4">
-            {filteredRutData?.map((item, index) => (
-              <div key={index} className="mb-2 p-2 border-b border-gray-300">
-                <p><strong>Monto:</strong> {item.monto}</p>
-                <p><strong>Fecha:</strong> {item.fecha}</p>
-                <p><strong>Referencia:</strong> {item.referencia}</p>
-                <p><strong>Rut:</strong> {item.rut_titular}</p>
-                <p><strong>Nombre:</strong> {item.nombre_titular}</p>
-              </div>
-            ))}
+            {showRut ? (
+              filteredRutData?.map((item, index) => (
+                <div key={index} className="mb-2 p-2 border-b border-gray-300">
+                  <p><strong>Monto:</strong> {item.monto}</p>
+                  <p><strong>Fecha:</strong> {item.fecha}</p>
+                  <p><strong>Referencia:</strong> {item.referencia}</p>
+                  <p><strong>Rut:</strong> {item.rut_titular}</p>
+                  <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                </div>
+              ))
+            ) : (
+              filteredDescripcion?.map((item, index) => (
+                <div key={index} className="mb-2 p-2 border-b border-gray-300">
+                  <p><strong>Monto:</strong> {item.monto}</p>
+                  <p><strong>Fecha:</strong> {item.fecha}</p>
+                  <p><strong>Referencia:</strong> {item.referencia}</p>
+                  <p><strong>Rut:</strong> {item.rut_titular}</p>
+                  <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                </div>
+              ))
+            )}
           </div>
-          
+
           <div className="flex-1 bg-gray-300 p-4">
             {filteredCuentasCorrientes?.map((item, index) => (
               <div key={index} className="mb-2 p-2 border-b border-gray-300">

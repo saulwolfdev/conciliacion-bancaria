@@ -21,6 +21,7 @@ const Cartolas = () => {
   const [accountNumber, setAccountNumber] = useState(null);  
   const [selectedRut, setSelectedRut] = useState(null);
   const [selectedDescripcion, setSelectedDescripcion] = useState(null);
+  const [selectedReference, setSelectedReference] = useState(null);
   const [filteredRutData, setFilteredRutData] = useState([]);
   const [filteredDescripcion, setFilteredDescripcion] = useState([]);
   const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState([]);
@@ -268,6 +269,12 @@ const handleClickDescripcion = (descripcion) => {
   const filteredDescripcion = dataListar.filter(item => item.descripcion === descripcion);
   setFilteredDescripcion(filteredDescripcion)
   setFilteredCuentasCorrientes(cuentasCorrientes.data);
+};
+
+const handleCheckboxChange = (reference) => {
+  setSelectedReference((prevSelected) =>
+    prevSelected === reference ? null : reference
+  );
 };
 
   const tabs = [
@@ -535,23 +542,56 @@ const handleClickDescripcion = (descripcion) => {
           <div className="flex-1 bg-gray-200 p-4">
             {showRut ? (
               filteredRutData?.map((item, index) => (
-                <div key={index} className="mb-2 p-2 border-b border-gray-300">
-                  <p><strong>Monto:</strong> {item.monto}</p>
-                  <p><strong>Fecha:</strong> {item.fecha}</p>
-                  <p><strong>Referencia:</strong> {item.referencia}</p>
-                  <p><strong>Rut:</strong> {item.rut_titular}</p>
-                  <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                <div
+                  key={index}
+                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
+                    selectedReference === item.referencia
+                      ? 'border-customGreen'
+                      : 'border-gray-200 hover:border-gray-300'
+                  } ${selectedReference && selectedReference !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => handleCheckboxChange(item.referencia)}
+                >
+                  <div>
+                    <p><strong>Monto:</strong> {item.monto}</p>
+                    <p><strong>Fecha:</strong> {item.fecha}</p>
+                    <p><strong>Referencia:</strong> {item.referencia}</p>
+                    {/* <p><strong>Rut:</strong> {item.rut_titular}</p>
+                    <p><strong>Nombre:</strong> {item.nombre_titular}</p> */}
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={selectedReference === item.referencia}
+                    // onChange={() => handleCheckboxChange(item.referencia)}
+                    className="form-checkbox text-customGreen"
+                    disabled={selectedReference && selectedReference !== item.referencia}
+                  />
                 </div>
               ))
             ) : (
               filteredDescripcion?.map((item, index) => (
-                <div key={index} className="mb-2 p-2 border-b border-gray-300">
+                <div
+                key={index}
+                className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
+                  selectedReference === item.referencia
+                    ? 'border-customGreen'
+                    : 'border-gray-200 hover:border-gray-300'
+                } ${selectedReference && selectedReference !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={() => handleCheckboxChange(item.referencia)}
+              >
+                <div>
                   <p><strong>Monto:</strong> {item.monto}</p>
                   <p><strong>Fecha:</strong> {item.fecha}</p>
                   <p><strong>Referencia:</strong> {item.referencia}</p>
                   <p><strong>Rut:</strong> {item.rut_titular}</p>
                   <p><strong>Nombre:</strong> {item.nombre_titular}</p>
                 </div>
+                <input
+                  type="checkbox"
+                  checked={selectedReference === item.referencia}
+                  className="form-checkbox text-customGreen"
+                  disabled={selectedReference && selectedReference !== item.referencia}
+                />
+              </div>
               ))
             )}
           </div>

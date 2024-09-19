@@ -8,6 +8,7 @@ import SearchCard from "@/components/SearchCard";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import SelectWithSearch from "@/components/SelectWithSearch";
 import { fetchDataBalance } from "@/api/fetchDataBalance";
+import BottomSheet from "@/components/BottomSheet";
 
 const Cartolas = () => {
   const [dataBalance, setDataBalance] = useState(null);
@@ -33,6 +34,20 @@ const Cartolas = () => {
   const [selectedReferenceCuentasCorrientes, setSelectedReferenceCuentasCorrientes] = useState([]);
   const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] = useState([]);
   const itemsPerPage = 20;
+
+
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  const toggleBottomSheet = () => {
+    setIsBottomSheetOpen(!isBottomSheetOpen);
+  };
+
+  const calculateResult = () => {
+    const sumAmounts = selectedMontoCuentasCorrientes.reduce((acc, curr) => acc + curr, 0);
+    return selectedMontos - sumAmounts;
+  };
+
+  const resultado = calculateResult();
 
   useEffect(() => {
     const numero = localStorage.getItem('accountNumber');
@@ -204,21 +219,31 @@ const handleCheckboxChangeRutData = (reference, monto) => {
 };
 
 const handleCheckboxChangeCuentasCorrientes = (reference, monto) => {
-  setSelectedReferenceCuentasCorrientes((prevSelectedReferences) =>
-    prevSelectedReferences.includes(reference)
+  setSelectedReferenceCuentasCorrientes((prevSelectedReferences) => {
+    const newSelectedReferences = prevSelectedReferences.includes(reference)
       ? prevSelectedReferences.filter((ref) => ref !== reference)
-      : [...prevSelectedReferences, reference]
-  );
+      : [...prevSelectedReferences, reference];
 
-  setSelectedMontoCuentasCorrientes((prevSelectedMontos) => {   
+    setIsBottomSheetOpen(newSelectedReferences.length > 0);
+
+    return newSelectedReferences;
+  });
+
+  setSelectedMontoCuentasCorrientes((prevSelectedMontos) => {
+    const newSelectedMontos = [...prevSelectedMontos];
+    const index = newSelectedMontos.indexOf(monto);
+
     if (selectedReferenceCuentasCorrientes.includes(reference)) {
-      return prevSelectedMontos.filter((m) => m !== monto);
-    } else {      
-      return [...prevSelectedMontos, monto];
+      if (index !== -1) {
+        newSelectedMontos.splice(index, 1);
+      }
+    } else {
+      newSelectedMontos.push(monto);
     }
+
+    return newSelectedMontos;
   });
 };
-
 
 useEffect(() => {  
   console.log('selectedMontos:', selectedMontos);
@@ -628,7 +653,19 @@ useEffect(() => {
         </div>
       </div>
       <Tabs tabs={tabs} defaultTab={activeTab} onTabChange={handleTabChange} />
-      <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>
+      <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>      
+      <BottomSheet isOpen={isBottomSheetOpen} onClose={toggleBottomSheet}>
+        <p>Monto: {selectedMontos}</p>
+        {selectedMontoCuentasCorrientes.map((monto, index) => (
+        <p key={index}>Monto INET: {monto}</p>
+      ))}
+      <p>Diferencia: {calculateResult()}</p>
+      {resultado === 0 && (
+        <button className="bg-customGreen text-white py-2 px-4 rounded">
+          Match
+        </button>
+      )}
+      </BottomSheet>
     </div>
   );
 };

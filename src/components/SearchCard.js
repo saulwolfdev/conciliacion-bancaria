@@ -15,7 +15,7 @@ const SearchCard = ({ onSearchChange, dataBalance, setDataBalance, dataListar, s
   useEffect(() => {
     handleSearch();
   }, [minAmount, maxAmount, dataBalance]);
-console.log("balanceData cob datos en padre:", dataBalance)
+// console.log("balanceData cob datos en padre:", dataBalance)
   const handleSearch = (filteredData) => {
     let filteredItems = filteredData || dataListar;
   

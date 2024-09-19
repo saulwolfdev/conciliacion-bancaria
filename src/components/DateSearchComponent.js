@@ -45,7 +45,7 @@ const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, s
     const fetchAndSetData = async () => {
       try {        
         const data = balance;
-        console.log("Datos balance:", data);
+        // console.log("Datos balance:", data);
         setDataBalance(data.data);
       } catch (error) {
         console.error("Error:", error);
@@ -77,7 +77,7 @@ const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, s
     const fetchSetDataListar = async () => {
       try {        
         const data = listar; 
-        console.log("Datos listar:", data);
+        // console.log("Datos listar:", data);
         setDataListar(data.data);
         setDataTotals(data);
       } catch (error) {

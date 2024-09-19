@@ -25,14 +25,19 @@ const Cartolas = () => {
   const [filteredRutData, setFilteredRutData] = useState([]);
   const [filteredDescripcion, setFilteredDescripcion] = useState([]);
   const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState([]);
+  const [selectedMontos, setSelectedMontos] = useState([]);
+  const [selectedRutMonto, setSelectedRutMonto] = useState(null);
   const [showRut, setShowRut] = useState(true);
+  const [selectedReferenceRutData, setSelectedReferenceRutData] = useState(null);
+  const [selectedMontosRutData, setSelectedMontosRutData] = useState([]);
+  const [selectedReferenceCuentasCorrientes, setSelectedReferenceCuentasCorrientes] = useState([]);
+  const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] = useState([]);
   const itemsPerPage = 20;
 
   useEffect(() => {
     const numero = localStorage.getItem('accountNumber');
     setAccountNumber(numero);
   }, []);
-console.log("accountNumber desde cartolas page:", accountNumber)
   const pages = [
     { name: 'Bancos', href: '/dashboard/matchfinanciero/', current: false },
     { name: 'Match Financiero', href: '/dashboard/matchfinanciero/cartolas?tab=movimientos', current: true } 
@@ -82,9 +87,7 @@ console.log("accountNumber desde cartolas page:", accountNumber)
             change: " ",
           },
         ]
-      : [];
-
-      console.log("Calculated stats:", stats);
+      : [];    
 
   const handleSearchChange = (data) => {
     setFilteredData(data);
@@ -98,112 +101,6 @@ console.log("accountNumber desde cartolas page:", accountNumber)
   }, [tabFromUrl]);
 
 
-   //para usar balance desde mock
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = balance;
-  //       setDataBalance(data.data);
-  //       console.log("Datos balance:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const body = {
-  //             cuenta_bancaria_id: 10,
-  //             fecha_inicio: "",
-  //             fecha_termino: "",
-  //             descripcion: "",
-  //             monto_minimo: "",
-  //             monto_maximo: "",
-  //             estados: [1, 2, 3],
-  //       };
-
-  //       const response = await fetch('https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard_balance/', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify(body)
-  //       });
-
-  //       const data = await response.json(); 
-  //       // setDataBalance(data.data);
-  //       console.log("Datos balance:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-  //para usar dataListar desde mock
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = listar;
-  //       setDataListar(data.data);
-  //       setDataTotals(data)
-  //       console.log("Datos listar:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_movimientos_listar/",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({
-  //             cuenta_bancaria_id: 10,
-  //             fecha_inicio: "",
-  //             fecha_termino: "",
-  //             descripcion: "",
-  //             monto_minimo: "",
-  //             monto_maximo: "",
-  //             estados: [1, 2, 3],
-  //           }),
-  //         }
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error("La solicitud falló");
-  //       }
-
-  //       const data = await response.json();
-  //       setDataListar(data.data);
-  //       setDataTotals(data)
-  //       console.log("Datos listar funcionando:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     if (dataListar) {
@@ -225,8 +122,6 @@ console.log("accountNumber desde cartolas page:", accountNumber)
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
-console.log("dataBalance padre del padre",  typeof dataBalance?.data?.saldos?.saldo_inicial )
 
 const headlines = Array.from(
   new Map(
@@ -257,11 +152,13 @@ const headlinesData = Array.from(
 ).map(([descripcion]) => ({ descripcion }));
 
 
-const handleClickRut = (rut) => {
+const handleClickRut = (rut, monto) => {
   setSelectedRut(rut);
+  setSelectedRutMonto(monto);
   const filtered = dataListar.filter(item => item.rut_titular === rut);
+  const filteredCuentasCorrientes = cuentasCorrientes?.data.filter(item => item.analisis === rut);
   setFilteredRutData(filtered);
-  setFilteredCuentasCorrientes(cuentasCorrientes.data);
+  setFilteredCuentasCorrientes(filteredCuentasCorrientes);
 };
 
 const handleClickDescripcion = (descripcion) => {
@@ -271,11 +168,75 @@ const handleClickDescripcion = (descripcion) => {
   setFilteredCuentasCorrientes(cuentasCorrientes.data);
 };
 
-const handleCheckboxChange = (reference) => {
-  setSelectedReference((prevSelected) =>
+const handleCheckboxChange = (reference, monto) => {
+  setSelectedReference((prevSelected) => 
     prevSelected === reference ? null : reference
   );
+
+  setSelectedMontos((prevSelectedMontos) => {
+    if (prevSelectedMontos.includes(monto)) {
+      return prevSelectedMontos.filter((m) => m !== monto);
+    } else {
+      return [monto];
+    }
+  });
+
+  if (selectedReference && selectedReference !== reference) {
+    setSelectedMontoCuentasCorrientes([]);
+    setSelectedReferenceCuentasCorrientes([]);
+  }
 };
+
+
+
+const handleCheckboxChangeRutData = (reference, monto) => {
+  setSelectedReferenceRutData((prevSelected) =>
+    prevSelected === reference ? null : reference
+  );
+
+  setSelectedMontos((prevSelectedMontos) => {
+    if (prevSelectedMontos.includes(monto)) {
+      return prevSelectedMontos.filter((m) => m !== monto);
+    } else {
+      return [...prevSelectedMontos, monto];
+    }
+  });
+};
+
+const handleCheckboxChangeCuentasCorrientes = (reference, monto) => {
+  setSelectedReferenceCuentasCorrientes((prevSelectedReferences) =>
+    prevSelectedReferences.includes(reference)
+      ? prevSelectedReferences.filter((ref) => ref !== reference)
+      : [...prevSelectedReferences, reference]
+  );
+
+  setSelectedMontoCuentasCorrientes((prevSelectedMontos) => {   
+    if (selectedReferenceCuentasCorrientes.includes(reference)) {
+      return prevSelectedMontos.filter((m) => m !== monto);
+    } else {      
+      return [...prevSelectedMontos, monto];
+    }
+  });
+};
+
+
+useEffect(() => {  
+  console.log('selectedMontos:', selectedMontos);
+  console.log('selectedRutMonto:', selectedRutMonto);
+  console.log('selectedReferenceCuentasCorrientes:', selectedReferenceCuentasCorrientes);
+  console.log('selectedMontoCuentasCorrientes:', selectedMontoCuentasCorrientes);
+
+  const totalMontoCuentasCorrientes = selectedMontoCuentasCorrientes.reduce((acc, curr) => acc + curr, 0);
+  const totalMonto = selectedMontos.reduce((acc, curr) => acc + curr, 0);
+
+  if (totalMonto === totalMontoCuentasCorrientes) {
+    console.log('Montos coinciden:', totalMonto);
+  } else {
+    console.log('Montos no coinciden');
+  }
+}, [selectedMontos, selectedRutMonto, selectedReferenceCuentasCorrientes, selectedMontoCuentasCorrientes ]);
+
+
 
   const tabs = [
     {
@@ -549,60 +510,68 @@ const handleCheckboxChange = (reference) => {
                       ? 'border-customGreen'
                       : 'border-gray-200 hover:border-gray-300'
                   } ${selectedReference && selectedReference !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => handleCheckboxChange(item.referencia)}
+                  onClick={() => handleCheckboxChange(item.referencia, item.monto)}
                 >
                   <div>
                     <p><strong>Monto:</strong> {item.monto}</p>
                     <p><strong>Fecha:</strong> {item.fecha}</p>
                     <p><strong>Referencia:</strong> {item.referencia}</p>
-                    {/* <p><strong>Rut:</strong> {item.rut_titular}</p>
-                    <p><strong>Nombre:</strong> {item.nombre_titular}</p> */}
                   </div>
                   <input
                     type="checkbox"
                     checked={selectedReference === item.referencia}
-                    // onChange={() => handleCheckboxChange(item.referencia)}
                     className="form-checkbox text-customGreen"
                     disabled={selectedReference && selectedReference !== item.referencia}
+                    onChange={() => handleCheckboxChange(item.referencia, item.monto)} 
                   />
                 </div>
               ))
             ) : (
               filteredDescripcion?.map((item, index) => (
                 <div
-                key={index}
-                className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
-                  selectedReference === item.referencia
-                    ? 'border-customGreen'
-                    : 'border-gray-200 hover:border-gray-300'
-                } ${selectedReference && selectedReference !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
-                onClick={() => handleCheckboxChange(item.referencia)}
-              >
-                <div>
-                  <p><strong>Monto:</strong> {item.monto}</p>
-                  <p><strong>Fecha:</strong> {item.fecha}</p>
-                  <p><strong>Referencia:</strong> {item.referencia}</p>
-                  <p><strong>Rut:</strong> {item.rut_titular}</p>
-                  <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                  key={index}
+                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
+                    selectedReferenceRutData === item.referencia
+                      ? 'border-customGreen'
+                      : 'border-gray-200 hover:border-gray-300'
+                  } ${selectedReferenceRutData && selectedReferenceRutData !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => handleCheckboxChangeRutData(item.referencia, item.monto)}
+                >
+                  <div>
+                    <p><strong>Monto:</strong> {item.monto}</p>
+                    <p><strong>Fecha:</strong> {item.fecha}</p>
+                    <p><strong>Referencia:</strong> {item.referencia}</p>
+                    <p><strong>Rut:</strong> {item.rut_titular}</p>
+                    <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={selectedReferenceRutData === item.referencia}
+                    className="form-checkbox text-customGreen"
+                    disabled={selectedReferenceRutData && selectedReferenceRutData !== item.referencia}
+                  />
                 </div>
-                <input
-                  type="checkbox"
-                  checked={selectedReference === item.referencia}
-                  className="form-checkbox text-customGreen"
-                  disabled={selectedReference && selectedReference !== item.referencia}
-                />
-              </div>
               ))
             )}
           </div>
 
           <div className="flex-1 bg-gray-300 p-4">
             {filteredCuentasCorrientes?.map((item, index) => (
-              <div key={index} className="mb-2 p-2 border-b border-gray-300">
-                <p><strong>Referencia:</strong> {item.referencia_his}</p>
-                <p><strong>Monto:</strong> {item.valor_moneda_nacional}</p>
-                <p><strong>Fecha:</strong> {item.fecha_comprobante_his}</p>
-              </div>
+              <div key={index} className="mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center">
+                <div>
+                  <p><strong>Cuenta:</strong> {item.codigo_plan_de_cuentas}</p>
+                  <p><strong>Monto:</strong> {item.valor_moneda_nacional}</p>
+                  <p><strong>Fecha:</strong> {item.fecha_comprobante_his}</p>
+                  <p><strong>Referencia:</strong> {item.referencia_his}</p>
+                  <p><strong>Glosa:</strong> {item.glosa_detalle_compte_his}</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                  onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+                  className="form-checkbox text-customGreen"
+                />
+              </div>          
             ))}
           </div>
         </div>
@@ -629,9 +598,6 @@ const handleCheckboxChange = (reference) => {
   };
  
   const totales = dataTotals?.totales;
-  console.log("dataTotals revision:", dataTotals);
-  console.log("totales:", totales);
-  console.log("filteredData:", filteredData)
   const totalCargos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_cargos : "N/A";
   const totalAbonos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_abonos : "N/A";
 

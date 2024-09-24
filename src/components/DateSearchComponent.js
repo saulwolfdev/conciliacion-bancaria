@@ -27,66 +27,66 @@ const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, s
     onSearch(filteredData);
   };
 
-  // useEffect(() => {
-  //   const fetchAndSetData = async () => {
-  //     try {
-  //       const data = await fetchDataBalance(value.startDate, value.endDate);
-  //       console.log("Datos balance:", data);
-  //       setDataBalance(data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchAndSetData();
-  // }, [value]);
-
   useEffect(() => {
     const fetchAndSetData = async () => {
-      try {        
-        const data = balance;
-        // console.log("Datos balance:", data);
-        setDataBalance(data.data);
+      try {
+        const data = await fetchDataBalance(value.startDate, value.endDate);
+        console.log("Datos balance:", data);
+        setDataBalance(data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-  
+
     fetchAndSetData();
   }, [value]);
 
   // useEffect(() => {
-  //   const fetchSetDataListar = async () => {
-  //     try {
-  //       const data = await fetchDataListar(value.startDate, value.endDate);
-  //       console.log("Datos listar:", data);
-  //       setDataListar(data.data);
-  //       setDataTotals(data)
+  //   const fetchAndSetData = async () => {
+  //     try {        
+  //       const data = balance;
+  //       // console.log("Datos balance:", data);
+  //       setDataBalance(data.data);
   //     } catch (error) {
   //       console.error("Error:", error);
   //     }
   //   };
-
-  //   fetchSetDataListar();
+  
+  //   fetchAndSetData();
   // }, [value]);
-
-
-  //para usar dataListar desde mock
 
   useEffect(() => {
     const fetchSetDataListar = async () => {
-      try {        
-        const data = listar; 
-        // console.log("Datos listar:", data);
+      try {
+        const data = await fetchDataListar(value.startDate, value.endDate);
+        console.log("Datos listar:", data);
         setDataListar(data.data);
-        setDataTotals(data);
+        setDataTotals(data)
       } catch (error) {
         console.error("Error:", error);
       }
     };
-  
+
     fetchSetDataListar();
   }, [value]);
+
+
+  //para usar dataListar desde mock
+
+  // useEffect(() => {
+  //   const fetchSetDataListar = async () => {
+  //     try {        
+  //       const data = listar; 
+  //       // console.log("Datos listar:", data);
+  //       setDataListar(data.data);
+  //       setDataTotals(data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+  
+  //   fetchSetDataListar();
+  // }, [value]);
 
   return (
     <div>

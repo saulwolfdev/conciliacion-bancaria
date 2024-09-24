@@ -35,7 +35,8 @@ const Cartolas = () => {
   const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] = useState([]);
   const itemsPerPage = 20;
 
-
+console.log("selectedRut revision", selectedRut)
+console.log("filteredRutData revision", filteredRutData)
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const toggleBottomSheet = () => {
@@ -123,16 +124,16 @@ const Cartolas = () => {
     }
   }, [dataListar]);
 
-  const totalPages = dataListar
-    ? Math.ceil(dataListar.length / itemsPerPage)
-    : 0;
+  // const totalPages = dataListar
+  //   ? Math.ceil(dataListar.length / itemsPerPage)
+  //   : 0;
 
-  const currentData = dataListar
-    ? dataListar.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )
-    : [];
+  // const currentData = dataListar
+  //   ? dataListar.slice(
+  //       (currentPage - 1) * itemsPerPage,
+  //       currentPage * itemsPerPage
+  //     )
+  //   : [];
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -531,11 +532,11 @@ useEffect(() => {
                 <div
                   key={index}
                   className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
-                    selectedReference === item.referencia
+                    selectedReference === index
                       ? 'border-customGreen'
                       : 'border-gray-200 hover:border-gray-300'
-                  } ${selectedReference && selectedReference !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => handleCheckboxChange(item.referencia, item.monto)}
+                  } ${selectedReference && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => handleCheckboxChange(index, item.monto)}
                 >
                   <div>
                     <p><strong>Monto:</strong> {item.monto}</p>
@@ -544,10 +545,10 @@ useEffect(() => {
                   </div>
                   <input
                     type="checkbox"
-                    checked={selectedReference === item.referencia}
+                    checked={selectedReference === index}
                     className="form-checkbox text-customGreen"
-                    disabled={selectedReference && selectedReference !== item.referencia}
-                    onChange={() => handleCheckboxChange(item.referencia, item.monto)} 
+                    disabled={selectedReference && selectedReference !== index}
+                    onChange={() => handleCheckboxChange(index, item.monto)} 
                   />
                 </div>
               ))
@@ -582,7 +583,15 @@ useEffect(() => {
 
           <div className="flex-1 bg-gray-300 p-4">
             {filteredCuentasCorrientes?.map((item, index) => (
-              <div key={index} className="mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center">
+              <div 
+                key={index} 
+                className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
+                  selectedReferenceCuentasCorrientes.includes(item.referencia_his)
+                    ? 'border-customGreen'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+              >
                 <div>
                   <p><strong>Cuenta:</strong> {item.codigo_plan_de_cuentas}</p>
                   <p><strong>Monto:</strong> {item.valor_moneda_nacional}</p>
@@ -623,8 +632,14 @@ useEffect(() => {
   };
  
   const totales = dataTotals?.totales;
-  const totalCargos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_cargos : "N/A";
-  const totalAbonos = totales && totales.length > 0 ? totales[0]["$ - CLP"].total_abonos : "N/A";
+  console.log("dataTotals revision:", dataTotals)
+  const totalCargos = totales && totales.length > 0 
+    ? totales.reduce((acc, curr) => acc + parseFloat(curr["$ - CLP"].total_cargos || 0), 0) 
+    : "N/A";
+
+  const totalAbonos = totales && totales.length > 0 
+    ? totales.reduce((acc, curr) => acc + parseFloat(curr["$ - CLP"].total_abonos || 0), 0) 
+    : "N/A";
 
   const getCurrentMonthYear = () => {
     const date = new Date();

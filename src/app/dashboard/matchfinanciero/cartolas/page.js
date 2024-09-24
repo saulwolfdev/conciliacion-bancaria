@@ -37,19 +37,27 @@ const Cartolas = () => {
 
 console.log("selectedRut revision", selectedRut)
 console.log("filteredRutData revision", filteredRutData)
+console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCuentasCorrientes)
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const toggleBottomSheet = () => {
     setIsBottomSheetOpen(!isBottomSheetOpen);
   };
 
+  const formatCurrencyMonto = (amount) => {
+    return new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
+  };
+  
+
   const calculateResult = () => {
     const sumAmounts = selectedMontoCuentasCorrientes.reduce((acc, curr) => acc + curr, 0);
-    return selectedMontos - sumAmounts;
+    const result = selectedMontos - sumAmounts;
+    return result; // Devuelve el valor numérico sin formatear
   };
-
+  
   const resultado = calculateResult();
-
+  const resultadoFormateado = formatCurrencyMonto(resultado);
+console.log("resultado revision:", resultado)
   useEffect(() => {
     const numero = localStorage.getItem('accountNumber');
     setAccountNumber(numero);
@@ -123,6 +131,7 @@ console.log("filteredRutData revision", filteredRutData)
       setFilteredData(dataListar);
     }
   }, [dataListar]);
+  
 
   // const totalPages = dataListar
   //   ? Math.ceil(dataListar.length / itemsPerPage)
@@ -168,14 +177,22 @@ const headlinesData = Array.from(
 ).map(([descripcion]) => ({ descripcion }));
 
 
+
 const handleClickRut = (rut, monto) => {
   setSelectedRut(rut);
   setSelectedRutMonto(monto);
+
   const filtered = dataListar.filter(item => item.rut_titular === rut);
   const filteredCuentasCorrientes = cuentasCorrientes?.data.filter(item => item.analisis === rut);
   setFilteredRutData(filtered);
   setFilteredCuentasCorrientes(filteredCuentasCorrientes);
+
+  setSelectedReference(null);
+  setSelectedMontos([]);
+  setSelectedReferenceCuentasCorrientes([]);
+  setSelectedMontoCuentasCorrientes([]);
 };
+
 
 const handleClickDescripcion = (descripcion) => {
   setSelectedDescripcion(descripcion);
@@ -197,10 +214,8 @@ const handleCheckboxChange = (reference, monto) => {
     }
   });
 
-  if (selectedReference && selectedReference !== reference) {
-    setSelectedMontoCuentasCorrientes([]);
-    setSelectedReferenceCuentasCorrientes([]);
-  }
+  setSelectedReferenceCuentasCorrientes([]);
+  setSelectedMontoCuentasCorrientes([]);
 };
 
 
@@ -502,7 +517,7 @@ useEffect(() => {
             {showRut ? (
               headlines?.map(({ rut_titular, nombre_titular }) => (
                 <div
-                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'}`}
+                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'} ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
                   key={rut_titular}
                   onClick={() => handleClickRut(rut_titular)}
                 >
@@ -510,7 +525,7 @@ useEffect(() => {
                   <div>{nombre_titular}</div>
                   <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
                 </div>
-              ))
+              ))              
             ) : (
               headlinesData?.map(({ descripcion, estado }) => (
                 <div
@@ -531,23 +546,23 @@ useEffect(() => {
               filteredRutData?.map((item, index) => (
                 <div
                   key={index}
-                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
+                  className={`mb-2 p-4 border-2 rounded-lg  w-full bg-white flex justify-between items-center ${
                     selectedReference === index
                       ? 'border-customGreen'
                       : 'border-gray-200 hover:border-gray-300'
-                  } ${selectedReference && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => handleCheckboxChange(index, item.monto)}
+                  } ${selectedReference !== null && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  // onClick={() => handleCheckboxChange(index, item.monto)}
                 >
                   <div>
-                    <p><strong>Monto:</strong> {item.monto}</p>
+                    <p><strong>Monto:</strong> {formatCurrencyMonto(item.monto)}</p>
                     <p><strong>Fecha:</strong> {item.fecha}</p>
                     <p><strong>Referencia:</strong> {item.referencia}</p>
                   </div>
                   <input
                     type="checkbox"
                     checked={selectedReference === index}
-                    className="form-checkbox text-customGreen"
-                    disabled={selectedReference && selectedReference !== index}
+                    className="form-checkbox text-customGreen cursor-pointer"
+                    disabled={selectedReference !== null && selectedReference !== index}
                     onChange={() => handleCheckboxChange(index, item.monto)} 
                   />
                 </div>
@@ -582,31 +597,31 @@ useEffect(() => {
           </div>
 
           <div className="flex-1 bg-gray-300 p-4">
-            {filteredCuentasCorrientes?.map((item, index) => (
-              <div 
-                key={index} 
-                className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
-                  selectedReferenceCuentasCorrientes.includes(item.referencia_his)
-                    ? 'border-customGreen'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-              >
-                <div>
-                  <p><strong>Cuenta:</strong> {item.codigo_plan_de_cuentas}</p>
-                  <p><strong>Monto:</strong> {item.valor_moneda_nacional}</p>
-                  <p><strong>Fecha:</strong> {item.fecha_comprobante_his}</p>
-                  <p><strong>Referencia:</strong> {item.referencia_his}</p>
-                  <p><strong>Glosa:</strong> {item.glosa_detalle_compte_his}</p>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
-                  onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-                  className="form-checkbox text-customGreen"
-                />
-              </div>          
-            ))}
+          {selectedMontos > 0 && filteredCuentasCorrientes?.map((item, index) => (
+            <div 
+              key={index} 
+              className={`mb-2 p-4 border-2 rounded-lg w-full bg-white flex justify-between items-center ${
+                selectedReferenceCuentasCorrientes.includes(item.referencia_his)
+                  ? 'border-customGreen'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+              // onClick={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+            >
+              <div>
+                <p><strong>Cuenta:</strong> {item.codigo_plan_de_cuentas}</p>
+                <p><strong>Monto:</strong> {formatCurrencyMonto(item.valor_moneda_nacional)}</p>
+                <p><strong>Fecha:</strong> {item.fecha_comprobante_his}</p>
+                <p><strong>Referencia:</strong> {item.referencia_his}</p>
+                <p><strong>Glosa:</strong> {item.glosa_detalle_compte_his}</p>
+              </div>
+              <input
+                type="checkbox"
+                checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+                className="form-checkbox text-customGreen cursor-pointer"
+              />
+            </div>          
+          ))}
           </div>
         </div>
       ),
@@ -669,18 +684,20 @@ useEffect(() => {
       </div>
       <Tabs tabs={tabs} defaultTab={activeTab} onTabChange={handleTabChange} />
       <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>      
-      <BottomSheet isOpen={isBottomSheetOpen} onClose={toggleBottomSheet}>
-        <p>Monto: {selectedMontos}</p>
-        {selectedMontoCuentasCorrientes.map((monto, index) => (
-        <p key={index}>Monto INET: {monto}</p>
-      ))}
-      <p>Diferencia: {calculateResult()}</p>
-      {resultado === 0 && (
-        <button className="bg-customGreen text-white py-2 px-4 rounded">
-          Match
-        </button>
+      {selectedReferenceCuentasCorrientes.length > 0 && (
+        <BottomSheet isOpen={isBottomSheetOpen} onClose={toggleBottomSheet}>
+          <p>Monto: {formatCurrencyMonto(selectedMontos)}</p>
+          {selectedMontoCuentasCorrientes.map((monto, index) => (
+            <p key={index}>Monto INET: {formatCurrencyMonto(monto)}</p>
+          ))}
+          <p>Diferencia: {resultadoFormateado}</p>
+          {resultado === 0 && (
+            <button className="bg-customGreen text-white py-2 px-4 rounded">
+              Match
+            </button>
+          )}
+        </BottomSheet>
       )}
-      </BottomSheet>
     </div>
   );
 };

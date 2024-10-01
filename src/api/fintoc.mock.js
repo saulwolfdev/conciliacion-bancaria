@@ -4842,7 +4842,7 @@ export const cuentasCorrientes = {
           "valor_otra_moneda":0.0,
           "codigo_plan_de_cuentas":"210710   ",
           "tipo":1,
-          "analisis":"12.555.901-8"
+          "analisis":"99.539.220-8"
        },
        {
           "modulo":"cc_credito_y_cobranza",

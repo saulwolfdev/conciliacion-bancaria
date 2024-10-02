@@ -39,6 +39,7 @@ const Cartolas = () => {
   const [expandedDescripcion, setExpandedDescripcion] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
 console.log("selectedRut revision", selectedRut)
 console.log("filteredRutData revision", filteredRutData)
@@ -241,7 +242,7 @@ const handleClickDescripcion = (descripcion) => {
   setExpandedDescripcion(expandedDescripcion === descripcion ? null : descripcion);
 };
 
-const handleCheckboxChange = (reference, monto) => {
+const handleCheckboxChange = (reference, monto, item) => {
   setSelectedReference((prevSelected) => 
     prevSelected === reference ? null : reference
   );
@@ -253,6 +254,10 @@ const handleCheckboxChange = (reference, monto) => {
       return [monto];
     }
   });
+
+  setSelectedItem((prevSelectedItem) => 
+    prevSelectedItem?.reference === reference ? null : item
+  );
 
   setSelectedReferenceCuentasCorrientes([]);
   setSelectedMontoCuentasCorrientes([]);
@@ -573,7 +578,7 @@ useEffect(() => {
                                     ? 'border-customGreen bg-customBackgroundGreen'
                                     : 'border-gray-200 hover:border-gray-300'
                                 } ${selectedReference !== null && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                onClick={() => handleCheckboxChange(index, item.monto)}
+                                onClick={() => handleCheckboxChange(index, item.monto, item)}
                               >
                                 {isMobile ? (
                                   <div className="flex flex-col">
@@ -746,6 +751,43 @@ useEffect(() => {
           </div> */}
 
           <div className="bg-gray-300 p-4" style={{ width: isMobile ? '100%' : '65%' }}>
+          {/* <div>  
+            {selectedItem && (
+              <>
+                <p>Monto: {selectedItem.monto}</p>
+                <p>Fecha: {selectedItem.fecha}</p>
+                <p>Referencia: {selectedItem.referencia}</p>
+              </>
+            )}
+          </div> */}
+          <div class="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4">
+            <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-2">
+              {selectedItem && (
+                <div className="flex flex-col">
+                  <div className="flex justify-between items-center">
+                    <div className="text-customGreen font-bold text-2xl">
+                      {formatCurrencyMonto(selectedItem.monto)}
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-bold">{selectedItem.nombre_titular}</div>
+                      <div>{selectedItem.rut_titular}</div>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <div className="font-bold">Fecha de emisión</div>
+                      <div>{selectedItem.fecha}</div>
+                    </div>
+                    <div>
+                      <div className="font-bold">Referencia</div>
+                      <div>{selectedItem.referencia}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+          </div>
             {selectedMontos > 0 && (
               <div className="bg-white rounded-lg shadow-md p-4">
                 <table className="w-full table-auto border-collapse">

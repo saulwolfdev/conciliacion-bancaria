@@ -40,6 +40,7 @@ const Cartolas = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isClicked, setIsClicked] = useState(false);
 
 console.log("selectedRut revision", selectedRut)
 console.log("filteredRutData revision", filteredRutData)
@@ -82,12 +83,12 @@ console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCue
   const calculateResult = () => {
     const sumAmounts = selectedMontoCuentasCorrientes.reduce((acc, curr) => acc + curr, 0);
     const result = selectedMontos - sumAmounts;
-    return result; // Devuelve el valor numérico sin formatear
+    return result;
   };
   
   const resultado = calculateResult();
   const resultadoFormateado = formatCurrencyMonto(resultado);
-console.log("resultado revision:", resultado)
+
   useEffect(() => {
     const numero = localStorage.getItem('accountNumber');
     setAccountNumber(numero);
@@ -213,13 +214,15 @@ const handleClickRut = (rut, monto) => {
   setSelectedRutMonto(monto);
 
   const filtered = dataListar.filter(item => item.rut_titular === rut);
-  const filteredCuentasCorrientes = cuentasCorrientes?.data.filter(item => item.analisis === rut);
+  const filterCuentasCorrientes = cuentasCorrientes?.data.filter(item => item.analisis === rut);
   setFilteredRutData(filtered);
-  setFilteredCuentasCorrientes(filteredCuentasCorrientes);
-
-  // setSelectedReference(null);
-  // setSelectedMontos([]);
-  // setSelectedReferenceCuentasCorrientes([]);
+  setFilteredCuentasCorrientes(filterCuentasCorrientes);
+  setExpandedRut(expandedRut === rut ? null : rut);
+  setSelectedReference(null);  
+  setIsClicked(false);
+  setSelectedMontoCuentasCorrientes([])
+  setSelectedReferenceCuentasCorrientes([]);
+  setSelectedMontos([]);
   // setSelectedMontoCuentasCorrientes([]);
   
   // const isExpanded = expandedRut === rut;
@@ -231,6 +234,7 @@ const handleToggleExpand = (rut) => {
   setExpandedRut(expandedRut === rut ? null : rut);
   setSelectedReference(null);
   setSelectedMontos([]);
+  setFilteredRutData([])
 };
 
 
@@ -242,7 +246,9 @@ const handleClickDescripcion = (descripcion) => {
   setExpandedDescripcion(expandedDescripcion === descripcion ? null : descripcion);
 };
 
-const handleCheckboxChange = (reference, monto, item) => {
+const handleCheckboxChange = (reference, monto, item, event) => {
+  event.stopPropagation();
+  setIsClicked(true);
   setSelectedReference((prevSelected) => 
     prevSelected === reference ? null : reference
   );
@@ -322,10 +328,10 @@ useEffect(() => {
   } else {
     console.log('Montos no coinciden');
   }
-}, [selectedMontos, selectedRutMonto, selectedReferenceCuentasCorrientes, selectedMontoCuentasCorrientes ]);
+}, [selectedMontos, selectedRutMonto, selectedReferenceCuentasCorrientes, selectedMontoCuentasCorrientes,filteredCuentasCorrientes ]);
 
 
-
+console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
 
   const tabs = [
     {
@@ -543,28 +549,29 @@ useEffect(() => {
                 <div
                   className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'} ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
                   key={rut_titular}
-                  onClick={() => handleClickRut(rut_titular)}
+                  // onClick={() => handleClickRut(rut_titular)}
                 >
-                  <div className="flex items-start w-full">
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-customGreen">
-                      <span className="font-medium leading-none text-white">{nombre_titular.substring(0, 2)}</span>
-                    </span>
-                    <div className="ml-2">
-                      <div>{nombre_titular}</div>
-                      <div className="text-md text-gray-600">{rut_titular}</div>
+                  <div className="flex items-start w-full" onClick={() => handleClickRut(rut_titular)}>
+                    <div className="flex w-full">
+                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-customGreen">
+                        <span className="font-medium leading-none text-white">{nombre_titular.substring(0, 2)}</span>
+                      </span>
+                      <div className="ml-2 flex-grow">
+                        <div>{nombre_titular}</div>
+                        <div className="text-md text-gray-600">{rut_titular}</div>
+                        <p className="text-red-500 mt-1">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+                      </div>
+                      <svg
+                        className={`w-4 h-4 ml-auto mt-1 transform ${expandedRut === rut_titular ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
                     </div>
-                    <svg
-                      className={`w-4 h-4 ml-auto transform ${expandedRut === rut_titular ? 'rotate-180' : ''}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      onClick={() => handleToggleExpand(rut_titular)}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
                   </div>
-                  <p className="text-red-500 ml-12 mt-1">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
 
                   {expandedRut === rut_titular && (
                     <div className="mt-2">                      
@@ -578,7 +585,7 @@ useEffect(() => {
                                     ? 'border-customGreen bg-customBackgroundGreen'
                                     : 'border-gray-200 hover:border-gray-300'
                                 } ${selectedReference !== null && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                onClick={() => handleCheckboxChange(index, item.monto, item)}
+                                onClick={() => handleCheckboxChange(index, item.monto, item, event)}
                               >
                                 {isMobile ? (
                                   <div className="flex flex-col">
@@ -750,7 +757,7 @@ useEffect(() => {
             ))}
           </div> */}
 
-          <div className="bg-gray-300 p-4" style={{ width: isMobile ? '100%' : '65%' }}>
+          <div className=" p-4" style={{ width: isMobile ? '100%' : '65%' }}>
           {/* <div>  
             {selectedItem && (
               <>
@@ -760,8 +767,10 @@ useEffect(() => {
               </>
             )}
           </div> */}
-          <div class="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4">
-            <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-2">
+          {filteredCuentasCorrientes.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-4">
+          {isClicked && selectedMontos > 0 && (                
+            <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
               {selectedItem && (
                 <div className="flex flex-col">
                   <div className="flex justify-between items-center">
@@ -786,10 +795,10 @@ useEffect(() => {
                 </div>
               )}
             </div>
-
-          </div>
-            {selectedMontos > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-4">
+          
+          )}
+            {/* {filteredCuentasCorrientes.length > 0 && (
+              <div className="bg-white rounded-lg shadow-md p-4"> */}
                 <table className="w-full table-auto border-collapse">
                   <thead>
                     <tr className="bg-customBackgroundGreen">
@@ -805,12 +814,14 @@ useEffect(() => {
                     {filteredCuentasCorrientes?.map((item, index) => (
                       <tr key={index} className="border-b">
                         <td className="p-2 text-center">
-                          <input
-                            type="checkbox"
-                            checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
-                            onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-                            className="form-checkbox text-customGreen cursor-pointer"
-                          />
+                        <input
+                          type="checkbox"
+                          checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                          onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+                          className={`form-checkbox cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
+                          disabled={selectedMontos.length === 0}
+                        />
+
                         </td>
                         <td className="p-2">{item.codigo_plan_de_cuentas}</td>
                         <td className="p-2">$ {formatCurrencyMonto(item.valor_moneda_nacional)}</td>

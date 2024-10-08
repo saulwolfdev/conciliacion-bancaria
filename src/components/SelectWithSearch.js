@@ -1,30 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const SelectWithSearch = ({ dataListar, accountNumber }) => {
+const SelectWithSearch = ({ filteredCuentasCorrientes, onSelect }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    if (dataListar && accountNumber) {
-      const defaultAccount = dataListar.find(item => {
-        const numeroExtraido = item.cuenta_corriente.nombre.match(/\d+/)[0];
-        return numeroExtraido === accountNumber;
-      });
-      if (defaultAccount) {
-        setSelectedAccount(defaultAccount);
-      }
-    }
-  }, [dataListar, accountNumber]);
-
-  const filteredData = dataListar?.filter(item =>
-    item?.cuenta_corriente?.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = filteredCuentasCorrientes?.filter(item =>
+    item?.glosa_detalle_compte_his.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const uniqueData = filteredData ? Object.values(
     filteredData.reduce((acc, item) => {
-      acc[item.cuenta_corriente.nombre] = item;
+      acc[item.glosa_detalle_compte_his] = item;
       return acc;
     }, {})
   ) : [];
@@ -32,8 +20,7 @@ const SelectWithSearch = ({ dataListar, accountNumber }) => {
   const handleSelect = (item) => {
     setSelectedAccount(item);
     setIsOpen(false);
-    const numeroExtraido = item.cuenta_corriente.nombre.match(/\d+/)[0];
-    console.log("numeroExtraido", numeroExtraido);
+    onSelect(item);
   };
 
   const handleClickOutside = (event) => {
@@ -56,7 +43,7 @@ const SelectWithSearch = ({ dataListar, accountNumber }) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>
-          {selectedAccount ? `${selectedAccount.cuenta_corriente?.nombre || ''} ${selectedAccount.cuenta_corriente?.numero || ''}` : 'Selecciona una cuenta'}
+          {selectedAccount ? `${selectedAccount.glosa_detalle_compte_his}` : 'Selecciona una cuenta'}
         </span>
         <svg className={`w-4 h-4 transform ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
@@ -78,7 +65,7 @@ const SelectWithSearch = ({ dataListar, accountNumber }) => {
                 className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleSelect(item)}
               >
-                <span>{item.cuenta_corriente.nombre} {item.cuenta_corriente.numero}</span>
+                <span>{item.glosa_detalle_compte_his}</span>
               </div>
             ))}
           </div>

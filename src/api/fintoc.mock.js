@@ -4687,7 +4687,7 @@ export const cuentasCorrientes = {
           "codigo_sucursal":0,
           "referencia_his":"55441    ",
           "fecha_comprobante_his":"2022-06-30T00:00:00",
-          "glosa_detalle_compte_his":"PROV O/C JUNIO           ",
+          "glosa_detalle_compte_his":"Prueba           ",
           "fecha_documento_his":"2022-06-10T00:00:00",
           "vencto_documento_his":"2022-06-14T00:00:00",
           "sentido_cta_vs_valor":1,

@@ -8,7 +8,8 @@ import SearchCard from "@/components/SearchCard";
 import BreadCrumbs from "@/components/BreadCrumbs";
 import SelectWithSearch from "@/components/SelectWithSearch";
 import { fetchDataBalance } from "@/api/fetchDataBalance";
-import BottomSheet from "@/components/BottomSheet";
+import BottomSheet from "@/components/BottomSheet"; 
+import SearchBar from '@/components/SearchBar';
 
 const Cartolas = () => {
   const [dataBalance, setDataBalance] = useState(null);
@@ -25,7 +26,9 @@ const Cartolas = () => {
   const [selectedReference, setSelectedReference] = useState(null);
   const [filteredRutData, setFilteredRutData] = useState([]);
   const [filteredDescripcion, setFilteredDescripcion] = useState([]);
+  const [cuentasCorrientesData, setCuentasCorrientesData] = useState(cuentasCorrientes);
   const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState([]);
+  const [filteredCuentasCorrientesByRut, setFilteredCuentasCorrientesByRut] = useState([]);
   const [selectedMontos, setSelectedMontos] = useState([]);
   const [selectedRutMonto, setSelectedRutMonto] = useState(null);
   const [showRut, setShowRut] = useState(true);
@@ -142,7 +145,33 @@ console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCue
             change: " ",
           },
         ]
-      : [];    
+        : [];     
+      
+      
+      const handleSearchs = (searchTerm) => {
+        if (typeof searchTerm !== 'string') {
+          console.error("searchTerm no es una cadena de texto");
+          return;
+      }
+      
+        const lowercasedTerm = searchTerm.toLowerCase();
+        if (Array.isArray(filteredCuentasCorrientesByRut)) {
+          const filtered = filteredCuentasCorrientesByRut.filter((item) =>
+            item.codigo_plan_de_cuentas?.toLowerCase().includes(lowercasedTerm) ||
+            item.valor_moneda_nacional?.toString().includes(lowercasedTerm) ||
+            item.fecha_comprobante_his?.toLowerCase().includes(lowercasedTerm) ||
+            item.referencia_his?.toLowerCase().includes(lowercasedTerm) ||
+            item.glosa_detalle_compte_his?.toLowerCase().includes(lowercasedTerm)
+          );
+          setFilteredCuentasCorrientes(filtered);
+        } else {
+          console.error("filteredCuentasCorrientesByRut no es un array");
+        }
+      };
+      
+      const handleSearch = (filteredDatas) => {
+        setFilteredCuentasCorrientes(filteredDatas || filteredCuentasCorrientes);
+      };
 
   const handleSearchChange = (data) => {
     setFilteredData(data);
@@ -214,21 +243,22 @@ const handleClickRut = (rut, monto) => {
   setSelectedRutMonto(monto);
 
   const filtered = dataListar.filter(item => item.rut_titular === rut);
-  const filterCuentasCorrientes = cuentasCorrientes?.data.filter(item => item.analisis === rut);
+  const filterCuentasCorrientes = Array.isArray(cuentasCorrientesData?.data) 
+    ? cuentasCorrientesData.data.filter(item => item.analisis === rut) 
+    : [];
+  
   setFilteredRutData(filtered);
   setFilteredCuentasCorrientes(filterCuentasCorrientes);
+  setFilteredCuentasCorrientesByRut(filterCuentasCorrientes);
   setExpandedRut(expandedRut === rut ? null : rut);
   setSelectedReference(null);  
   setIsClicked(false);
-  setSelectedMontoCuentasCorrientes([])
+  setSelectedMontoCuentasCorrientes([]);
   setSelectedReferenceCuentasCorrientes([]);
   setSelectedMontos([]);
-  // setSelectedMontoCuentasCorrientes([]);
-  
-  // const isExpanded = expandedRut === rut;
-  // setExpandedRut(isExpanded ? null : rut);
-  // setIsOpen(!isExpanded);
 };
+
+
 
 const handleToggleExpand = (rut) => {
   setExpandedRut(expandedRut === rut ? null : rut);
@@ -582,7 +612,7 @@ console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
                                 key={index}
                                 className={`mb-2 p-4 border-2 rounded-xl w-full flex flex-col ${
                                   selectedReference === index
-                                    ? 'border-customGreen bg-customBackgroundGreen'
+                                    ? ' bg-customBackgroundGreen'
                                     : 'border-gray-200 hover:border-gray-300'
                                 } ${selectedReference !== null && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 onClick={() => handleCheckboxChange(index, item.monto, item, event)}
@@ -769,36 +799,49 @@ console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
           </div> */}
           {filteredCuentasCorrientes.length > 0 && (
               <div className="bg-white rounded-lg shadow-md p-4">
-          {isClicked && selectedMontos > 0 && (                
-            <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
-              {selectedItem && (
-                <div className="flex flex-col">
-                  <div className="flex justify-between items-center">
-                    <div className="text-customGreen font-bold text-2xl">
-                      {formatCurrencyMonto(selectedItem.monto)}
-                    </div>
-                    <div className="ml-4">
-                      <div className="font-bold">{selectedItem.nombre_titular}</div>
-                      <div>{selectedItem.rut_titular}</div>
-                    </div>
+                {isClicked && selectedMontos > 0 && (                
+                  <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
+                    {selectedItem && (
+                      <div className="flex flex-col">
+                        <div className="flex justify-between items-center">
+                          <div className="text-customGreen font-bold text-2xl">
+                            {formatCurrencyMonto(selectedItem.monto)}
+                          </div>
+                          <div className="ml-4">
+                            <div className="font-bold">{selectedItem.nombre_titular}</div>
+                            <div>{selectedItem.rut_titular}</div>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex justify-between">
+                          <div>
+                            <div className="font-bold">Fecha de emisión</div>
+                            <div>{selectedItem.fecha}</div>
+                          </div>
+                          <div>
+                            <div className="font-bold">Referencia</div>
+                            <div>{selectedItem.referencia}</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="mt-4 flex justify-between">
-                    <div>
-                      <div className="font-bold">Fecha de emisión</div>
-                      <div>{selectedItem.fecha}</div>
-                    </div>
-                    <div>
-                      <div className="font-bold">Referencia</div>
-                      <div>{selectedItem.referencia}</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          
-          )}
+                
+                )}
             {/* {filteredCuentasCorrientes.length > 0 && (
               <div className="bg-white rounded-lg shadow-md p-4"> */}
+              {/* <SearchComponent             
+            filteredCuentasCorrientes={filteredCuentasCorrientes} 
+            label="Búsqueda libre" 
+            inputId="search-free" 
+            onSearch={handleSearchs} 
+            searchType="inetSearch" 
+          /> */}
+          <SearchBar
+            label="Busqueda Libre"
+            onSearch={handleSearchs}
+            inputId="search-input"
+          />
+    
                 <table className="w-full table-auto border-collapse">
                   <thead>
                     <tr className="bg-customBackgroundGreen">

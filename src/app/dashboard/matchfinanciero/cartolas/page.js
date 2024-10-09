@@ -10,6 +10,8 @@ import SelectWithSearch from "@/components/SelectWithSearch";
 import { fetchDataBalance } from "@/api/fetchDataBalance";
 import BottomSheet from "@/components/BottomSheet"; 
 import SearchBar from '@/components/SearchBar';
+import SelectBar from '@/components/SelectBar';
+import DateSearchBar from '@/components/DateSearchBar';
 
 const Cartolas = () => {
   const [dataBalance, setDataBalance] = useState(null);
@@ -28,6 +30,7 @@ const Cartolas = () => {
   const [filteredDescripcion, setFilteredDescripcion] = useState([]);
   const [cuentasCorrientesData, setCuentasCorrientesData] = useState(cuentasCorrientes);
   const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState([]);
+  const [selectFilteredCuentasCorrientes, setSelectFilteredCuentasCorrientes] = useState([]);
   const [filteredCuentasCorrientesByRut, setFilteredCuentasCorrientesByRut] = useState([]);
   const [selectedMontos, setSelectedMontos] = useState([]);
   const [selectedRutMonto, setSelectedRutMonto] = useState(null);
@@ -44,6 +47,9 @@ const Cartolas = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+  // const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
+  const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
 
 console.log("selectedRut revision", selectedRut)
 console.log("filteredRutData revision", filteredRutData)
@@ -148,25 +154,75 @@ console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCue
         : [];     
       
       
-      const handleSearchs = (searchTerm) => {
-        if (typeof searchTerm !== 'string') {
-          console.error("searchTerm no es una cadena de texto");
-          return;
-      }
-      
-        const lowercasedTerm = searchTerm.toLowerCase();
-        if (Array.isArray(filteredCuentasCorrientesByRut)) {
+        const handleSearchs = (searchTerm) => {
+          if (typeof searchTerm !== 'string') {
+            console.error("searchTerm no es una cadena de texto");
+            return;
+          }
+        
+          const lowercasedTerm = searchTerm.toLowerCase();
+          if (Array.isArray(filteredCuentasCorrientesByRut)) {
+            const filtered = filteredCuentasCorrientesByRut.filter((item) => {
+              const formattedDate = formatDate(item.fecha_comprobante_his).toLowerCase();
+              return (
+                item.codigo_plan_de_cuentas?.toLowerCase().includes(lowercasedTerm) ||
+                item.valor_moneda_nacional?.toString().includes(lowercasedTerm) ||
+                formattedDate.includes(lowercasedTerm) ||
+                item.referencia_his?.toLowerCase().includes(lowercasedTerm) ||
+                item.glosa_detalle_compte_his?.toLowerCase().includes(lowercasedTerm)
+              );
+            });
+            setFilteredCuentasCorrientes(filtered);
+          } else {
+            console.error("filteredCuentasCorrientesByRut no es un array");
+          }
+        };
+
+
+      const handleSelect = (selectedOption) => {
+        if (selectedOption === "all") {
+          setFilteredCuentasCorrientes(filteredCuentasCorrientesByRut);
+        } else if (typeof selectedOption === 'string') {
           const filtered = filteredCuentasCorrientesByRut.filter((item) =>
-            item.codigo_plan_de_cuentas?.toLowerCase().includes(lowercasedTerm) ||
-            item.valor_moneda_nacional?.toString().includes(lowercasedTerm) ||
-            item.fecha_comprobante_his?.toLowerCase().includes(lowercasedTerm) ||
-            item.referencia_his?.toLowerCase().includes(lowercasedTerm) ||
-            item.glosa_detalle_compte_his?.toLowerCase().includes(lowercasedTerm)
+            item.glosa_detalle_compte_his?.toLowerCase() === selectedOption.toLowerCase()
           );
           setFilteredCuentasCorrientes(filtered);
         } else {
+          console.error("selectedOption no es una cadena de texto");
+        }
+      };
+      
+      const uniqueOptions = [...new Set(filteredCuentasCorrientesByRut.map(item => item.glosa_detalle_compte_his))];
+
+
+
+      const handleDateChange = (dateRange) => {
+        if (Array.isArray(filteredCuentasCorrientesByRut)) {
+          if (!dateRange.startDate && !dateRange.endDate) {            
+            setFilteredCuentasCorrientes(filteredCuentasCorrientesByRut);
+          } else {
+            const startDate = new Date(dateRange.startDate);
+            startDate.setHours(0, 0, 0, 0); 
+            const endDate = new Date(dateRange.endDate);
+            endDate.setHours(23, 59, 59, 999);
+    
+            const filtered = filteredCuentasCorrientesByRut.filter((item) => {
+              const itemDate = new Date(item.fecha_comprobante_his);
+              return itemDate >= startDate && itemDate <= endDate;
+            });
+    
+            setFilteredCuentasCorrientes(filtered);
+          }
+        } else {
           console.error("filteredCuentasCorrientesByRut no es un array");
         }
+      };
+
+
+      const handleDateReset = () => {
+        // setDateRange({ startDate: null, endDate: null });
+        setSelectedDateRange({ startDate: null, endDate: null });
+        setFilteredCuentasCorrientes(filteredCuentasCorrientesByRut);
       };
       
       const handleSearch = (filteredDatas) => {
@@ -249,6 +305,7 @@ const handleClickRut = (rut, monto) => {
   
   setFilteredRutData(filtered);
   setFilteredCuentasCorrientes(filterCuentasCorrientes);
+  setSelectFilteredCuentasCorrientes(filterCuentasCorrientes);
   setFilteredCuentasCorrientesByRut(filterCuentasCorrientes);
   setExpandedRut(expandedRut === rut ? null : rut);
   setSelectedReference(null);  
@@ -256,6 +313,7 @@ const handleClickRut = (rut, monto) => {
   setSelectedMontoCuentasCorrientes([]);
   setSelectedReferenceCuentasCorrientes([]);
   setSelectedMontos([]);
+  setSelectedOption('');
 };
 
 
@@ -362,6 +420,7 @@ useEffect(() => {
 
 
 console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
+console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
 
   const tabs = [
     {
@@ -628,7 +687,21 @@ console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
                                     <div className="flex  justify-between">
                                       <div className="flex flex-col items-start mb-2">
                                         <p>$ {formatCurrencyMonto(item.monto)}</p>
-                                        <p className="text-md text-gray-600">Monto</p>
+                                        {item.monto >= 0 ? (
+                                          <div className="flex items-center">
+                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                            <p className="text-md text-green-500 ml-1">Ingreso</p>
+                                          </div>
+                                        ) : (
+                                          <div className="flex items-center">
+                                            <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                            <p className="text-md text-red-500 ml-1">Egreso</p>
+                                          </div>
+                                        )}
                                       </div>
                                       <div className="flex flex-col items-start mb-2">
                                         <p>{formatDate(item.fecha)}</p>
@@ -797,52 +870,66 @@ console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
               </>
             )}
           </div> */}
-          {filteredCuentasCorrientes.length > 0 && (
+          {selectFilteredCuentasCorrientes.length > 0 && (
               <div className="bg-white rounded-lg shadow-md p-4">
                 {isClicked && selectedMontos > 0 && (                
                   <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
                     {selectedItem && (
                       <div className="flex flex-col">
-                        <div className="flex justify-between items-center">
-                          <div className="text-customGreen font-bold text-2xl">
-                            {formatCurrencyMonto(selectedItem.monto)}
-                          </div>
-                          <div className="ml-4">
-                            <div className="font-bold">{selectedItem.nombre_titular}</div>
-                            <div>{selectedItem.rut_titular}</div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex justify-between">
+                        <div className="flex justify-between">
                           <div>
-                            <div className="font-bold">Fecha de emisión</div>
-                            <div>{selectedItem.fecha}</div>
+                            <div className="text-customGreen font-bold text-2xl mb-8">
+                              {formatCurrencyMonto(selectedItem.monto)}
+                            </div>
+                            <div>
+                              <div className="font-bold">Fecha de emisión</div>
+                              <div>{selectedItem.fecha}</div>
+                            </div>
                           </div>
                           <div>
-                            <div className="font-bold">Referencia</div>
-                            <div>{selectedItem.referencia}</div>
+                            <div className="mb-4">
+                              <div className="font-bold">{selectedItem.nombre_titular}</div>
+                              <div>{selectedItem.rut_titular}</div>
+                            </div>
+                            <div>
+                              <div className="font-bold">Referencia</div>
+                              <div>{selectedItem.referencia}</div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     )}
+
                   </div>
                 
-                )}
-            {/* {filteredCuentasCorrientes.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-4"> */}
-              {/* <SearchComponent             
-            filteredCuentasCorrientes={filteredCuentasCorrientes} 
-            label="Búsqueda libre" 
-            inputId="search-free" 
-            onSearch={handleSearchs} 
-            searchType="inetSearch" 
-          /> */}
-          <SearchBar
-            label="Busqueda Libre"
-            onSearch={handleSearchs}
-            inputId="search-input"
-          />
-    
-                <table className="w-full table-auto border-collapse">
+                )}            
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <SearchBar
+                    label="Búsqueda libre"
+                    onSearch={handleSearchs}
+                    inputId="search-input"
+                    setSelectedOption={setSelectedOption}
+                    handleDateReset={handleDateReset}
+                  />
+                  <SelectBar
+                    label="Buscar Cliente/Proovedor"
+                    options={uniqueOptions}
+                    onSelect={handleSelect}
+                    inputId="select-input"
+                    selectedOption={selectedOption}
+                    setSelectedOption={setSelectedOption}
+                    handleDateReset={handleDateReset}
+                  />
+                  <DateSearchBar
+                    label="Buscar por fecha"
+                    onDateChange={handleDateChange}
+                    inputId="date-search-input"
+                    setSelectedOption={setSelectedOption}
+                    selectedDateRange={selectedDateRange}
+                    setSelectedDateRange={setSelectedDateRange}
+                  />
+                </div>               
+                <table className="w-full table-auto border-collapse mt-4">
                   <thead>
                     <tr className="bg-customBackgroundGreen">
                       <th className="p-2 text-left pl-6"></th>
@@ -854,36 +941,47 @@ console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCuentasCorrientes?.map((item, index) => (
-                      <tr key={index} className="border-b">
-                        <td className="p-2 text-center">
-                        <input
-                          type="checkbox"
-                          checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
-                          onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-                          className={`form-checkbox cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
-                          disabled={selectedMontos.length === 0}
-                        />
-
+                    {filteredCuentasCorrientes.length > 0 ? (
+                      filteredCuentasCorrientes.map((item, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="p-2 text-center">
+                            <input
+                              type="checkbox"
+                              checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                              onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+                              className={`form-checkbox cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
+                              disabled={selectedMontos.length === 0}
+                            />
+                          </td>
+                          <td className="p-2">{item.codigo_plan_de_cuentas}</td>
+                          <td className="p-2">$ {formatCurrencyMonto(item.valor_moneda_nacional)}</td>
+                          <td className="p-2">{formatDate(item.fecha_comprobante_his)}</td>
+                          <td className="p-2">{item.referencia_his}</td>
+                          <td className="p-2">{item.glosa_detalle_compte_his}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={8}
+                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500"
+                        >
+                          No se encontraron resultados.
                         </td>
-                        <td className="p-2">{item.codigo_plan_de_cuentas}</td>
-                        <td className="p-2">$ {formatCurrencyMonto(item.valor_moneda_nacional)}</td>
-                        <td className="p-2">{formatDate(item.fecha_comprobante_his)}</td>
-                        <td className="p-2">{item.referencia_his}</td>
-                        <td className="p-2">{item.glosa_detalle_compte_his}</td>                        
                       </tr>
-                    ))}
+                    )}
                   </tbody>
+
                 </table>
                 <div className="bg-gray-100 p-4 shadow-md flex justify-end">
                   <span className="font-bold mr-4">Diferencia:</span>  $ {resultadoFormateado}
                 </div>
               </div>
             )}
-            {resultado === 0 && selectedReferenceCuentasCorrientes.length > 0 && (
+            {selectedReferenceCuentasCorrientes.length > 0 && (
               <div className="flex justify-end">
                 <button className="bg-customGreen text-white py-2 px-4 rounded mt-4 mr-4">
-                  Match
+                 {resultado === 0 && selectedReferenceCuentasCorrientes.length > 0 ? 'Match' : 'Match Parcial'}
                 </button>
               </div>
             )}

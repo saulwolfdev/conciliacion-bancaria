@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
-const SearchBar = ({ onSearch, label, inputId }) => {
+const SearchBar = ({ onSearch, label, inputId, setSelectedOption, handleDateReset }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
     onSearch(e.target.value);
+    // setSelectedOption("");
   };
 
   return (
@@ -26,7 +27,11 @@ const SearchBar = ({ onSearch, label, inputId }) => {
           placeholder="Buscar..."
           value={searchTerm}
           onChange={handleChange}
-          className="block w-full rounded-md border-0 py-1.8 pl-2 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-sm sm:leading-6"
+          onClick={() => {
+            handleDateReset();
+            setSelectedOption("");
+          }}
+          className="block w-full rounded-md border-0 py-1.8 pl-2 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-md sm:leading-6"
         />
       </div>
     </div>

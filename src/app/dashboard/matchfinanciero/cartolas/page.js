@@ -12,6 +12,7 @@ import BottomSheet from "@/components/BottomSheet";
 import SearchBar from '@/components/SearchBar';
 import SelectBar from '@/components/SelectBar';
 import DateSearchBar from '@/components/DateSearchBar';
+import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/solid';
 
 const Cartolas = () => {
   const [dataBalance, setDataBalance] = useState(null);
@@ -689,17 +690,13 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                                         <p>$ {formatCurrencyMonto(item.monto)}</p>
                                         {item.monto >= 0 ? (
                                           <div className="flex items-center">
-                                            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                                            </svg>
-                                            <p className="text-md text-green-500 ml-1">Ingreso</p>
+                                            <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
+                                            <p className="text-md text-green-500 ml-1">Abono</p>
                                           </div>
                                         ) : (
                                           <div className="flex items-center">
-                                            <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7"></path>
-                                            </svg>
-                                            <p className="text-md text-red-500 ml-1">Egreso</p>
+                                            <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                            <p className="text-md text-red-500 ml-1">Cargo</p>
                                           </div>
                                         )}
                                       </div>
@@ -871,15 +868,15 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             )}
           </div> */}
           {selectFilteredCuentasCorrientes.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="bg-white rounded-lg shadow-md p-6">
                 {isClicked && selectedMontos > 0 && (                
                   <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
                     {selectedItem && (
                       <div className="flex flex-col">
-                        <div className="flex justify-between">
+                        <div className="flex justify-around">
                           <div>
                             <div className="text-customGreen font-bold text-2xl mb-8">
-                              {formatCurrencyMonto(selectedItem.monto)}
+                              $ {formatCurrencyMonto(selectedItem.monto)}
                             </div>
                             <div>
                               <div className="font-bold">Fecha de emisión</div>
@@ -887,13 +884,13 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             </div>
                           </div>
                           <div>
-                            <div className="mb-4">
-                              <div className="font-bold">{selectedItem.nombre_titular}</div>
-                              <div>{selectedItem.rut_titular}</div>
-                            </div>
+                          <div className="mb-4">
+                            <div className="font-bold">{selectedItem.nombre_titular}</div>
+                            <div style={{ textAlign: 'right' }}>{selectedItem.rut_titular}</div>
+                          </div>
                             <div>
-                              <div className="font-bold">Referencia</div>
-                              <div>{selectedItem.referencia}</div>
+                              <div className="font-bold" style={{ textAlign: 'right' }}>Referencia</div>
+                              <div style={{ textAlign: 'right' }}>{selectedItem.referencia}</div>
                             </div>
                           </div>
                         </div>
@@ -929,7 +926,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     setSelectedDateRange={setSelectedDateRange}
                   />
                 </div>               
-                <table className="w-full table-auto border-collapse mt-4">
+                <table className="w-full table-auto border-collapse mt-8">
                   <thead>
                     <tr className="bg-customBackgroundGreen">
                       <th className="p-2 text-left pl-6"></th>

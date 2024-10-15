@@ -57,10 +57,19 @@ console.log("filteredRutData revision", filteredRutData)
 console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCuentasCorrientes)
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
+  let withoutMatch = (dataListar) => {
+    if (dataListar) {
+      return dataListar?.filter(item => item.estado === "Sin Conciliar").length;;
+    } 
+  }
+console.log("contarSinConciliar", withoutMatch(dataListar))
+console.log("dataListar", dataListar)
+
   const toggleBottomSheet = () => {
     setIsBottomSheetOpen(!isBottomSheetOpen);
   };
 
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1200);
@@ -633,9 +642,14 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
       label: "Match Financieros",
       content: (
         <div className="flex w-full mt-4">
-          <div className="p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '35%' }}>
+          <div className="card bg-white shadow-md rounded-lg pt-0 mt-4">
+            <div className="w-full p-4 flex flex-col items-start justify-start">
+          <p className="text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
+          </div>
+          <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
             {showRut ? (
               headlines?.map(({ rut_titular, nombre_titular }) => (
+                
                 <div
                   className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'} ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
                   key={rut_titular}
@@ -773,7 +787,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
               ))
             )}
           </div>
-
+          </div>
           {/* <div className="flex-1 bg-gray-200 p-4">
             {showRut ? (
               filteredRutData?.map((item, index) => (
@@ -938,37 +952,46 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCuentasCorrientes.length > 0 ? (
-                      filteredCuentasCorrientes.map((item, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="p-2 text-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
-                              onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-                              className={`form-checkbox cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
-                              disabled={selectedMontos.length === 0}
-                            />
+                    {
+                      filteredCuentasCorrientes
+                        .sort((a, b) => selectedMontos.includes(b.valor_moneda_nacional) - selectedMontos.includes(a.valor_moneda_nacional))
+                        .map((item, index) => {
+                          console.log(item); 
+                          return (
+                            <tr key={index} className="border-b">
+                              <td className="p-2 text-center">
+                                <input
+                                  type="checkbox"
+                                  checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                                  onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+                                  className={`form-checkbox cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
+                                  disabled={selectedMontos.length === 0}
+                                />
+                              </td>
+                              <td className="p-2">{item.codigo_plan_de_cuentas}</td>
+                              <td className="p-2" style={{ color: item.sentido_cta_vs_valor === 1 ? 'green' : item.sentido_cta_vs_valor === 2 ? 'red' : 'inherit' }}>
+                                $ {formatCurrencyMonto(item.valor_moneda_nacional)}
+                              </td>
+                              <td className="p-2">{formatDate(item.fecha_comprobante_his)}</td>
+                              <td className="p-2">{item.referencia_his}</td>
+                              <td className="p-2">
+                                {item.glosa_detalle_compte_his} 
+                                {selectedMontos.includes(item.valor_moneda_nacional) && <span className="text-customGreen ml-8"> Recomendado</span>}
+                              </td>
+                            </tr>
+                          );
+                        })
+                    }
+                    {
+                      filteredCuentasCorrientes.length === 0 && (
+                        <tr>
+                          <td colSpan={8} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500">
+                            No se encontraron resultados.
                           </td>
-                          <td className="p-2">{item.codigo_plan_de_cuentas}</td>
-                          <td className="p-2">$ {formatCurrencyMonto(item.valor_moneda_nacional)}</td>
-                          <td className="p-2">{formatDate(item.fecha_comprobante_his)}</td>
-                          <td className="p-2">{item.referencia_his}</td>
-                          <td className="p-2">{item.glosa_detalle_compte_his}</td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan={8}
-                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500"
-                        >
-                          No se encontraron resultados.
-                        </td>
-                      </tr>
-                    )}
+                      )
+                    }
                   </tbody>
-
                 </table>
                 <div className="bg-gray-100 p-4 shadow-md flex justify-end">
                   <span className="font-bold mr-4">Diferencia:</span>  $ {resultadoFormateado}

@@ -12,6 +12,7 @@ import BottomSheet from "@/components/BottomSheet";
 import SearchBar from '@/components/SearchBar';
 import SelectBar from '@/components/SelectBar';
 import DateSearchBar from '@/components/DateSearchBar';
+import CustomModal from '@/components/CustomModal';
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/solid';
 
 const Cartolas = () => {
@@ -40,7 +41,7 @@ const Cartolas = () => {
   const [selectedMontosRutData, setSelectedMontosRutData] = useState([]);
   const [selectedReferenceCuentasCorrientes, setSelectedReferenceCuentasCorrientes] = useState([]);
   const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] = useState([]);
-  const itemsPerPage = 20;
+  const itemsPerPage = 15;
 
   const [expandedRut, setExpandedRut] = useState(null);
   const [expandedDescripcion, setExpandedDescripcion] = useState(null);
@@ -56,6 +57,10 @@ console.log("selectedRut revision", selectedRut)
 console.log("filteredRutData revision", filteredRutData)
 console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCuentasCorrientes)
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
   let withoutMatch = (dataListar) => {
     if (dataListar) {
@@ -889,8 +894,19 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                       <div className="flex flex-col">
                         <div className="flex justify-around">
                           <div>
-                            <div className="text-customGreen font-bold text-2xl mb-8">
+                            <div className="text-customGreen font-bold text-2xl mb-2">
                               $ {formatCurrencyMonto(selectedItem.monto)}
+                                  {selectedItem.monto >= 0 ? (
+                                      <div className="flex items-center">
+                                        <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
+                                        <p className="text-sm text-green-500 ml-1">Abono</p>
+                                      </div>
+                                   ) : (
+                                      <div className="flex items-center">
+                                        <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                        <p className="text-md text-red-500 ml-1">Cargo</p>
+                                      </div>
+                                   )}
                             </div>
                             <div>
                               <div className="font-bold">Fecha de emisión</div>
@@ -971,7 +987,10 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                               <td className="p-2">{item.codigo_plan_de_cuentas}</td>
                               <td className="p-2" style={{ color: item.sentido_cta_vs_valor === 1 ? 'green' : item.sentido_cta_vs_valor === 2 ? 'red' : 'inherit' }}>
                                 $ {formatCurrencyMonto(item.valor_moneda_nacional)}
+                                {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 inline-block ml-1" />}
+                                {item.sentido_cta_vs_valor === 2 && <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />}
                               </td>
+
                               <td className="p-2">{formatDate(item.fecha_comprobante_his)}</td>
                               <td className="p-2">{item.referencia_his}</td>
                               <td className="p-2">
@@ -1000,13 +1019,62 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             )}
             {selectedReferenceCuentasCorrientes.length > 0 && (
               <div className="flex justify-end">
-                <button className="bg-customGreen text-white py-2 px-4 rounded mt-4 mr-4">
+                <button onClick={openModal} className="bg-customGreen text-white py-2 px-4 rounded mt-4 mr-4">
                  {resultado === 0 && selectedReferenceCuentasCorrientes.length > 0 ? 'Match' : 'Match Parcial'}
                 </button>
               </div>
             )}
           </div>
-
+          <CustomModal 
+            isOpen={isModalOpen} 
+            onClose={closeModal} 
+            title="Detalle del Match" 
+            content=
+            {selectedItem && (
+              <div className="flex flex-col">
+                <div className="flex justify-between">
+                  <div>
+                  <div className="text-customGreen font-bold text-2xl mb-4">
+                              $ {formatCurrencyMonto(selectedItem.monto)}
+                                  {selectedItem.monto >= 0 ? (
+                                      <div className="flex items-center">
+                                        <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
+                                        <p className="text-sm text-green-500 ml-1">Abono</p>
+                                      </div>
+                                   ) : (
+                                      <div className="flex items-center">
+                                        <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                        <p className="text-md text-red-500 ml-1">Cargo</p>
+                                      </div>
+                                   )}
+                            </div>
+                    <div>
+                      <div className="font-bold">Fecha de emisión</div>
+                      <div>{selectedItem.fecha}</div>
+                    </div>
+                  </div>
+                  <div>
+                  <div className="mb-4">
+                    <div className="font-bold">{selectedItem.nombre_titular}</div>
+                    <div style={{ textAlign: 'right' }}>{selectedItem.rut_titular}</div>
+                  </div>
+                    <div>
+                      <div className="font-bold" style={{ textAlign: 'right' }}>Referencia</div>
+                      <div style={{ textAlign: 'right' }}>{selectedItem.referencia}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}           
+            
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelButtonText="Cancelar"
+            confirmButtonText="Confirmar"
+            onCancel={closeModal}
+            onConfirm={() => alert('click')}    
+            size="3xl"  
+          />
           
         </div>
       ),
@@ -1050,7 +1118,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
   };
 
   return (
-    <div className="container md:w-1/1 md:px-16">
+    <div className="container md:w-1/1 md:px-16">    
       <BreadCrumbs pages={pages} />
       <SelectWithSearch dataListar={dataListar} accountNumber={accountNumber} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
@@ -1068,7 +1136,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
         </div>
       </div>
       <Tabs tabs={tabs} defaultTab={activeTab} onTabChange={handleTabChange} />
-      <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>      
+      <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>   
       {/* {selectedReferenceCuentasCorrientes.length > 0 && (
         <BottomSheet isOpen={isBottomSheetOpen} onClose={toggleBottomSheet}>
           <p>Monto: {formatCurrencyMonto(selectedMontos)}</p>

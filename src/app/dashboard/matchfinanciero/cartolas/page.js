@@ -1031,41 +1031,46 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             title="Detalle del Match" 
             content=
             {selectedItem && (
-              <div className="flex flex-col">
-                <div className="flex justify-between">
-                  <div>
-                  <div className="text-customGreen font-bold text-2xl mb-4">
-                              $ {formatCurrencyMonto(selectedItem.monto)}
-                                  {selectedItem.monto >= 0 ? (
-                                      <div className="flex items-center">
-                                        <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
-                                        <p className="text-sm text-green-500 ml-1">Abono</p>
-                                      </div>
-                                   ) : (
-                                      <div className="flex items-center">
-                                        <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
-                                        <p className="text-md text-red-500 ml-1">Cargo</p>
-                                      </div>
-                                   )}
-                            </div>
-                    <div>
-                      <div className="font-bold">Fecha de emisión</div>
-                      <div>{selectedItem.fecha}</div>
+              <div className="flex flex-col p-4 border rounded-md shadow-sm">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col">
+                    <div className="text-sm font-bold">{selectedItem.nombre_titular}</div>
+                    <div className="text-sm text-gray-500">{selectedItem.rut_titular}</div>
+                  </div>
+                  <div className="text-sm text-gray-500 text-right">Movimiento</div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 items-center">
+                  <div className="flex flex-col items-start">
+                    <div className="text-customGreen font-bold text-xl">
+                      $ {formatCurrencyMonto(selectedItem.monto)}
+                    </div>
+                    <div className="flex items-center mt-1">
+                      {selectedItem.monto >= 0 ? (
+                        <>
+                          <ArrowTrendingUpIcon className="w-3 h-3 text-green-500" />
+                          <p className="text-xs text-green-500 ml-1">Abono</p>
+                        </>
+                      ) : (
+                        <>
+                          <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
+                          <p className="text-xs text-red-500 ml-1">Cargo</p>
+                        </>
+                      )}
                     </div>
                   </div>
-                  <div>
-                  <div className="mb-4">
-                    <div className="font-bold">{selectedItem.nombre_titular}</div>
-                    <div style={{ textAlign: 'right' }}>{selectedItem.rut_titular}</div>
-                  </div>
-                    <div>
-                      <div className="font-bold" style={{ textAlign: 'right' }}>Referencia</div>
-                      <div style={{ textAlign: 'right' }}>{selectedItem.referencia}</div>
-                    </div>
+                  <div className="text-center">
+                    <div className="text-sm font-bold">Fecha de emisión</div>
+                    <div className="text-sm text-gray-500">{selectedItem.fecha}</div>
+                  </div>                           
+                  <div className="text-right">
+                    <div className="text-sm font-bold">Referencia</div>
+                    <div className="text-sm text-gray-500">{selectedItem.referencia}</div>
                   </div>
                 </div>
               </div>
-            )}           
+            )}
+            
+                     
             
             showCancelButton={true}
             showConfirmButton={true}

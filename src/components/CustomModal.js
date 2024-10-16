@@ -33,7 +33,7 @@ const CustomModal = ({
       <div className={`bg-white rounded-lg shadow-md p-6 relative z-10 ${sizeClasses[size]} w-full`}>
         <button 
           onClick={onClose} 
-          className="absolute top-2 right-6 text-gray-600 hover:text-gray-900 text-3xl"
+          className="absolute top-3 right-6 text-gray-600 hover:text-gray-900 text-3xl"
         >
           &times;
         </button>

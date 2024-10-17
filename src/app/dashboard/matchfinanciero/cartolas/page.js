@@ -52,6 +52,7 @@ const Cartolas = () => {
   const [selectedOption, setSelectedOption] = useState('');
   // const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
   const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
+  const [filteredMatchedCuentasCorrientes, setFilteredMatchedCuentasCorrientes] = useState([]);
 
 console.log("selectedRut revision", selectedRut)
 console.log("filteredRutData revision", filteredRutData)
@@ -74,6 +75,13 @@ console.log("dataListar", dataListar)
     setIsBottomSheetOpen(!isBottomSheetOpen);
   };
 
+  useEffect(() => {
+    const matchedCuentas = filteredCuentasCorrientes.filter(cuenta =>
+      selectedReferenceCuentasCorrientes.includes(cuenta.referencia_his)
+    );
+    setFilteredMatchedCuentasCorrientes(matchedCuentas);
+  }, [selectedReferenceCuentasCorrientes, filteredCuentasCorrientes]);
+console.log("filteredMatchedCuentasCorrientes", filteredMatchedCuentasCorrientes)
   
   useEffect(() => {
     const handleResize = () => {
@@ -706,11 +714,11 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                                   <>
                                     <div className="flex  justify-between">
                                       <div className="flex flex-col items-start mb-2">
-                                        <p>$ {formatCurrencyMonto(item.monto)}</p>
+                                        <p className={item.monto >= 0 ? "text-customGreen" : "text-red-500"}>$ {formatCurrencyMonto(item.monto)}</p>
                                         {item.monto >= 0 ? (
                                           <div className="flex items-center">
-                                            <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
-                                            <p className="text-md text-green-500 ml-1">Abono</p>
+                                            <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                            <p className="text-md text-customGreen ml-1">Abono</p>
                                           </div>
                                         ) : (
                                           <div className="flex items-center">
@@ -894,12 +902,12 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                       <div className="flex flex-col">
                         <div className="flex justify-around">
                           <div>
-                            <div className="text-customGreen font-bold text-2xl mb-2">
+                            <div className={selectedItem.monto >= 0  ? "text-customGreen font-bold text-xl" : "text-red-500 font-bold text-xl"}>
                               $ {formatCurrencyMonto(selectedItem.monto)}
                                   {selectedItem.monto >= 0 ? (
                                       <div className="flex items-center">
-                                        <ArrowTrendingUpIcon className="w-4 h-4 text-green-500" />
-                                        <p className="text-sm text-green-500 ml-1">Abono</p>
+                                        <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                        <p className="text-sm text-customGreen ml-1">Abono</p>
                                       </div>
                                    ) : (
                                       <div className="flex items-center">
@@ -985,9 +993,9 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                                 />
                               </td>
                               <td className="p-2">{item.codigo_plan_de_cuentas}</td>
-                              <td className="p-2" style={{ color: item.sentido_cta_vs_valor === 1 ? 'green' : item.sentido_cta_vs_valor === 2 ? 'red' : 'inherit' }}>
+                              <td className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
                                 $ {formatCurrencyMonto(item.valor_moneda_nacional)}
-                                {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-green-500 inline-block ml-1" />}
+                                {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />}
                                 {item.sentido_cta_vs_valor === 2 && <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />}
                               </td>
 
@@ -995,7 +1003,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                               <td className="p-2">{item.referencia_his}</td>
                               <td className="p-2">
                                 {item.glosa_detalle_compte_his} 
-                                {selectedMontos.includes(item.valor_moneda_nacional) && <span className="text-customGreen ml-8"> Recomendado</span>}
+                                {selectedMontos.includes(item.valor_moneda_nacional) && <span className="text-customGreen font-bold ml-8"> Recomendado</span>}
                               </td>
                             </tr>
                           );
@@ -1028,27 +1036,33 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
           <CustomModal 
             isOpen={isModalOpen} 
             onClose={closeModal} 
-            title="Detalle del Match" 
+            title={resultado === 0 ? "Detalle del Match Completo" : "Detalle del Match Parcial"}
             content=
+            <div>
             {selectedItem && (
-              <div className="flex flex-col p-4 border rounded-md shadow-sm">
+              <div className="flex flex-col p-4 border rounded-md shadow-sm bg-gray-100">
                 <div className="flex justify-between items-start mb-4">
-                  <div className="flex flex-col">
-                    <div className="text-sm font-bold">{selectedItem.nombre_titular}</div>
-                    <div className="text-sm text-gray-500">{selectedItem.rut_titular}</div>
+                  <div className="flex items-center space-x-4">                    
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-customGreen">
+                      <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
+                    </span>
+                    <div className="flex flex-col">
+                      <div className="text-sm font-bold">{selectedItem.nombre_titular}</div>
+                      <div className="text-sm text-gray-500">{selectedItem.rut_titular}</div>
+                    </div>
                   </div>
                   <div className="text-sm text-gray-500 text-right">Movimiento</div>
                 </div>
                 <div className="grid grid-cols-3 gap-4 items-center">
                   <div className="flex flex-col items-start">
-                    <div className="text-customGreen font-bold text-xl">
+                    <div className={selectedItem.monto >= 0 ? "text-customGreen font-bold text-xl" : "text-red-500 font-bold text-xl"}>
                       $ {formatCurrencyMonto(selectedItem.monto)}
                     </div>
                     <div className="flex items-center mt-1">
                       {selectedItem.monto >= 0 ? (
                         <>
-                          <ArrowTrendingUpIcon className="w-3 h-3 text-green-500" />
-                          <p className="text-xs text-green-500 ml-1">Abono</p>
+                          <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
+                          <p className="text-xs text-customGreen ml-1">Abono</p>
                         </>
                       ) : (
                         <>
@@ -1069,7 +1083,47 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                 </div>
               </div>
             )}
-            
+            {filteredMatchedCuentasCorrientes.map((item, index) => (
+              <div key={index} className="flex flex-col p-4 border rounded-md shadow-sm">
+                {/* <div className="flex justify-end items-end mb-4">
+                  <div className="text-sm text-gray-500">Recibo</div>
+                </div> */}
+                <div className="grid grid-cols-4 gap-4 items-center">
+                  <div className="flex flex-col items-start">
+                    <div className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
+                      <p>{formatCurrencyMonto(item.valor_moneda_nacional)}</p>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      {item.sentido_cta_vs_valor === 1 ? (
+                          <>
+                            <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
+                            <p className="text-xs text-customGreen ml-1">Abono</p>
+                          </>
+                        ) : item.sentido_cta_vs_valor === 2 ? (
+                          <>
+                            <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
+                            <p className="text-xs text-red-500 ml-1">Cargo</p>
+                          </>
+                        ) : null
+                      }
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-bold">Fecha</div>
+                    <div className="text-sm text-gray-500">{formatDate(item.fecha_comprobante_his)}</div>
+                  </div>                           
+                  <div className="text-right">
+                    <div className="text-sm font-bold">Referencia</div>
+                    <div className="text-sm text-gray-500">{item.referencia_his}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-bold">Tipo</div>
+                    <div className="text-sm text-gray-500">Recibo</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            </div>
                      
             
             showCancelButton={true}

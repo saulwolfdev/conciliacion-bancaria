@@ -4685,7 +4685,7 @@ export const cuentasCorrientes = {
           "tipo_de_comprobante_his":3,
           "linea_comprobante_his":79,
           "codigo_sucursal":0,
-          "referencia_his":"55441    ",
+          "referencia_his":"55441",
           "fecha_comprobante_his":"2024-10-01T00:00:00",
           "glosa_detalle_compte_his":"Prueba           ",
           "fecha_documento_his":"2024-10-05T00:00:00",

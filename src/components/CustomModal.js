@@ -51,7 +51,7 @@ const CustomModal = ({
           {showConfirmButton && (
             <button 
               onClick={onConfirm || onClose} 
-              className="px-4 py-2 bg-green-500 text-white rounded"
+              className="px-4 py-2 bg-customGreen text-white rounded"
             >
               {confirmButtonText}
             </button>

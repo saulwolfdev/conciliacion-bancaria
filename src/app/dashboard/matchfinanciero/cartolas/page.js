@@ -59,6 +59,7 @@ console.log("filteredRutData revision", filteredRutData)
 console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCuentasCorrientes)
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [open, setOpen] = useState(true)
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -484,116 +485,79 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
               </dl>
             </div>
           )}
-          <div className="mt-6">
-            <div className="container overflow-x-auto">
-              <table className="min-w-full border border-gray-200">
-                <thead className="bg-red-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Fecha
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      R.U.T. Titular
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Nombre Titular
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Descripción
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Referencia
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Monto
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Estado
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-red-600 uppercase tracking-wider">
-                      Ver detalle
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(filteredData?.length > 0
-                    ? filteredData.slice(
-                        (currentPage - 1) * itemsPerPage,
-                        currentPage * itemsPerPage
-                      )
-                    : []
-                  ).map((item, index) => (
-                    <tr
-                      key={index}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          <div className="container overflow-x-auto mt-6">
+            <table className="min-w-full table-auto border-collapse border border-gray-200">
+              <thead className="bg-customBackgroundGreen">
+                <tr>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fecha</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">R.U.T. Titular</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nombre Titular</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Descripción</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Referencia</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Monto</th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Estado</th>
+                  {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ver detalle</th> */}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {(filteredData?.length > 0
+                  ? filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                  : []
+                ).map((item, index) => (
+                  <tr
+                    key={index}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                      {item.fecha.split("-").reverse().join("/")}
+                    </td>
+                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                      {item.rut_titular}
+                    </td>
+                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                      {item.nombre_titular}
+                    </td>
+                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                      {item.descripcion}
+                    </td>
+                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
+                      {item.referencia}
+                    </td>
+                    <td
+                      className={`px-3 py-2 whitespace-nowrap text-sm ${
+                        parseInt(item.monto) < 0 ? "text-red-500" : "text-customGreen"
+                      }`}
                     >
-                      <td className="px-6 py-1 whitespace-nowrap text-gray-600 text-sm">
-                        {item.fecha.split("-").reverse().join("/")}
-                      </td>
-                      <td className="px-6 py-2 whitespace-nowrap text-gray-600 text-sm">
-                        {item.rut_titular}
-                      </td>
-                      <td className="px-6 py-2 whitespace-nowrap text-gray-600 text-sm">
-                        {item.nombre_titular}
-                      </td>
-                      <td className="px-6 py-2 whitespace-nowrap text-gray-600 text-sm">
-                        {item.descripcion}
-                      </td>
-                      <td className="px-6 py-2 whitespace-nowrap text-gray-600 text-sm">
-                        {item.referencia}
-                      </td>
-                      <td
-                        className={`px-6 py-2 whitespace-nowrap text-sm ${
-                          parseInt(item.monto) < 0
-                            ? "text-red-600"
-                            : "text-green-600"
+                      {parseInt(item.monto) < 0
+                        ? `(${Math.abs(parseInt(item.monto)).toLocaleString("es-CL", { style: "currency", currency: "CLP" })})`
+                        : Math.abs(parseInt(item.monto)).toLocaleString("es-CL", { style: "currency", currency: "CLP" })}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-2 text-sm text-left">
+                      <span
+                        className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${
+                          item.estado === "activo"
+                            ? "bg-customBackgroundGreen text-customGreen ring-1 ring-inset ring-green-600/20"
+                            : "bg-red-100 text-red-800 ring-1 ring-inset ring-red-600/20"
                         }`}
                       >
-                        {parseInt(item.monto) < 0
-                          ? `(${Math.abs(parseInt(item.monto)).toLocaleString(
-                              "es-CL",
-                              { style: "currency", currency: "CLP" }
-                            )})`
-                          : Math.abs(parseInt(item.monto)).toLocaleString(
-                              "es-CL",
-                              { style: "currency", currency: "CLP" }
-                            )}
-                      </td>
-                      <td className="px-6 py-2 whitespace-nowrap text-sm">
-                        <span
-                          className={`
-                          inline-block px-3 py-1 
-                          text-xs font-medium 
-                          rounded-full 
-                          ${
-                            item.estado === "activo"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }
-                        `}
-                        >
-                          {item.estado === "Sin Conciliar"
-                            ? "Sin Match"
-                            : item.estado}
-                        </span>
-                      </td>
-                      <td className="px-6 py-2 whitespace-nowrap text-sm"></td>
-                    </tr>
-                  ))}
-                  {filteredData?.length === 0 && (
-                    <tr>
-                      <td
-                        colSpan={8}
-                        // className="px-6 py-4 text-center text-gray-500"
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500"
-                      >
-                        No se encontraron resultados.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                        {item.estado === "Sin Conciliar" ? "Sin Match" : item.estado}
+                      </span>
+                    </td>
+                    {/* <td className="px-3 py-2 whitespace-nowrap text-sm"></td> */}
+                  </tr>
+                ))}
+                {filteredData?.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500"
+                    >
+                      No se encontraron resultados.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
 
           <div className="flex flex-col gap-4 mt-4 md:flex-row md:items-center md:justify-between">
@@ -661,23 +625,25 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
           </div>
           <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
             {showRut ? (
-              headlines?.map(({ rut_titular, nombre_titular }) => (
-                
+              headlines?.map(({ rut_titular, nombre_titular }) => (                
                 <div
-                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'} ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
-                  key={rut_titular}
-                  // onClick={() => handleClickRut(rut_titular)}
+                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'shadow-xl' : 'border-gray-200 hover:border-gray-300'} ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
+                  key={rut_titular}                  
                 >
                   <div className="flex items-start w-full" onClick={() => handleClickRut(rut_titular)}>
                     <div className="flex w-full">
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-customGreen">
-                        <span className="font-medium leading-none text-white">{nombre_titular.substring(0, 2)}</span>
-                      </span>
-                      <div className="ml-2 flex-grow">
-                        <div>{nombre_titular}</div>
-                        <div className="text-md text-gray-600">{rut_titular}</div>
-                        <p className="text-red-500 mt-1">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex items-center space-x-2">                    
+                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
+                            <span className="font-medium leading-none text-white">{selectedItem?.nombre_titular.substring(0, 2)}</span>
+                          </span>
+                          <div className="flex flex-col">
+                            <div className="text-md font-bold">{nombre_titular}</div>
+                            <div className="text-sm text-gray-500 text-left">{rut_titular}</div>
+                          </div>
+                        </div>                  
                       </div>
+                
                       <svg
                         className={`w-4 h-4 ml-auto mt-1 transform ${expandedRut === rut_titular ? 'rotate-180' : ''}`}
                         fill="none"
@@ -689,6 +655,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                       </svg>
                     </div>
                   </div>
+                  <p className="text-red-500 ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
 
                   {expandedRut === rut_titular && (
                     <div className="mt-2">                      
@@ -712,30 +679,32 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                                   </div>
                                 ) : (
                                   <>
-                                    <div className="flex  justify-between">
-                                      <div className="flex flex-col items-start mb-2">
-                                        <p className={item.monto >= 0 ? "text-customGreen" : "text-red-500"}>$ {formatCurrencyMonto(item.monto)}</p>
-                                        {item.monto >= 0 ? (
-                                          <div className="flex items-center">
-                                            <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
-                                            <p className="text-md text-customGreen ml-1">Abono</p>
-                                          </div>
-                                        ) : (
-                                          <div className="flex items-center">
-                                            <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
-                                            <p className="text-md text-red-500 ml-1">Cargo</p>
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="flex flex-col items-start mb-2">
-                                        <p>{formatDate(item.fecha)}</p>
-                                        <p className="text-md text-gray-600">Fecha de emisión</p>
-                                      </div>
-                                      <div className="flex flex-col items-start">
-                                        <p>{item.referencia}</p>
-                                        <p className="text-md text-gray-600">Referencia</p>
-                                      </div>
+                                    <div className="flex justify-between">
+                                    <div className="flex flex-col items-start">
+                                      <p className={item.monto >= 0 ? "text-customGreen font-medium text-sm" : "text-red-500 font-medium text-sm"}>
+                                        $ {formatCurrencyMonto(item.monto)}
+                                      </p>
+                                      {item.monto >= 0 ? (
+                                        <div className="flex items-center">
+                                          <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                          <p className="text-sm font-medium text-customGreen ml-1">Abono</p>
+                                        </div>
+                                      ) : (
+                                        <div className="flex items-center">
+                                          <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                          <p className="text-sm font-medium text-red-500 ml-1">Cargo</p>
+                                        </div>
+                                      )}
                                     </div>
+                                    <div className="flex flex-col items-start">
+                                      <p className="text-sm font-medium text-gray-900">{formatDate(item.fecha)}</p>
+                                      <p className="text-xs text-gray-500">Fecha de emisión</p>
+                                    </div>
+                                    <div className="flex flex-col items-start">
+                                      <p className="text-sm font-medium text-gray-900">{item.referencia}</p>
+                                      <p className="text-xs text-gray-500">Referencia</p>
+                                    </div>
+                                  </div>
                                   </>
                                 )}
 
@@ -899,46 +868,54 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                 {isClicked && selectedMontos > 0 && (                
                   <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
                     {selectedItem && (
-                      <div className="flex flex-col">
-                        <div className="flex justify-around">
-                          <div>
-                            <div className={selectedItem.monto >= 0  ? "text-customGreen font-bold text-xl" : "text-red-500 font-bold text-xl"}>
-                              $ {formatCurrencyMonto(selectedItem.monto)}
-                                  {selectedItem.monto >= 0 ? (
-                                      <div className="flex items-center">
-                                        <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
-                                        <p className="text-sm text-customGreen ml-1">Abono</p>
-                                      </div>
-                                   ) : (
-                                      <div className="flex items-center">
-                                        <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
-                                        <p className="text-md text-red-500 ml-1">Cargo</p>
-                                      </div>
-                                   )}
-                            </div>
-                            <div>
-                              <div className="font-bold">Fecha de emisión</div>
-                              <div>{selectedItem.fecha}</div>
-                            </div>
-                          </div>
-                          <div>
-                          <div className="mb-4">
-                            <div className="font-bold">{selectedItem.nombre_titular}</div>
-                            <div style={{ textAlign: 'right' }}>{selectedItem.rut_titular}</div>
-                          </div>
-                            <div>
-                              <div className="font-bold" style={{ textAlign: 'right' }}>Referencia</div>
-                              <div style={{ textAlign: 'right' }}>{selectedItem.referencia}</div>
+                      <div>
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-center space-x-2">
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
+                              <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
+                            </span>
+                            <div className="flex flex-col">
+                              <div className="text-md font-bold">{selectedItem.nombre_titular}</div>
+                              <div className="text-sm text-gray-500">{selectedItem.rut_titular}</div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                        <div className="flex justify-between gap-4 items-center">
+                          <div className="flex flex-col items-start">
+                            <div className={selectedItem.monto >= 0 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
+                              $ {formatCurrencyMonto(selectedItem.monto)}
+                            </div>
+                            <div className="flex items-center mt-1">
+                              {selectedItem.monto >= 0 ? (
+                                <>
+                                  <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
+                                  <p className="text-xs text-customGreen ml-1">Abono</p>
+                                </>
+                              ) : (
+                                <>
+                                  <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
+                                  <p className="text-xs text-red-500 ml-1">Cargo</p>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-left">
+                            <div className="text-sm font-bold">Fecha de emisión</div>
+                            <div className="text-sm text-gray-500">{formatDate(selectedItem.fecha)}</div>
+                          </div>                      
+                          <div className="text-left">
+                            <div className="text-sm font-bold">Referencia</div>
+                            <div className="text-sm text-gray-500">{selectedItem.referencia}</div>
+                          </div>                        
+                        </div>
+                    </div>
+                    
                     )}
 
                   </div>
                 
                 )}            
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div className="flex items-center gap-x-3">
                   <SearchBar
                     label="Búsqueda libre"
                     onSearch={handleSearchs}
@@ -964,62 +941,68 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     setSelectedDateRange={setSelectedDateRange}
                   />
                 </div>               
-                <table className="w-full table-auto border-collapse mt-8">
-                  <thead>
-                    <tr className="bg-customBackgroundGreen">
-                      <th className="p-2 text-left pl-6"></th>
-                      <th className="p-2 text-left">Cuenta</th>
-                      <th className="p-2 text-left">Monto</th>
-                      <th className="p-2 text-left">Fecha</th>
-                      <th className="p-2 text-left">Referencia</th>
-                      <th className="p-2 text-left">Glosa</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      filteredCuentasCorrientes
+                <div className="mt-8 overflow-x-auto">
+                  <table className="min-w-full table-auto border-collapse">
+                    <thead>
+                      <tr className="bg-customBackgroundGreen">
+                        <th className="py-3.5 pl-6 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"></th>
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Cuenta</th>
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Monto</th>
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fecha</th>
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Referencia</th>
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Glosa</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {filteredCuentasCorrientes
                         .sort((a, b) => selectedMontos.includes(b.valor_moneda_nacional) - selectedMontos.includes(a.valor_moneda_nacional))
-                        .map((item, index) => {
-                          console.log(item); 
-                          return (
-                            <tr key={index} className="border-b">
-                              <td className="p-2 text-center">
-                                <input
-                                  type="checkbox"
-                                  checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
-                                  onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-                                  className={`form-checkbox cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
-                                  disabled={selectedMontos.length === 0}
-                                />
-                              </td>
-                              <td className="p-2">{item.codigo_plan_de_cuentas}</td>
-                              <td className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
-                                $ {formatCurrencyMonto(item.valor_moneda_nacional)}
-                                {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />}
-                                {item.sentido_cta_vs_valor === 2 && <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />}
-                              </td>
-
-                              <td className="p-2">{formatDate(item.fecha_comprobante_his)}</td>
-                              <td className="p-2">{item.referencia_his}</td>
-                              <td className="p-2">
-                                {item.glosa_detalle_compte_his} 
-                                {selectedMontos.includes(item.valor_moneda_nacional) && <span className="text-customGreen font-bold ml-8"> Recomendado</span>}
-                              </td>
-                            </tr>
-                          );
-                        })
-                    }
-                    {
-                      filteredCuentasCorrientes.length === 0 && (
+                        .map((item, index) => (
+                          <tr key={index} className="border-b">
+                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm sm:pl-0">
+                            <input
+                              id={`checkbox-${index}`}
+                              name={`checkbox-${index}`}
+                              type="checkbox"
+                              checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                              onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
+                              className={`h-4 w-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
+                              disabled={selectedMontos.length === 0}
+                            />
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+                              {item.codigo_plan_de_cuentas}
+                            </td>
+                            <td className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${item.sentido_cta_vs_valor === 1 ? "text-customGreen" : "text-red-500"}`}>
+                              $ {formatCurrencyMonto(item.valor_moneda_nacional)}
+                              {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />}
+                              {item.sentido_cta_vs_valor === 2 && <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              {formatDate(item.fecha_comprobante_his)}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              {item.referencia_his}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              {item.glosa_detalle_compte_his}
+                              {selectedMontos.includes(item.valor_moneda_nacional) && (
+                                <span className="inline-flex items-center rounded-md bg-customBackgroundGreen px-2 py-1 text-xs font-medium text-customGreen ring-1 ring-inset ring-green-600/20 ml-8">
+                                  Recomendado
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      {filteredCuentasCorrientes.length === 0 && (
                         <tr>
-                          <td colSpan={8} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 px-6 py-4 text-center text-gray-500">
+                          <td colSpan={6} className="px-6 py-4 text-center text-gray-500 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             No se encontraron resultados.
                           </td>
                         </tr>
-                      )
-                    }
-                  </tbody>
-                </table>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="bg-gray-100 p-4 shadow-md flex justify-end">
                   <span className="font-bold mr-4">Diferencia:</span>  $ {resultadoFormateado}
                 </div>
@@ -1027,114 +1010,12 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             )}
             {selectedReferenceCuentasCorrientes.length > 0 && (
               <div className="flex justify-end">
-                <button onClick={openModal} className="bg-customGreen text-white py-2 px-4 rounded mt-4 mr-4">
+                <button onClick={openModal} className="rounded-md bg-customGreen px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-customLightGreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-customGreen mt-4 mr-4">
                  {resultado === 0 && selectedReferenceCuentasCorrientes.length > 0 ? 'Match' : 'Match Parcial'}
                 </button>
               </div>
             )}
-          </div>
-          <CustomModal 
-            isOpen={isModalOpen} 
-            onClose={closeModal} 
-            title={resultado === 0 ? "Detalle del Match Completo" : "Detalle del Match Parcial"}
-            content=
-            <div>
-            {selectedItem && (
-              <div className="flex flex-col p-4 border rounded-md shadow-sm bg-gray-100">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center space-x-4">                    
-                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-customGreen">
-                      <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
-                    </span>
-                    <div className="flex flex-col">
-                      <div className="text-sm font-bold">{selectedItem.nombre_titular}</div>
-                      <div className="text-sm text-gray-500">{selectedItem.rut_titular}</div>
-                    </div>
-                  </div>
-                  <div className="text-sm text-gray-500 text-right">Movimiento</div>
-                </div>
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <div className="flex flex-col items-start">
-                    <div className={selectedItem.monto >= 0 ? "text-customGreen font-bold text-xl" : "text-red-500 font-bold text-xl"}>
-                      $ {formatCurrencyMonto(selectedItem.monto)}
-                    </div>
-                    <div className="flex items-center mt-1">
-                      {selectedItem.monto >= 0 ? (
-                        <>
-                          <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
-                          <p className="text-xs text-customGreen ml-1">Abono</p>
-                        </>
-                      ) : (
-                        <>
-                          <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
-                          <p className="text-xs text-red-500 ml-1">Cargo</p>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-bold">Fecha de emisión</div>
-                    <div className="text-sm text-gray-500">{selectedItem.fecha}</div>
-                  </div>                           
-                  <div className="text-right">
-                    <div className="text-sm font-bold">Referencia</div>
-                    <div className="text-sm text-gray-500">{selectedItem.referencia}</div>
-                  </div>
-                </div>
-              </div>
-            )}
-            {filteredMatchedCuentasCorrientes.map((item, index) => (
-              <div key={index} className="flex flex-col p-4 border rounded-md shadow-sm">
-                {/* <div className="flex justify-end items-end mb-4">
-                  <div className="text-sm text-gray-500">Recibo</div>
-                </div> */}
-                <div className="grid grid-cols-4 gap-4 items-center">
-                  <div className="flex flex-col items-start">
-                    <div className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
-                      <p>{formatCurrencyMonto(item.valor_moneda_nacional)}</p>
-                    </div>
-                    <div className="flex items-center mt-1">
-                      {item.sentido_cta_vs_valor === 1 ? (
-                          <>
-                            <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
-                            <p className="text-xs text-customGreen ml-1">Abono</p>
-                          </>
-                        ) : item.sentido_cta_vs_valor === 2 ? (
-                          <>
-                            <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
-                            <p className="text-xs text-red-500 ml-1">Cargo</p>
-                          </>
-                        ) : null
-                      }
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-bold">Fecha</div>
-                    <div className="text-sm text-gray-500">{formatDate(item.fecha_comprobante_his)}</div>
-                  </div>                           
-                  <div className="text-right">
-                    <div className="text-sm font-bold">Referencia</div>
-                    <div className="text-sm text-gray-500">{item.referencia_his}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-bold">Tipo</div>
-                    <div className="text-sm text-gray-500">Recibo</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-            </div>
-                     
-            
-            showCancelButton={true}
-            showConfirmButton={true}
-            cancelButtonText="Cancelar"
-            confirmButtonText="Confirmar"
-            onCancel={closeModal}
-            onConfirm={() => alert('click')}    
-            size="3xl"  
-          />
-          
+          </div>                  
         </div>
       ),
     },
@@ -1177,7 +1058,105 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
   };
 
   return (
-    <div className="container md:w-1/1 md:px-16">    
+    <div className="container md:w-1/1 md:px-16">   
+      <CustomModal 
+       isOpen={isModalOpen} 
+       onClose={closeModal} 
+      title={resultado === 0 ? "Detalle del Match Completo" : "Detalle del Match Parcial"}
+      content=
+      <div>
+            {selectedItem && (
+              <div className="flex flex-col p-4 border rounded-md shadow-sm bg-gray-100">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center space-x-2">                    
+                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
+                      <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
+                    </span>
+                    <div className="flex flex-col">
+                      <div className="text-md font-bold">{selectedItem.nombre_titular}</div>
+                      <div className="text-sm text-gray-500 text-left">{selectedItem.rut_titular}</div>
+                    </div>
+                  </div>                  
+                </div>
+                <div className="flex justify-between gap-4 items-center">
+                  <div className="flex flex-col items-start">
+                    <div className={selectedItem.monto >= 0 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
+                      $ {formatCurrencyMonto(selectedItem.monto)}
+                    </div>
+                    <div className="flex items-center mt-1">
+                      {selectedItem.monto >= 0 ? (
+                        <>
+                          <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
+                          <p className="text-xs text-customGreen ml-1">Abono</p>
+                        </>
+                      ) : (
+                        <>
+                          <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
+                          <p className="text-xs text-red-500 ml-1">Cargo</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-bold">Fecha de emisión</div>
+                    <div className="text-sm text-gray-500">{formatDate(selectedItem.fecha)}</div>
+                  </div>                           
+                  <div className="text-left">
+                    <div className="text-sm font-bold ">Referencia</div>
+                    <div className="text-sm text-gray-500">{selectedItem.referencia}</div>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-bold">Tipo</div>
+                    <div className="text-sm text-gray-500">Recibo</div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {filteredMatchedCuentasCorrientes.map((item, index) => (
+              <div key={index} className="flex flex-col p-4 border rounded-md shadow-sm">
+                <div className="flex justify-between gap-4 items-center">
+                  <div className="flex flex-col items-start">
+                    <div className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
+                      <p>$ {formatCurrencyMonto(item.valor_moneda_nacional)}</p>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      {item.sentido_cta_vs_valor === 1 ? (
+                        <>
+                          <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
+                          <p className="text-xs text-customGreen ml-1">Abono</p>
+                        </>
+                      ) : item.sentido_cta_vs_valor === 2 ? (
+                        <>
+                          <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
+                          <p className="text-xs text-red-500 ml-1">Cargo</p>
+                        </>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-bold">Fecha de comprobante</div>
+                    <div className="text-sm text-gray-500">{formatDate(item.fecha_comprobante_his)}</div>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-bold">Referencia</div>
+                    <div className="text-sm text-gray-500">{item.referencia_his}</div>
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-bold">Tipo</div>
+                    <div className="text-sm text-gray-500">Recibo</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            </div>
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelButtonText="Cancelar"
+            confirmButtonText="Confirmar"
+            onCancel={closeModal}
+            onConfirm={() => alert('click')}   
+            size="3xl"   
+      />
       <BreadCrumbs pages={pages} />
       <SelectWithSearch dataListar={dataListar} accountNumber={accountNumber} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">

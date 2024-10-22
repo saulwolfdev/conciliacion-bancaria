@@ -1,8 +1,10 @@
-import React from 'react';
+'use client'
+
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
 const CustomModal = ({ 
   isOpen, 
-  onClose, 
+  onClose,
   title, 
   content, 
   showCancelButton = false, 
@@ -12,8 +14,7 @@ const CustomModal = ({
   onCancel, 
   onConfirm, 
   size = 'md' 
-}) => {
-  if (!isOpen) return null;
+}) =>{
 
   const sizeClasses = {
     xs: 'max-w-xs',
@@ -28,38 +29,54 @@ const CustomModal = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-black bg-opacity-50 absolute inset-0" onClick={onClose}></div>
-      <div className={`bg-white rounded-lg shadow-md p-6 relative z-10 ${sizeClasses[size]} w-full`}>
-        <button 
-          onClick={onClose} 
-          className="absolute top-3 right-6 text-gray-600 hover:text-gray-900 text-3xl"
-        >
-          &times;
-        </button>
-        <h2 className="text-xl font-bold mb-4">{title}</h2>
-        <div>{content}</div>
-        <div className="flex justify-end mt-4 space-x-2">
-          {showCancelButton && (
+    <Dialog  open={isOpen} onClose={onClose} className="relative z-50">
+      <DialogBackdrop
+        transition
+        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+      />
+
+      <div className="fixed inset-0 z-50 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <DialogPanel
+            transition
+            className={`relative z-10 bg-white rounded-lg shadow-md p-6 transition-all transform data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 w-full ${sizeClasses[size]}`}
+          >           
             <button 
-              onClick={onCancel || onClose} 
-              className="px-4 py-2 bg-gray-500 text-white rounded"
+              onClick={onClose} 
+              className="absolute top-3 right-6 text-gray-600 hover:text-gray-900 text-3xl"
             >
-              {cancelButtonText}
+              &times;
             </button>
-          )}
-          {showConfirmButton && (
-            <button 
-              onClick={onConfirm || onClose} 
-              className="px-4 py-2 bg-customGreen text-white rounded"
-            >
-              {confirmButtonText}
-            </button>
-          )}
+
+            <DialogTitle as="h2" className="text-xl font-bold mb-4">
+              {title}
+            </DialogTitle>
+
+            <div>{content}</div>
+
+            <div className="flex justify-end mt-4 space-x-2">
+              {showCancelButton && (
+                <button 
+                  onClick={onCancel || onClose} 
+                   className="rounded-md bg-customGray px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-customLightGray focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-customGray"
+                >
+                  {cancelButtonText}
+                </button>
+              )}
+              {showConfirmButton && (
+                <button 
+                  onClick={onConfirm || onClose} 
+                  className="rounded-md bg-customGreen px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-customLightGreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-customGreen"
+                >
+                  {confirmButtonText}
+                </button>
+              )}
+            </div> 
+          </DialogPanel>
         </div>
       </div>
-    </div>
-  );
-};
+    </Dialog>
+  )
+}
 
 export default CustomModal;

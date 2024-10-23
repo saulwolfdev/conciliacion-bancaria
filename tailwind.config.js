@@ -42,6 +42,8 @@ module.exports = {
         customBackgroundGreen: '#eafafa',
         customGray: '#808080',
         customLightGray: '#A0A0A0',
+        customBackgroundGray: '#F6F6F6',
+        customHeaderGray: '#FBFBFC',
         customYellow: '#EF9B39',
         customLightBlue: '#00aca5'
       },

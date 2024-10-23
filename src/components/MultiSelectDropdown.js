@@ -50,7 +50,7 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
       <div className="relative">
           <button
             onClick={toggleDropdown}
-            className="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-0 py-2 text-left focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm overflow-hidden relative cursor-pointer"
+            className="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-0 py-2 text-left focus:outline-none focus:ring-1 focus:ring-customGreen focus:border-customGreen sm:text-sm overflow-hidden relative cursor-pointer"
           >
             <div className="flex items-center justify-between">
               <span className="text-sm overflow-hidden text-ellipsis whitespace-nowrap pr-4" >
@@ -76,7 +76,7 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
               placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-customGreen focus:border-customGreen text-sm"
             />
             <div className="flex flex-col 2xl:flex-row justify-between p-1">
               <button onClick={handleSelectAll} className="bg-blue-500 text-white px-2 py-2 rounded-md mb-1 sm:mb-0 sm:mr-1 mb-2 text-xs mt-1">Seleccionar Todo</button>
@@ -90,7 +90,7 @@ const MultiSelectDropdown = ({ onFilterChange }) => {
                     type="checkbox"
                     checked={selectedItems.includes(option)}
                     onChange={() => handleCheckboxChange(option)}
-                    className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="h-4 w-4 text-customGreen border-gray-300 rounded focus:ring-customGreen"
                   />
                 </li>
               ))}

@@ -621,7 +621,8 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
         <div className="flex w-full mt-4">
           <div className="card bg-white shadow-md rounded-lg pt-0 mt-4">
             <div className="w-full p-4 flex flex-col items-start justify-start">
-          <p className="text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
+            <p className="text-xl mt-1 font-bold text-[#525252]">Movimientos Bancarios</p>
+          <p className="text-sm text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
           </div>
           <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
             {showRut ? (
@@ -638,7 +639,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             <span className="font-medium leading-none text-white">{selectedItem?.nombre_titular.substring(0, 2)}</span>
                           </span>
                           <div className="flex flex-col">
-                            <div className="text-md font-bold">{nombre_titular}</div>
+                            <div className="text-md font-bold text-[#525252]">{nombre_titular}</div>
                             <div className="text-sm text-gray-500 text-left">{rut_titular}</div>
                           </div>
                         </div>                  
@@ -866,7 +867,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
           {selectFilteredCuentasCorrientes.length > 0 && (
               <div className="bg-white rounded-lg shadow-md p-6">
                 {isClicked && selectedMontos > 0 && (                
-                  <div className="w-full mx-auto bg-gray-100 shadow-lg rounded-lg overflow-hidden p-4 mb-4">
+                  <div className="w-full mx-auto bg-customBackgroundGray shadow-lg rounded-lg overflow-hidden p-4 mb-4">
                     {selectedItem && (
                       <div>
                         <div className="flex justify-between items-start mb-4">
@@ -875,8 +876,8 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                               <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
                             </span>
                             <div className="flex flex-col">
-                              <div className="text-md font-bold">{selectedItem.nombre_titular}</div>
-                              <div className="text-sm text-gray-500">{selectedItem.rut_titular}</div>
+                              <div className="text-md font-bold text-[#525252]">{selectedItem.nombre_titular}</div>
+                              <div className="text-sm text-[#939393]">{selectedItem.rut_titular}</div>
                             </div>
                           </div>
                         </div>
@@ -900,12 +901,12 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             </div>
                           </div>
                           <div className="text-left">
-                            <div className="text-sm font-bold">Fecha de emisión</div>
-                            <div className="text-sm text-gray-500">{formatDate(selectedItem.fecha)}</div>
+                            <div className="text-sm font-bold text-[#525252]">Fecha de emisión</div>
+                            <div className="text-sm text-[#939393]">{formatDate(selectedItem.fecha)}</div>
                           </div>                      
                           <div className="text-left">
-                            <div className="text-sm font-bold">Referencia</div>
-                            <div className="text-sm text-gray-500">{selectedItem.referencia}</div>
+                            <div className="text-sm font-bold text-[#525252]">Referencia</div>
+                            <div className="text-sm text-[#939393]">{selectedItem.referencia}</div>
                           </div>                        
                         </div>
                     </div>
@@ -915,7 +916,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                   </div>
                 
                 )}            
-                <div className="flex items-center gap-x-3">
+                <div className="flex items-center gap-x-6">
                   <SearchBar
                     label="Búsqueda libre"
                     onSearch={handleSearchs}
@@ -969,25 +970,25 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                               disabled={selectedMontos.length === 0}
                             />
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-gray-900">
+                            <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
                               {item.codigo_plan_de_cuentas}
                             </td>
                             <td className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${item.sentido_cta_vs_valor === 1 ? "text-customGreen" : "text-red-500"}`}>
-                              $ {formatCurrencyMonto(item.valor_moneda_nacional)}
                               {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />}
                               {item.sentido_cta_vs_valor === 2 && <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />}
+                              {" "} $ {formatCurrencyMonto(item.valor_moneda_nacional)}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
                               {formatDate(item.fecha_comprobante_his)}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
                               {item.referencia_his}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
                               {item.glosa_detalle_compte_his}
                               {selectedMontos.includes(item.valor_moneda_nacional) && (
                                 <span className="inline-flex items-center rounded-md bg-customBackgroundGreen px-2 py-1 text-xs font-medium text-customGreen ring-1 ring-inset ring-green-600/20 ml-8">
-                                  Recomendado
+                                  Coincidencia
                                 </span>
                               )}
                             </td>
@@ -1003,7 +1004,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </tbody>
                   </table>
                 </div>
-                <div className="bg-gray-100 p-4 shadow-md flex justify-end">
+                <div className="bg-customBackgroundGray p-4 shadow-md flex justify-end">
                   <span className="font-bold mr-4">Diferencia:</span>  $ {resultadoFormateado}
                 </div>
               </div>
@@ -1066,15 +1067,15 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
       content=
       <div>
             {selectedItem && (
-              <div className="flex flex-col p-4 border rounded-md shadow-sm bg-gray-100">
+              <div className="flex flex-col p-4 border rounded-md shadow-sm bg-customHeaderGray">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center space-x-2">                    
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
                       <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
                     </span>
                     <div className="flex flex-col">
-                      <div className="text-md font-bold">{selectedItem.nombre_titular}</div>
-                      <div className="text-sm text-gray-500 text-left">{selectedItem.rut_titular}</div>
+                      <div className="text-md font-bold text-[#525252]">{selectedItem.nombre_titular}</div>
+                      <div className="text-sm text-gray-500 text-left text-[#939393]">{selectedItem.rut_titular}</div>
                     </div>
                   </div>                  
                 </div>
@@ -1098,16 +1099,16 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold">Fecha de emisión</div>
-                    <div className="text-sm text-gray-500">{formatDate(selectedItem.fecha)}</div>
+                    <div className="text-sm font-bold text-[#525252]">Fecha de emisión</div>
+                    <div className="text-sm text-gray-500 text-[#939393]">{formatDate(selectedItem.fecha)}</div>
                   </div>                           
                   <div className="text-left">
-                    <div className="text-sm font-bold ">Referencia</div>
-                    <div className="text-sm text-gray-500">{selectedItem.referencia}</div>
+                    <div className="text-sm font-bold text-[#525252]">Referencia</div>
+                    <div className="text-sm text-gray-500 text-[#939393]">{selectedItem.referencia}</div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold">Tipo</div>
-                    <div className="text-sm text-gray-500">Recibo</div>
+                    <div className="text-sm font-bold text-[#525252]">Tipo</div>
+                    <div className="text-sm text-gray-500 text-[#939393]">Recibo</div>
                   </div>
                 </div>
               </div>
@@ -1134,16 +1135,16 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold">Fecha de comprobante</div>
-                    <div className="text-sm text-gray-500">{formatDate(item.fecha_comprobante_his)}</div>
+                    <div className="text-sm font-bold text-[#525252]">Fecha de comprobante</div>
+                    <div className="text-sm text-gray-500 text-[#939393]">{formatDate(item.fecha_comprobante_his)}</div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold">Referencia</div>
-                    <div className="text-sm text-gray-500">{item.referencia_his}</div>
+                    <div className="text-sm font-bold text-[#525252]">Referencia</div>
+                    <div className="text-sm text-gray-500 text-[#939393]">{item.referencia_his}</div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold">Tipo</div>
-                    <div className="text-sm text-gray-500">Recibo</div>
+                    <div className="text-sm font-bold text-[#525252]">Tipo</div>
+                    <div className="text-sm text-gray-500 text-[#939393]">Recibo</div>
                   </div>
                 </div>
               </div>

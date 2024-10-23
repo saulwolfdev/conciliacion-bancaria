@@ -48,7 +48,7 @@ const CustomModal = ({
               &times;
             </button>
 
-            <DialogTitle as="h2" className="text-xl font-bold mb-4">
+            <DialogTitle as="h2" className="text-xl font-bold mb-4 text-[#525252]">
               {title}
             </DialogTitle>
 

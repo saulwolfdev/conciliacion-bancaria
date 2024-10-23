@@ -63,7 +63,7 @@ const SearchComponent = ({ data, label, inputId, onSearch, searchType, amountTyp
           onChange={handleChange}
           className={`block w-full rounded-md border-0 py-1.8 ${
             searchType === 'amount' ? 'pr-2 text-right' : 'pl-2 pr-14'
-          } text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+          } text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-sm sm:leading-6`}
           placeholder={searchType === 'amount' ? '0,00' : 'Búsqueda libre'}
         />
       </div>

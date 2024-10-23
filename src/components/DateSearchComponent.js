@@ -104,7 +104,7 @@ const DateSearchComponent = ({ data, label, inputId, onSearch, setDataBalance, s
           onChange={handleValueChange}
           placeholderText="Selecciona una fecha"
           displayFormat="DD/MM/YYYY"
-          inputClassName="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-14 text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm sm:leading-6"
+          inputClassName="w-full rounded-md border border-gray-300 py-1.5 pl-2 pr-14 text-gray-900 shadow-sm focus:border-customGreen focus:ring-customGreen sm:text-sm sm:leading-6"
           popperPlacement="bottom-start"
           popperModifiers={[
             {

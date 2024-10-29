@@ -4788,7 +4788,7 @@ export const cuentasCorrientes = {
         "glosa_detalle_compte_his":"Test Match",
         "fecha_documento_his":"2024-10-05T00:00:00",
         "vencto_documento_his":"2024-10-05T00:00:00",
-        "sentido_cta_vs_valor":2,
+        "sentido_cta_vs_valor":1,
         "valor_moneda_nacional":1564319,
         "valor_otra_moneda":0.0,
         "codigo_plan_de_cuentas":"610105",

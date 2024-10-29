@@ -13,14 +13,16 @@ import SearchBar from '@/components/SearchBar';
 import SelectBar from '@/components/SelectBar';
 import DateSearchBar from '@/components/DateSearchBar';
 import CustomModal from '@/components/CustomModal';
+import CustomSelectRutMobile from '@/components/CustomSelectRutMobile';
+import CustomSelectMovementMobile from '@/components/CustomSelectMovementMobile';
 import { ArrowTrendingUpIcon, ArrowTrendingDownIcon } from '@heroicons/react/24/solid';
 
 const Cartolas = () => {
+  const searchParams = useSearchParams();
+  const tabFromUrl = searchParams.get("tab");
   const [dataBalance, setDataBalance] = useState(null);
   const [dataListar, setDataListar] = useState(null);
   const [dataTotals, setDataTotals] = useState(null);
-  const searchParams = useSearchParams();
-  const tabFromUrl = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState(tabFromUrl || "movimientos");
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredData, setFilteredData] = useState(dataListar || []);
@@ -50,16 +52,12 @@ const Cartolas = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
-  // const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
   const [selectedDateRange, setSelectedDateRange] = useState({ startDate: null, endDate: null });
-  const [filteredMatchedCuentasCorrientes, setFilteredMatchedCuentasCorrientes] = useState([]);
-
-console.log("selectedRut revision", selectedRut)
-console.log("filteredRutData revision", filteredRutData)
-console.log("selectedReferenceCuentasCorrientes revision:", selectedReferenceCuentasCorrientes)
+  const [filteredMatchedCuentasCorrientes, setFilteredMatchedCuentasCorrientes] = useState([]); 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(true)
+  const [isOptionSelected, setIsOptionSelected] = useState(0);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -75,6 +73,8 @@ console.log("dataListar", dataListar)
   const toggleBottomSheet = () => {
     setIsBottomSheetOpen(!isBottomSheetOpen);
   };
+
+  
 
   useEffect(() => {
     const matchedCuentas = filteredCuentasCorrientes.filter(cuenta =>
@@ -625,6 +625,20 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
           <p className="text-sm text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
           </div>
           <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
+          <CustomSelectRutMobile 
+            headlines={headlines} 
+            handleClickRut ={handleClickRut}
+            setIsOptionSelected={setIsOptionSelected}
+            UnmatchedCount={UnmatchedCount}
+          />
+          <CustomSelectMovementMobile 
+            filteredRutData={filteredRutData } 
+            handleCheckboxChange={handleCheckboxChange} 
+            formatCurrencyMonto={formatCurrencyMonto}
+            formatDate={formatDate} 
+            isOptionSelected={isOptionSelected} 
+                      
+          />
             {showRut ? (
               headlines?.map(({ rut_titular, nombre_titular }) => (                
                 <div
@@ -636,7 +650,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center space-x-2">                    
                           <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
-                            <span className="font-medium leading-none text-white">{selectedItem?.nombre_titular.substring(0, 2)}</span>
+                            <span className="font-medium leading-none text-white">{nombre_titular.substring(0, 2)}</span>
                           </span>
                           <div className="flex flex-col">
                             <div className="text-md font-bold text-[#525252]">{nombre_titular}</div>

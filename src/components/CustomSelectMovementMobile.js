@@ -4,7 +4,7 @@ import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@h
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
 const CustomSelectMovementMobile = ({ filteredRutData, handleCheckboxChange, formatCurrencyMonto, formatDate, isOptionSelected }) => {
-  const placeholder = { monto: '', fecha: '', referencia: '', label: 'Seleccionar Movimiento' };
+  const placeholder = { monto: '', fecha: '', referencia: '', label: 'Seleccionar...' };
   const [selected, setSelected] = useState(placeholder);
 
   const handleSelectionChange = (item) => {
@@ -19,8 +19,8 @@ const CustomSelectMovementMobile = ({ filteredRutData, handleCheckboxChange, for
       onChange={(item) => handleSelectionChange(item, filteredRutData.indexOf(item), event)}
       disabled={isDisabled}
     >
-      <Label className={`block text-sm font-medium leading-6 font-bold ${isDisabled ? 'text-gray-400' : 'text-[#525252]'} ml-2 mt-4`}>Seleccionar Movimiento</Label>
-      <div className={`relative mt-2 w-full ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+      <Label className={`block text-md font-medium leading-6 font-bold ${isDisabled ? 'text-gray-400' : 'text-[#525252]'} mt-4`}>Seleccionar un Movimiento</Label>
+      <div className={`relative w-full ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
         <ListboxButton
           className={`relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-customGreen sm:text-sm sm:leading-6 ${isDisabled ? 'cursor-not-allowed' : ''}`}
           disabled={isDisabled}
@@ -71,8 +71,7 @@ const CustomSelectMovementMobile = ({ filteredRutData, handleCheckboxChange, for
                     <CheckIcon aria-hidden="true" className="h-5 w-5" />
                   </span>
                 )}
-              </ListboxOption>
-              {/* Línea separadora */}
+              </ListboxOption>              
               {index < filteredRutData.length - 1 && (
                 <hr className="border-t border-gray-200 my-1" />
               )}

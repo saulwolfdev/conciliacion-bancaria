@@ -31,7 +31,7 @@ const SearchBar = ({ onSearch, label, inputId, setSelectedOption, handleDateRese
             handleDateReset();
             setSelectedOption("");
           }}
-          className="block w-full rounded-md border-0 py-1.8 pl-2 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-md sm:leading-6"
+          className="block w-full rounded-md border-0 py-1 pl-2 pr-14 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-md sm:leading-6.5"
         />
       </div>
     </div>

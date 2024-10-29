@@ -49,6 +49,7 @@ const Cartolas = () => {
   const [expandedDescripcion, setExpandedDescripcion] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectIsMobile, setSelectIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -84,22 +85,25 @@ console.log("dataListar", dataListar)
   }, [selectedReferenceCuentasCorrientes, filteredCuentasCorrientes]);
 console.log("filteredMatchedCuentasCorrientes", filteredMatchedCuentasCorrientes)
   
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1200);
-    };
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 1670);
+    setSelectIsMobile(window.innerWidth < 1450);
+  };
 
-    if (typeof window !== 'undefined') {
-      setIsMobile(window.innerWidth < 1200);
-      window.addEventListener('resize', handleResize);
+  if (typeof window !== "undefined") {
+    setIsMobile(window.innerWidth < 1670);
+    setSelectIsMobile(window.innerWidth < 1450);
+    window.addEventListener("resize", handleResize);
+  }
+
+  return () => {
+    if (typeof window !== "undefined") {
+      window.removeEventListener("resize", handleResize);
     }
+  };
+}, []);
 
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', handleResize);
-      }
-    };
-  }, []);
 
   const formatCurrencyMonto = (amount) => {
     return new Intl.NumberFormat('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
@@ -618,62 +622,68 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
       name: "match",
       label: "Match Financieros",
       content: (
-        <div className="flex w-full mt-4">
-          <div className="card bg-white shadow-md rounded-lg pt-0 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-4">
+          <div className="md:col-span-1">
+          <div className="card bg-white shadow-md rounded-lg pt-0 mt-4 max-h-[740px] overflow-y-auto">
             <div className="w-full p-4 flex flex-col items-start justify-start">
-            <p className="text-xl mt-1 font-bold text-[#525252]">Movimientos Bancarios</p>
-          <p className="text-sm text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
-          </div>
+              <p className="text-xl mt-1 font-bold text-[#525252]">Movimientos Bancarios</p>
+              <p className="text-xs text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
+            </div>
           <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
-          <CustomSelectRutMobile 
-            headlines={headlines} 
-            handleClickRut ={handleClickRut}
-            setIsOptionSelected={setIsOptionSelected}
-            UnmatchedCount={UnmatchedCount}
-          />
-          <CustomSelectMovementMobile 
-            filteredRutData={filteredRutData } 
-            handleCheckboxChange={handleCheckboxChange} 
-            formatCurrencyMonto={formatCurrencyMonto}
-            formatDate={formatDate} 
-            isOptionSelected={isOptionSelected} 
-                      
-          />
-            {showRut ? (
-              headlines?.map(({ rut_titular, nombre_titular }) => (                
-                <div
-                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedRut === rut_titular ? 'shadow-xl' : 'border-gray-200 hover:border-gray-300'} ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
-                  key={rut_titular}                  
-                >
-                  <div className="flex items-start w-full" onClick={() => handleClickRut(rut_titular)}>
-                    <div className="flex w-full">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center space-x-2">                    
-                          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
-                            <span className="font-medium leading-none text-white">{nombre_titular.substring(0, 2)}</span>
-                          </span>
-                          <div className="flex flex-col">
-                            <div className="text-md font-bold text-[#525252]">{nombre_titular}</div>
-                            <div className="text-sm text-gray-500 text-left">{rut_titular}</div>
-                          </div>
-                        </div>                  
-                      </div>
-                
-                      <svg
-                        className={`w-4 h-4 ml-auto mt-1 transform ${expandedRut === rut_titular ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                  <p className="text-red-500 ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+          {selectIsMobile ? (
+              <>
+                <CustomSelectRutMobile 
+                  headlines={headlines} 
+                  handleClickRut={handleClickRut}
+                  setIsOptionSelected={setIsOptionSelected}
+                  UnmatchedCount={UnmatchedCount}
+                />
+                <CustomSelectMovementMobile 
+                  filteredRutData={filteredRutData} 
+                  handleCheckboxChange={handleCheckboxChange} 
+                  formatCurrencyMonto={formatCurrencyMonto}
+                  formatDate={formatDate} 
+                  isOptionSelected={isOptionSelected} 
+                />
+              </>
+            ) : (
+              showRut ? (
+                headlines?.map(({ rut_titular, nombre_titular }) => (                
+                  <div
+                    key={rut_titular}
+                    className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${
+                      selectedRut === rut_titular ? 'shadow-xl' : 'border-gray-200 hover:border-gray-300'
+                    } ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
+                  >
+                    <div className="flex items-start w-full" onClick={() => handleClickRut(rut_titular)}>
+                      <div className="flex w-full">
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex items-center space-x-2">                    
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
+                              <span className="font-medium leading-none text-white">{nombre_titular.substring(0, 2)}</span>
+                            </span>
+                            <div className="flex flex-col">
+                              <div className="text-md font-bold text-[#525252] ">{nombre_titular}</div>
+                              <div className="text-sm text-gray-500 text-left">{rut_titular}</div>
+                            </div>
+                          </div>                  
+                        </div>
 
-                  {expandedRut === rut_titular && (
-                    <div className="mt-2">                      
+                        <svg
+                          className={`w-4 h-4 ml-auto mt-1 transform ${expandedRut === rut_titular ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <p className="text-red-500 ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+
+                    {expandedRut === rut_titular && (
+                      <div className="mt-2">                      
                         <div className="flex-1">
                           {showRut ? (
                             filteredRutData?.map((item, index) => (
@@ -681,48 +691,69 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                                 key={index}
                                 className={`mb-2 p-4 border-2 rounded-xl w-full flex flex-col ${
                                   selectedReference === index
-                                    ? ' bg-customBackgroundGreen'
+                                    ? 'bg-customBackgroundGreen'
                                     : 'border-gray-200 hover:border-gray-300'
                                 } ${selectedReference !== null && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                onClick={() => handleCheckboxChange(index, item.monto, item, event)}
+                                onClick={(event) => handleCheckboxChange(index, item.monto, item, event)}
                               >
                                 {isMobile ? (
                                   <div className="flex flex-col">
-                                    <p ><strong className="text-md text-gray-500">Monto:</strong> {formatCurrencyMonto(item.monto)}</p>
-                                    <p><strong className="text-md text-gray-500">Fecha:</strong> {item.fecha}</p>
-                                    <p><strong className="text-md text-gray-500">Referencia:</strong> {item.referencia}</p>
+                                    <div className="flex items-center">
+                                      <p className={item.monto >= 0 ? "text-customGreen font-medium text-sm flex items-center" : "text-red-500 font-medium text-sm flex items-center"}>
+                                        {item.monto >= 0 ? (
+                                          <>
+                                            <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                            <span className="text-sm font-medium text-customGreen ml-1">Abono</span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                            <span className="text-sm font-medium text-red-500 ml-1">Cargo</span>
+                                          </>
+                                        )}
+                                        <span className="ml-2">$ {formatCurrencyMonto(item.monto)}</span>
+                                      </p>
+                                    </div>
+
+                                    <div className="flex items-center">
+                                      <p className="text-xs text-gray-500 mr-2">Fecha:</p>
+                                      <p className="text-sm font-medium text-gray-900">{formatDate(item.fecha)}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                      <p className="text-xs text-gray-500 mr-2">Referencia:</p>
+                                      <p className="text-sm font-medium text-gray-900">{item.referencia}</p>
+                                    </div>
                                   </div>
                                 ) : (
                                   <>
                                     <div className="flex justify-between">
-                                    <div className="flex flex-col items-start">
-                                      <p className={item.monto >= 0 ? "text-customGreen font-medium text-sm" : "text-red-500 font-medium text-sm"}>
-                                        $ {formatCurrencyMonto(item.monto)}
-                                      </p>
-                                      {item.monto >= 0 ? (
-                                        <div className="flex items-center">
-                                          <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
-                                          <p className="text-sm font-medium text-customGreen ml-1">Abono</p>
-                                        </div>
-                                      ) : (
-                                        <div className="flex items-center">
-                                          <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
-                                          <p className="text-sm font-medium text-red-500 ml-1">Cargo</p>
-                                        </div>
-                                      )}
+                                      <div className="flex flex-col items-start">
+                                        <p className={item.monto >= 0 ? "text-customGreen font-medium text-sm" : "text-red-500 font-medium text-sm"}>
+                                          $ {formatCurrencyMonto(item.monto)}
+                                        </p>
+                                        {item.monto >= 0 ? (
+                                          <div className="flex items-center">
+                                            <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                            <p className="text-sm font-medium text-customGreen ml-1">Abono</p>
+                                          </div>
+                                        ) : (
+                                          <div className="flex items-center">
+                                            <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                            <p className="text-sm font-medium text-red-500 ml-1">Cargo</p>
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="flex flex-col items-start">
+                                        <p className="text-sm font-medium text-gray-900">{formatDate(item.fecha)}</p>
+                                        <p className="text-xs text-gray-500">Fecha de emisión</p>
+                                      </div>
+                                      <div className="flex flex-col items-start">
+                                        <p className="text-sm font-medium text-gray-900">{item.referencia}</p>
+                                        <p className="text-xs text-gray-500">Referencia</p>
+                                      </div>
                                     </div>
-                                    <div className="flex flex-col items-start">
-                                      <p className="text-sm font-medium text-gray-900">{formatDate(item.fecha)}</p>
-                                      <p className="text-xs text-gray-500">Fecha de emisión</p>
-                                    </div>
-                                    <div className="flex flex-col items-start">
-                                      <p className="text-sm font-medium text-gray-900">{item.referencia}</p>
-                                      <p className="text-xs text-gray-500">Referencia</p>
-                                    </div>
-                                  </div>
                                   </>
                                 )}
-
                               </div>
                             ))
                           ) : (
@@ -753,36 +784,41 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             ))
                           )}
                         </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              headlinesData?.map(({ descripcion, estado }) => (
-                <div
-                  className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${selectedDescripcion === descripcion ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'}`}
-                  key={descripcion}
-                  onClick={() => handleClickDescripcion(descripcion)}
-                >
-                  <div className="flex justify-between items-start w-full">
-                    <div>
-                      <div className="font-bold">{descripcion}</div>
-                      <div>{estado}</div>
-                    </div>
-                    <svg className={`w-4 h-4 transform ${expandedDescripcion === descripcion ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
+                      </div>
+                    )}
                   </div>
-                  <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[descripcion] || 0}</p>
-                  {expandedDescripcion === descripcion && (
-                    <div className="mt-2">                      
-                      <div className="p-2 bg-gray-200 rounded-lg">Card 1</div>
-                      <div className="p-2 bg-gray-200 rounded-lg mt-2">Card 2</div>
-                    </div>
+                ))
+              ) : (
+                headlinesData?.map(({ descripcion, estado }) => (
+                  <div
+                    key={descripcion}
+                    className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${
+                      selectedDescripcion === descripcion ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => handleClickDescripcion(descripcion)}
+                  >
+                    <div className="flex justify-between items-start w-full">
+                      <div>
+                        <div className="font-bold">{descripcion}</div>
+                        <div>{estado}</div>
+                            </div>
+                            <svg className={`w-4 h-4 transform ${expandedDescripcion === descripcion ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                          </div>
+                          <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[descripcion] || 0}</p>
+                          {expandedDescripcion === descripcion && (
+                             <div className="mt-2">                      
+                                <div className="p-2 bg-gray-200 rounded-lg">Card 1</div>
+                                <div className="p-2 bg-gray-200 rounded-lg mt-2">Card 2</div>
+                             </div>
+                          )}
+                        </div>
+                      ))
+                    )
                   )}
-                </div>
-              ))
-            )}
+
+          </div>
           </div>
           </div>
           {/* <div className="flex-1 bg-gray-200 p-4">
@@ -868,36 +904,47 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             ))}
           </div> */}
 
-          <div className=" p-4" style={{ width: isMobile ? '100%' : '65%' }}>
-          {/* <div>  
-            {selectedItem && (
-              <>
-                <p>Monto: {selectedItem.monto}</p>
-                <p>Fecha: {selectedItem.fecha}</p>
-                <p>Referencia: {selectedItem.referencia}</p>
-              </>
-            )}
-          </div> */}
-          {selectFilteredCuentasCorrientes.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                {isClicked && selectedMontos > 0 && (                
-                  <div className="w-full mx-auto bg-customBackgroundGray shadow-lg rounded-lg overflow-hidden p-4 mb-4">
+        <div className="md:col-span-2 mt-4">          
+            {selectFilteredCuentasCorrientes.length === 0 ? (
+              <div className="bg-white rounded-lg p-4 flex flex-col items-center justify-center h-[740px] text-center">
+              <img src="/images/amico.png" alt="Nada por acá" className="w-80 h-80" />
+              <p className="text-xl font-bold text-[#525252] mt-12">No hay elementos para hacer match</p>
+              <p className="text-md text-[#939393] mt-2">Selecciona un movimiento bancario para empezar a conciliar</p>
+            </div>
+            
+            ) : (
+              <div className="bg-white rounded-lg p-4">
+                <p className="text-xl mt-1 font-bold text-[#525252]">Movimientos INET</p>
+                {isClicked && selectedMontos > 0 && (
+                  <div className="w-full mx-auto bg-customBackgroundGray rounded-lg overflow-hidden p-4 mb-4 mt-4">
                     {selectedItem && (
                       <div>
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center space-x-2">
                             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
-                              <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
+                              <span className="font-medium leading-none text-white">
+                                {selectedItem.nombre_titular.substring(0, 2)}
+                              </span>
                             </span>
                             <div className="flex flex-col">
-                              <div className="text-md font-bold text-[#525252]">{selectedItem.nombre_titular}</div>
-                              <div className="text-sm text-[#939393]">{selectedItem.rut_titular}</div>
+                              <div className="text-md font-bold text-[#525252]">
+                                {selectedItem.nombre_titular}
+                              </div>
+                              <div className="text-sm text-[#939393]">
+                                {selectedItem.rut_titular}
+                              </div>
                             </div>
                           </div>
                         </div>
                         <div className="flex justify-between gap-4 items-center">
                           <div className="flex flex-col items-start">
-                            <div className={selectedItem.monto >= 0 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
+                            <div
+                              className={
+                                selectedItem.monto >= 0
+                                  ? "text-customGreen font-bold text-md"
+                                  : "text-red-500 font-bold text-md"
+                              }
+                            >
                               $ {formatCurrencyMonto(selectedItem.monto)}
                             </div>
                             <div className="flex items-center mt-1">
@@ -917,20 +964,18 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                           <div className="text-left">
                             <div className="text-sm font-bold text-[#525252]">Fecha de emisión</div>
                             <div className="text-sm text-[#939393]">{formatDate(selectedItem.fecha)}</div>
-                          </div>                      
+                          </div>
                           <div className="text-left">
                             <div className="text-sm font-bold text-[#525252]">Referencia</div>
                             <div className="text-sm text-[#939393]">{selectedItem.referencia}</div>
-                          </div>                        
+                          </div>
                         </div>
-                    </div>
-                    
+                      </div>
                     )}
-
                   </div>
-                
-                )}            
-                <div className="flex items-center gap-x-6">
+                )}
+                <div className="text-md font-bold text-[#525252] mt-2">Movimientos Boletas/Facturas</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   <SearchBar
                     label="Búsqueda libre"
                     onSearch={handleSearchs}
@@ -939,7 +984,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     handleDateReset={handleDateReset}
                   />
                   <SelectBar
-                    label="Buscar Cliente/Proovedor"
+                    label="Buscar Cliente/Proveedor"
                     options={uniqueOptions}
                     onSelect={handleSelect}
                     inputId="select-input"
@@ -955,7 +1000,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     selectedDateRange={selectedDateRange}
                     setSelectedDateRange={setSelectedDateRange}
                   />
-                </div>               
+                </div>
                 <div className="mt-8 overflow-x-auto">
                   <table className="min-w-full table-auto border-collapse">
                     <thead>
@@ -970,27 +1015,45 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredCuentasCorrientes
-                        .sort((a, b) => selectedMontos.includes(b.valor_moneda_nacional) - selectedMontos.includes(a.valor_moneda_nacional))
+                        .sort(
+                          (a, b) =>
+                            selectedMontos.includes(b.valor_moneda_nacional) -
+                            selectedMontos.includes(a.valor_moneda_nacional)
+                        )
                         .map((item, index) => (
                           <tr key={index} className="border-b">
                             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm sm:pl-0">
-                            <input
-                              id={`checkbox-${index}`}
-                              name={`checkbox-${index}`}
-                              type="checkbox"
-                              checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
-                              onChange={() => handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)}
-                              className={`h-4 w-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${selectedMontos.length === 0 ? 'text-gray-400 cursor-not-allowed opacity-40' : 'text-customGreen'}`}
-                              disabled={selectedMontos.length === 0}
-                            />
+                              <input
+                                id={`checkbox-${index}`}
+                                name={`checkbox-${index}`}
+                                type="checkbox"
+                                checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                                onChange={() =>
+                                  handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)
+                                }
+                                className={`h-4 w-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
+                                  selectedMontos.length === 0
+                                    ? "text-gray-400 cursor-not-allowed opacity-40"
+                                    : "text-customGreen"
+                                }`}
+                                disabled={selectedMontos.length === 0}
+                              />
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
                               {item.codigo_plan_de_cuentas}
                             </td>
-                            <td className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${item.sentido_cta_vs_valor === 1 ? "text-customGreen" : "text-red-500"}`}>
-                              {item.sentido_cta_vs_valor === 1 && <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />}
-                              {item.sentido_cta_vs_valor === 2 && <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />}
-                              {" "} $ {formatCurrencyMonto(item.valor_moneda_nacional)}
+                            <td
+                              className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${
+                                item.sentido_cta_vs_valor === 1 ? "text-customGreen" : "text-red-500"
+                              }`}
+                            >
+                              {item.sentido_cta_vs_valor === 1 && (
+                                <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />
+                              )}
+                              {item.sentido_cta_vs_valor === 2 && (
+                                <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />
+                              )}
+                              {" $"} {formatCurrencyMonto(item.valor_moneda_nacional)}
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
                               {formatDate(item.fecha_comprobante_his)}
@@ -1010,7 +1073,10 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                         ))}
                       {filteredCuentasCorrientes.length === 0 && (
                         <tr>
-                          <td colSpan={6} className="px-6 py-4 text-center text-gray-500 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                          <td
+                            colSpan={6}
+                            className="px-6 py-4 text-center text-gray-500 bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                          >
                             No se encontraron resultados.
                           </td>
                         </tr>
@@ -1019,10 +1085,11 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                   </table>
                 </div>
                 <div className="bg-customBackgroundGray p-4 shadow-md flex justify-end">
-                  <span className="font-bold mr-4">Diferencia:</span>  $ {resultadoFormateado}
+                  <span className="font-bold mr-4">Diferencia:</span> $ {resultadoFormateado}
                 </div>
               </div>
             )}
+
             {selectedReferenceCuentasCorrientes.length > 0 && (
               <div className="flex justify-end">
                 <button onClick={openModal} className="rounded-md bg-customGreen px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-customLightGreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-customGreen mt-4 mr-4">

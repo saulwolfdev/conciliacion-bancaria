@@ -4,7 +4,7 @@ import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@h
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
 const CustomSelectRutMobile = ({ headlines, handleClickRut, setIsOptionSelected, UnmatchedCount }) => {
-  const placeholder = { nombre_titular: 'Seleccionar Rut', rut_titular: '' };
+  const placeholder = { nombre_titular: 'Seleccionar...', rut_titular: '' };
   const [selected, setSelected] = useState(placeholder);
 
   const handleSelectionChange = (item) => {
@@ -17,8 +17,8 @@ const CustomSelectRutMobile = ({ headlines, handleClickRut, setIsOptionSelected,
 
   return (
     <Listbox value={selected} onChange={handleSelectionChange}>
-      <Label className="block text-sm font-medium leading-6 font-bold text-[#525252] ml-2">Seleccionar Rut</Label>
-      <div className="relative mt-2 w-full">
+      <Label className="block text-md font-medium leading-6 font-bold text-[#525252]">Seleccionar un Rut</Label>
+      <div className="relative w-full">
         <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-customGreen sm:text-sm sm:leading-6">
           <span className="inline-flex w-full truncate">
             <span className="truncate">{selected.nombre_titular}</span>
@@ -59,8 +59,7 @@ const CustomSelectRutMobile = ({ headlines, handleClickRut, setIsOptionSelected,
                     <CheckIcon aria-hidden="true" className="h-5 w-5" />
                   </span>
                 )}
-              </ListboxOption>
-              {/* Línea separadora */}
+              </ListboxOption>              
               <hr className="border-t border-gray-200 my-1" />
             </div>
           ))}

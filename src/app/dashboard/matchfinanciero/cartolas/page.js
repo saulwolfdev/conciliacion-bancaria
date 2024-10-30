@@ -50,6 +50,7 @@ const Cartolas = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [selectIsMobile, setSelectIsMobile] = useState(false);
+  const [modalIsMobile, setModalIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -59,6 +60,7 @@ const Cartolas = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(true)
   const [isOptionSelected, setIsOptionSelected] = useState(0);
+  const maxVisiblePages = 5;
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -89,11 +91,13 @@ useEffect(() => {
   const handleResize = () => {
     setIsMobile(window.innerWidth < 1670);
     setSelectIsMobile(window.innerWidth < 1450);
+    setModalIsMobile(window.innerWidth < 450)
   };
 
   if (typeof window !== "undefined") {
     setIsMobile(window.innerWidth < 1670);
     setSelectIsMobile(window.innerWidth < 1450);
+    setModalIsMobile(window.innerWidth < 450)
     window.addEventListener("resize", handleResize);
   }
 
@@ -287,6 +291,14 @@ useEffect(() => {
   //       currentPage * itemsPerPage
   //     )
   //   : [];
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
+
+  const startPage = Math.max(
+    1,
+    Math.min(currentPage - Math.floor(maxVisiblePages / 2), totalPages - maxVisiblePages + 1)
+  );
+  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -573,47 +585,44 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
               </span>
             </div>
             <div className="flex flex-col items-center md:inline-flex md:-space-x-px">
-              {filteredData && filteredData.length > 0 && (
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
-                    aria-label="Anterior"
-                  >
-                    Anterior
-                  </button>
-                  {[
-                    ...Array(Math.ceil(filteredData.length / itemsPerPage)),
-                  ].map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 
-                      ${
-                        currentPage === index + 1
-                          ? "bg-white border-gray-400 text-black shadow-md"
-                          : "bg-white text-gray-500"
-                      }`}
-                      aria-label={`Página ${index + 1}`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={
-                      currentPage ===
-                      Math.ceil(filteredData.length / itemsPerPage)
-                    }
-                    className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
-                    aria-label="Próximo"
-                  >
-                    Próximo
-                  </button>
-                </div>
-              )}
-            </div>
+    {filteredData && filteredData.length > 0 && (
+      <div className="flex justify-center">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+          aria-label="Anterior"
+        >
+          Anterior
+        </button>
+
+        {/* Mapea solo las páginas dentro del rango visible */}
+        {Array.from({ length: endPage - startPage + 1 }, (_, index) => {
+          const page = startPage + index;
+          return (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 
+              ${currentPage === page ? "bg-white border-gray-400 text-black shadow-md" : "bg-white text-gray-500"}`}
+              aria-label={`Página ${page}`}
+            >
+              {page}
+            </button>
+          );
+        })}
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+          aria-label="Próximo"
+        >
+          Próximo
+        </button>
+      </div>
+    )}
+  </div>
           </div>
         </div>
       ),
@@ -631,7 +640,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             </div>
           <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
           {selectIsMobile ? (
-              <>
+              <div className="w-full min-h-[220px]">
                 <CustomSelectRutMobile 
                   headlines={headlines} 
                   handleClickRut={handleClickRut}
@@ -645,7 +654,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                   formatDate={formatDate} 
                   isOptionSelected={isOptionSelected} 
                 />
-              </>
+              </div>
             ) : (
               showRut ? (
                 headlines?.map(({ rut_titular, nombre_titular }) => (                
@@ -680,7 +689,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                         </svg>
                       </div>
                     </div>
-                    <p className="text-red-500 ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+                    <p onClick={() => handleClickRut(rut_titular)} className="text-red-500 ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
 
                     {expandedRut === rut_titular && (
                       <div className="mt-2">                      
@@ -927,7 +936,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                               </span>
                             </span>
                             <div className="flex flex-col">
-                              <div className="text-md font-bold text-[#525252]">
+                              <div className={`${modalIsMobile ? 'text-sm' : 'text-md'}  font-bold text-[#525252]`}>
                                 {selectedItem.nombre_titular}
                               </div>
                               <div className="text-sm text-[#939393]">
@@ -941,7 +950,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             <div
                               className={
                                 selectedItem.monto >= 0
-                                  ? "text-customGreen font-bold text-md"
+                                  ? `text-customGreen font-bold ${modalIsMobile ? 'text-xs' : 'text-md'}`
                                   : "text-red-500 font-bold text-md"
                               }
                             >
@@ -962,7 +971,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             </div>
                           </div>
                           <div className="text-left">
-                            <div className="text-sm font-bold text-[#525252]">Fecha de emisión</div>
+                            <div className="text-sm font-bold text-[#525252]"> {modalIsMobile ? 'Emisión' : 'Fecha de emisión'}</div>
                             <div className="text-sm text-[#939393]">{formatDate(selectedItem.fecha)}</div>
                           </div>
                           <div className="text-left">
@@ -974,7 +983,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     )}
                   </div>
                 )}
-                <div className="text-md font-bold text-[#525252] mt-2">Movimientos Boletas/Facturas</div>
+                <div className="text-md font-bold text-[#525252] mt-4">Movimientos Boletas/Facturas</div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   <SearchBar
                     label="Búsqueda libre"
@@ -1031,7 +1040,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                                 onChange={() =>
                                   handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)
                                 }
-                                className={`h-4 w-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
+                                className={`h-4 w-4 ml-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
                                   selectedMontos.length === 0
                                     ? "text-gray-400 cursor-not-allowed opacity-40"
                                     : "text-customGreen"
@@ -1144,8 +1153,16 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
       <CustomModal 
        isOpen={isModalOpen} 
        onClose={closeModal} 
-      title={resultado === 0 ? "Detalle del Match Completo" : "Detalle del Match Parcial"}
-      content=
+       title={
+          modalIsMobile
+            ? resultado === 0 
+              ? "Match Completo" 
+              : "Match Parcial"
+            : resultado === 0
+              ? "Detalle del Match Completo"
+              : "Detalle del Match Parcial"
+        }      
+       content=
       <div>
             {selectedItem && (
               <div className="flex flex-col p-4 border rounded-md shadow-sm bg-customHeaderGray">
@@ -1155,7 +1172,12 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                       <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
                     </span>
                     <div className="flex flex-col">
-                      <div className="text-md font-bold text-[#525252]">{selectedItem.nombre_titular}</div>
+                    <div className="text-md font-bold text-[#525252] overflow-hidden text-ellipsis whitespace-nowrap">
+                    {modalIsMobile 
+                      ? selectedItem.nombre_titular.split(' ').slice(0, 2).join(' ') 
+                      : selectedItem.nombre_titular
+                    }
+                    </div>
                       <div className="text-sm text-gray-500 text-left text-[#939393]">{selectedItem.rut_titular}</div>
                     </div>
                   </div>                  
@@ -1180,22 +1202,26 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold text-[#525252]">Fecha de emisión</div>
+                    <div className={`${modalIsMobile ? 'text-xs' : 'text-sm'} font-bold text-[#525252]`}>Fecha de emisión</div>
                     <div className="text-sm text-gray-500 text-[#939393]">{formatDate(selectedItem.fecha)}</div>
-                  </div>                           
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-[#525252]">Referencia</div>
-                    <div className="text-sm text-gray-500 text-[#939393]">{selectedItem.referencia}</div>
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-[#525252]">Tipo</div>
-                    <div className="text-sm text-gray-500 text-[#939393]">Recibo</div>
-                  </div>
+                  </div>  
+                  {!modalIsMobile && (
+                      <>                         
+                        <div className="text-left">
+                          <div className="text-sm font-bold text-[#525252]">Referencia</div>
+                          <div className="text-sm text-gray-500 text-[#939393]">{selectedItem.referencia}</div>
+                        </div>
+                        <div className="text-left">
+                          <div className="text-sm font-bold text-[#525252]">Tipo</div>
+                          <div className="text-sm text-gray-500 text-[#939393]">Recibo</div>
+                        </div>
+                      </>
+                   )}
                 </div>
               </div>
             )}
             {filteredMatchedCuentasCorrientes.map((item, index) => (
-              <div key={index} className="flex flex-col p-4 border rounded-md shadow-sm">
+              <div key={index} className={`flex flex-col ${modalIsMobile ? 'p-2' : 'p-4'} border rounded-md shadow-sm`}>
                 <div className="flex justify-between gap-4 items-center">
                   <div className="flex flex-col items-start">
                     <div className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
@@ -1216,17 +1242,21 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </div>
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold text-[#525252]">Fecha de comprobante</div>
+                    <div className={`${modalIsMobile ? 'text-xs' : 'text-sm'} font-bold text-[#525252]`}>Fecha de comprobante</div>
                     <div className="text-sm text-gray-500 text-[#939393]">{formatDate(item.fecha_comprobante_his)}</div>
                   </div>
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-[#525252]">Referencia</div>
-                    <div className="text-sm text-gray-500 text-[#939393]">{item.referencia_his}</div>
-                  </div>
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-[#525252]">Tipo</div>
-                    <div className="text-sm text-gray-500 text-[#939393]">Recibo</div>
-                  </div>
+                  {!modalIsMobile && (
+                      <>
+                        <div className="text-left">
+                          <div className="text-sm font-bold text-[#525252]">Referencia</div>
+                          <div className="text-sm text-gray-500 text-[#939393]">{item.referencia_his}</div>
+                        </div>
+                        <div className="text-left">
+                          <div className="text-sm font-bold text-[#525252]">Tipo</div>
+                          <div className="text-sm text-gray-500 text-[#939393]">Recibo</div>
+                        </div>
+                      </>
+                   )}
                 </div>
               </div>
             ))}
@@ -1243,15 +1273,15 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
       <SelectWithSearch dataListar={dataListar} accountNumber={accountNumber} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
         <div className="card bg-white p-4 rounded shadow">
-          <div className="text-lg font-semibold">{getCurrentMonthYear()}</div>
+          <div className={`${modalIsMobile ? 'text-sm' : 'text-md'} font-semibold`}>{getCurrentMonthYear()}</div>
           <div className="text-sm text-gray-500">Periodo</div>
         </div>
         <div className="card bg-white p-4 rounded shadow">
-          <div className="text-lg font-semibold">{formatCurrency(totalCargos)}</div>
+          <div className={`${modalIsMobile ? 'text-sm' : 'text-md'} font-semibold`}>{formatCurrency(totalCargos)}</div>
           <div className="text-sm text-gray-500">Cargos</div>
         </div>
         <div className="card bg-white p-4 rounded shadow">
-          <div className="text-lg font-semibold">{formatCurrency(totalAbonos)}</div>
+          <div className={`${modalIsMobile ? 'text-sm' : 'text-md'} font-semibold`}>{formatCurrency(totalAbonos)}</div>
           <div className="text-sm text-gray-500">Abonos</div>
         </div>
       </div>

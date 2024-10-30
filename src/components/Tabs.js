@@ -16,7 +16,7 @@ const Tabs = ({ tabs, defaultTab, onTabChange }) => {
         <select
           id="tabs"
           name="tabs"
-          className="block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          className="block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-customGreen focus:ring-customGreen sm:text-sm"
           value={selectedTab}
           onChange={(e) => handleTabClick(e.target.value)}
         >
@@ -37,7 +37,7 @@ const Tabs = ({ tabs, defaultTab, onTabChange }) => {
               className={
                 selectedTab === tab.name
                   ? 'border-b-2 border-customGreen text-customGreen font-bold w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium' 
-                  : 'border-transparent text-gray-500 w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium hover:text-customGreen hover:font-bold hover:cursor-pointer' // Agregando hover:cursor-pointer
+                  : 'border-transparent text-gray-500 w-1/4 border-b-2 px-1 py-4 text-center text-sm font-medium hover:text-customGreen hover:font-bold hover:cursor-pointer'
               }
               onClick={() => handleTabClick(tab.name)}
             >

@@ -41,34 +41,34 @@ console.log("dataDashboard nuevo URL:", dataDashboard)
     }
   }, [holderType, isClient]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = dashboard;
-  //       setDataDashboard(data.data);
-  //       console.log("Datos Dashboard:", data);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
-        const data = await response.json();
+        const data = dashboard;
         setDataDashboard(data.data);
         console.log("Datos Dashboard:", data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
-  
+
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch("https://informat.sa.ngrok.io/tesoreria/api/bancos/api_banco_dashboard/");
+  //       const data = await response.json();
+  //       setDataDashboard(data.data);
+  //       console.log("Datos Dashboard:", data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, []);
   
   
 

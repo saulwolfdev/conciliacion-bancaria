@@ -246,7 +246,7 @@ console.log("dataDashboard nuevo URL:", dataDashboard)
                   className="bg-white shadow-md rounded p-4 text-center"
                 >
                   <div className="flex flex-col items-center">
-                    <h2 className="text-4xl font-bold text-blue-700">
+                    <h2 className="text-2xl font-bold text-blue-700">
                       {stat.value}
                     </h2>
                     <p className="text-gray-500 mt-2">

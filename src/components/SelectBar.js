@@ -48,7 +48,7 @@ const SelectBar = ({ options, onSelect, label, inputId, selectedOption, setSelec
         </label>
       </div>
       <div
-        className="border p-1 w-full flex items-center justify-between bg-white text-black cursor-pointer rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-customGreen mt-2"
+        className="border p-1 w-full flex items-center justify-between bg-white text-black cursor-pointer rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-customGreen mt-2 text-sm "
         tabIndex="0"
         onClick={() => {
           setIsOpen(!isOpen);
@@ -69,13 +69,13 @@ const SelectBar = ({ options, onSelect, label, inputId, selectedOption, setSelec
             placeholder="Buscar..."
             value={searchTerm}
             onChange={handleSearch}
-            className="block w-full rounded-md border-0 py-1 pl-2 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-md sm:leading-6"
+            className="block w-full rounded-md border-0 py-1 pl-2 pr-14 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-customGreen sm:text-sm sm:leading-5"
           />
           <div className="max-h-60 overflow-y-auto">
             {filteredOptions.map((option, index) => (
               <div
                 key={index}
-                className={`p-2 hover:bg-gray-100 cursor-pointer ${index < filteredOptions.length - 1 ? 'border-b border-gray-300' : ''}`}
+                className={`p-2 hover:bg-gray-100 cursor-pointer text-sm  ${index < filteredOptions.length - 1 ? 'border-b border-gray-300' : ''}`}
                 onClick={() => handleChange(option)}
               >
                 {option}

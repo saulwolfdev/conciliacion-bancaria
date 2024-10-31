@@ -24,7 +24,7 @@ const DateSearchBar = ({ onDateChange, label, inputId, setSelectedOption, select
           onChange={handleDateChange}
           placeholderText="Selecciona un rango de fechas"
           displayFormat="DD/MM/YYYY"
-          inputClassName="w-full rounded-md border border-gray-300 py-1 pl-2 pr-14 text-gray-900 shadow-sm focus:border-customGreen focus:ring-customGreen sm:text-sm sm:leading-6"
+          inputClassName="w-full rounded-md border border-gray-300 py-1 pl-2 pr-14 text-gray-900 shadow-sm focus:border-customGreen focus:ring-customGreen sm:text-xs sm:leading-5"
           popperPlacement="bottom-start"
           popperModifiers={[
             {

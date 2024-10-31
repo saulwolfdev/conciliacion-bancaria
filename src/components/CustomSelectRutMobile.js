@@ -40,27 +40,31 @@ const CustomSelectRutMobile = ({ headlines, handleClickRut, setIsOptionSelected,
           >
             {placeholder.nombre_titular}
           </ListboxOption>
-          {headlines.map((item) => (
-            <div key={item.rut_titular}>
+          {headlines.map((item,index) => (
+            <div key={index}>
               <ListboxOption
                 value={item}
                 className={({ active }) => `
                   relative cursor-default select-none py-2 pl-3 pr-9
-                  ${active ? 'bg-customGreen text-white' : 'text-gray-900'}
+                  ${active || selected.rut_titular === item.rut_titular ? 'bg-customBackgroundGreen text-white' : 'text-gray-900'}
                 `}
               >
                 <div className="flex flex-col">
-                  <span className="truncate font-normal">Nombre:  {item.nombre_titular}</span>
+                  <span className="truncate text-gray-500">Nombre:  {item.nombre_titular}</span>
                   <span className="truncate text-gray-500">Rut: {item.rut_titular}</span>
                   <span className="truncate text-gray-500">Sin Match: {UnmatchedCount[item.rut_titular] || 0}</span>
                 </div>
                 {selected.rut_titular === item.rut_titular && item.rut_titular !== '' && (
-                  <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-red">
+                  <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
                     <CheckIcon aria-hidden="true" className="h-5 w-5" />
                   </span>
                 )}
-              </ListboxOption>              
-              <hr className="border-t border-gray-200 my-1" />
+              </ListboxOption>  
+              {index < headlines.length - 1 && (
+                <hr className="border-t border-gray-200 my-1" />
+              )}
+
+                          
             </div>
           ))}
         </ListboxOptions>

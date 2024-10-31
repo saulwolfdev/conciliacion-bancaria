@@ -51,6 +51,7 @@ const Cartolas = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [selectIsMobile, setSelectIsMobile] = useState(false);
   const [modalIsMobile, setModalIsMobile] = useState(false);
+  const [tailwindIsMobile, setTailwindIsMobile] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -92,12 +93,14 @@ useEffect(() => {
     setIsMobile(window.innerWidth < 1670);
     setSelectIsMobile(window.innerWidth < 1450);
     setModalIsMobile(window.innerWidth < 450)
+    setTailwindIsMobile(window.innerWidth < 769)
   };
 
   if (typeof window !== "undefined") {
     setIsMobile(window.innerWidth < 1670);
     setSelectIsMobile(window.innerWidth < 1450);
     setModalIsMobile(window.innerWidth < 450)
+    setTailwindIsMobile(window.innerWidth < 769)
     window.addEventListener("resize", handleResize);
   }
 
@@ -447,7 +450,7 @@ useEffect(() => {
   console.log('selectedReferenceCuentasCorrientes:', selectedReferenceCuentasCorrientes);
   console.log('selectedMontoCuentasCorrientes:', selectedMontoCuentasCorrientes);
   console.log('filteredCuentasCorrientes:', filteredCuentasCorrientes);
-
+  
   const totalMontoCuentasCorrientes = selectedMontoCuentasCorrientes.reduce((acc, curr) => acc + curr, 0);
   const totalMonto = selectedMontos.reduce((acc, curr) => acc + curr, 0);
 
@@ -461,6 +464,9 @@ useEffect(() => {
 
 console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length)
 console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
+console.log('filteredDescripcion:', filteredDescripcion);
+console.log('headlinesData:', headlinesData);
+console.log('selectedDescripcion:', selectedDescripcion);
 
   const tabs = [
     {
@@ -595,8 +601,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
         >
           Anterior
         </button>
-
-        {/* Mapea solo las páginas dentro del rango visible */}
+       
         {Array.from({ length: endPage - startPage + 1 }, (_, index) => {
           const page = startPage + index;
           return (
@@ -660,7 +665,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                 headlines?.map(({ rut_titular, nombre_titular }) => (                
                   <div
                     key={rut_titular}
-                    className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${
+                    className={`mb-2 p-3 border-2 rounded-xl cursor-pointer w-full bg-white ${
                       selectedRut === rut_titular ? 'shadow-xl' : 'border-gray-200 hover:border-gray-300'
                     } ${selectedRut && selectedRut !== rut_titular ? 'opacity-50' : ''}`}
                   >
@@ -689,7 +694,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                         </svg>
                       </div>
                     </div>
-                    <p onClick={() => handleClickRut(rut_titular)} className="text-red-500 ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
+                    <p onClick={() => handleClickRut(rut_titular)} className="text-red-500 text-sm ml-10">Movimientos sin match: {UnmatchedCount[rut_titular] || 0}</p>
 
                     {expandedRut === rut_titular && (
                       <div className="mt-2">                      
@@ -698,7 +703,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                             filteredRutData?.map((item, index) => (
                               <div
                                 key={index}
-                                className={`mb-2 p-4 border-2 rounded-xl w-full flex flex-col ${
+                                className={`mt-2 p-2 border-2 rounded-xl w-full flex flex-col ${
                                   selectedReference === index
                                     ? 'bg-customBackgroundGreen'
                                     : 'border-gray-200 hover:border-gray-300'
@@ -1093,7 +1098,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
                     </tbody>
                   </table>
                 </div>
-                <div className="bg-customBackgroundGray p-4 shadow-md flex justify-end">
+                <div className="bg-customBackgroundGray p-4 flex justify-end rounded-b-lg">
                   <span className="font-bold mr-4">Diferencia:</span> $ {resultadoFormateado}
                 </div>
               </div>
@@ -1102,7 +1107,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
             {selectedReferenceCuentasCorrientes.length > 0 && (
               <div className="flex justify-end">
                 <button onClick={openModal} className="rounded-md bg-customGreen px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-customLightGreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-customGreen mt-4 mr-4">
-                 {resultado === 0 && selectedReferenceCuentasCorrientes.length > 0 ? 'Match' : 'Match Parcial'}
+                 {resultado === 0 && selectedReferenceCuentasCorrientes.length > 0 ? 'Match Total' : 'Match Parcial'}
                 </button>
               </div>
             )}
@@ -1165,8 +1170,8 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
        content=
       <div>
             {selectedItem && (
-              <div className="flex flex-col p-4 border rounded-md shadow-sm bg-customHeaderGray">
-                <div className="flex justify-between items-start mb-4">
+              <div className="flex flex-col p-3 border rounded-md shadow-sm bg-customHeaderGray">
+                <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center space-x-2">                    
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
                       <span className="font-medium leading-none text-white">{selectedItem.nombre_titular.substring(0, 2)}</span>
@@ -1221,7 +1226,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
               </div>
             )}
             {filteredMatchedCuentasCorrientes.map((item, index) => (
-              <div key={index} className={`flex flex-col ${modalIsMobile ? 'p-2' : 'p-4'} border rounded-md shadow-sm`}>
+              <div key={index} className={`flex flex-col ${modalIsMobile ? 'p-2' : 'p-3'} border rounded-md shadow-sm`}>
                 <div className="flex justify-between gap-4 items-center">
                   <div className="flex flex-col items-start">
                     <div className={item.sentido_cta_vs_valor === 1 ? "text-customGreen font-bold text-md" : "text-red-500 font-bold text-md"}>
@@ -1271,20 +1276,41 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
       />
       <BreadCrumbs pages={pages} />
       <SelectWithSearch dataListar={dataListar} accountNumber={accountNumber} />
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-        <div className="card bg-white p-4 rounded shadow">
-          <div className={`${modalIsMobile ? 'text-sm' : 'text-md'} font-semibold`}>{getCurrentMonthYear()}</div>
-          <div className="text-sm text-gray-500">Periodo</div>
-        </div>
-        <div className="card bg-white p-4 rounded shadow">
-          <div className={`${modalIsMobile ? 'text-sm' : 'text-md'} font-semibold`}>{formatCurrency(totalCargos)}</div>
-          <div className="text-sm text-gray-500">Cargos</div>
-        </div>
-        <div className="card bg-white p-4 rounded shadow">
-          <div className={`${modalIsMobile ? 'text-sm' : 'text-md'} font-semibold`}>{formatCurrency(totalAbonos)}</div>
-          <div className="text-sm text-gray-500">Abonos</div>
-        </div>
-      </div>
+      {tailwindIsMobile ? (
+          <div className="card bg-white p-4 rounded shadow mt-4">
+            <div className="flex justify-between gap-4 items-center">
+              <div className="flex flex-col items-start">
+                <div className="w-1/1 text-sm font-semibold">{getCurrentMonthYear()}</div>
+                <div className="w-1/2 text-sm text-gray-500 text-right">Periodo</div>
+              </div>
+              <div className="flex flex-col items-start">
+                <div className="w-1/2 text-sm font-semibold">{formatCurrency(totalCargos)}</div>
+                <div className="w-1/2 text-sm text-gray-500 text-right">Cargos</div>
+              </div>
+              <div className="flex flex-col items-start">
+                <div className="w-1/2 text-sm font-semibold">{formatCurrency(totalAbonos)}</div>
+                <div className="w-1/2 text-sm text-gray-500 text-right">Abonos</div>
+              </div>
+            </div>
+         </div>
+        
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="card bg-white p-4 rounded shadow">
+              <div className="text-md font-semibold">{getCurrentMonthYear()}</div>
+              <div className="text-sm text-gray-500">Periodo</div>
+            </div>
+            <div className="card bg-white p-4 rounded shadow">
+              <div className="text-md font-semibold">{formatCurrency(totalCargos)}</div>
+              <div className="text-sm text-gray-500">Cargos</div>
+            </div>
+            <div className="card bg-white p-4 rounded shadow">
+              <div className="text-md font-semibold">{formatCurrency(totalAbonos)}</div>
+              <div className="text-sm text-gray-500">Abonos</div>
+            </div>
+          </div>
+       )}
+
       <Tabs tabs={tabs} defaultTab={activeTab} onTabChange={handleTabChange} />
       <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>   
       {/* {selectedReferenceCuentasCorrientes.length > 0 && (

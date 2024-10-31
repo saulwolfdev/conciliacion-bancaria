@@ -58,16 +58,16 @@ const CustomSelectMovementMobile = ({ filteredRutData, handleCheckboxChange, for
                 onClick={(event) => handleCheckboxChange(index, item.monto, item, event)}
                 className={({ active }) => `
                   relative cursor-default select-none py-2 pl-3 pr-9
-                  ${active ? 'bg-customGreen text-white' : 'text-gray-900'}
+                  ${active ? 'bg-customBackgroundGreen text-white' : 'text-gray-900'}
                 `}
               >
                 <div className="flex flex-col">
-                  <span className="truncate font-normal">Monto: $ {formatCurrencyMonto(item.monto)}</span>
+                  <span className="truncate text-gray-500">Monto: $ {formatCurrencyMonto(item.monto)}</span>
                   <span className="truncate text-gray-500"> Fecha: {formatDate(item.fecha)}</span>
                   <span className="truncate text-gray-500">Referencia: {item.referencia}</span>
                 </div>
                 {selected.monto === item.monto && item.monto !== '' && (
-                  <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-red">
+                  <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
                     <CheckIcon aria-hidden="true" className="h-5 w-5" />
                   </span>
                 )}

@@ -118,11 +118,14 @@ useEffect(() => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+    date.setHours(0, 0, 0, 0); // Establece la hora a las 00:00:00
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
+  
+  
 
   const calculateResult = () => {
     const sumAmounts = selectedMontoCuentasCorrientes.reduce((acc, curr) => acc + curr, 0);
@@ -467,6 +470,7 @@ console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut)
 console.log('filteredDescripcion:', filteredDescripcion);
 console.log('headlinesData:', headlinesData);
 console.log('selectedDescripcion:', selectedDescripcion);
+console.log('expandedDescripcion:', expandedDescripcion);
 
   const tabs = [
     {
@@ -643,7 +647,23 @@ console.log('selectedDescripcion:', selectedDescripcion);
               <p className="text-xl mt-1 font-bold text-[#525252]">Movimientos Bancarios</p>
               <p className="text-xs text-red-500 mt-1">Movimientos totales sin match: {withoutMatch(dataListar)}</p>
             </div>
-          <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>
+          <div className="w-full p-4 flex flex-col items-start justify-start" style={{ width: isMobile ? '100%' : '100%' }}>          
+            <div className="mb-6">
+              <label htmlFor="rutOption" className="block text-sm font-medium text-gray-900">
+                Selecciona una opción
+              </label>
+              <select
+                id="rutOption"
+                name="rutOption"
+                value={showRut ? "conRut" : "sinRut"}
+                onChange={(e) => setShowRut(e.target.value === "conRut")}
+                className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-customGreen focus:border-customGreen sm:text-sm"
+              >
+                <option value="conRut">Con RUT</option>
+                <option value="sinRut">Sin RUT</option>
+              </select>
+            </div>
+
           {selectIsMobile ? (
               <div className="w-full min-h-[220px]">
                 <CustomSelectRutMobile 
@@ -661,6 +681,7 @@ console.log('selectedDescripcion:', selectedDescripcion);
                 />
               </div>
             ) : (
+              
               showRut ? (
                 headlines?.map(({ rut_titular, nombre_titular }) => (                
                   <div
@@ -803,29 +824,130 @@ console.log('selectedDescripcion:', selectedDescripcion);
                   </div>
                 ))
               ) : (
-                headlinesData?.map(({ descripcion, estado }) => (
+                headlinesData?.map(({ descripcion }) => (
+                  // <div
+                  //   key={descripcion}
+                  //   className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${
+                  //     selectedDescripcion === descripcion ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'
+                  //   }`}
+                  //   onClick={() => handleClickDescripcion(descripcion)}
+                  // >
                   <div
                     key={descripcion}
-                    className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white ${
-                      selectedDescripcion === descripcion ? 'border-customGreen' : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => handleClickDescripcion(descripcion)}
+                    className={`mb-2 p-3 border-2 rounded-xl cursor-pointer w-full bg-white ${
+                      selectedDescripcion === descripcion ? 'shadow-xl' : 'border-gray-200 hover:border-gray-300'
+                    } ${selectedDescripcion && selectedDescripcion !== descripcion ? 'opacity-50' : ''}`}
+                    // onClick={() => handleClickDescripcion(descripcion)}
                   >
-                    <div className="flex justify-between items-start w-full">
-                      <div>
-                        <div className="font-bold">{descripcion}</div>
-                        <div>{estado}</div>
+                    <div className="flex justify-between items-start w-full" onClick={() => handleClickDescripcion(descripcion)}>
+                      <div>                        
+                        <div className="flex items-center space-x-2">                    
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
+                              <span className="font-medium leading-none text-white">{descripcion.substring(0, 2)}</span>
+                            </span>
+                            <div className="flex flex-col">
+                              <div className="text-md font-bold text-[#525252] ">{descripcion}</div>
+                              {/* <div className="text-sm text-gray-500 text-left">{rut_titular}</div> */}
+                            </div>
+                          </div>
                             </div>
                             <svg className={`w-4 h-4 transform ${expandedDescripcion === descripcion ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                           </div>
-                          <p className="text-red-500 mt-2">Movimientos sin match: {UnmatchedCount[descripcion] || 0}</p>
+                          <p className="text-red-500 mt-2 text-sm ml-10" onClick={() => handleClickDescripcion(descripcion)}>Movimientos sin match: {UnmatchedCount[descripcion] || 0}</p>
                           {expandedDescripcion === descripcion && (
-                             <div className="mt-2">                      
-                                <div className="p-2 bg-gray-200 rounded-lg">Card 1</div>
-                                <div className="p-2 bg-gray-200 rounded-lg mt-2">Card 2</div>
-                             </div>
+                             filteredDescripcion?.map((item, index) => (
+                              <div
+                                // key={index}
+                                // className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
+                                //   selectedReferenceRutData === item.referencia
+                                //     ? 'border-customGreen'
+                                //     : 'border-gray-200 hover:border-gray-300'
+                                // } ${selectedReferenceRutData && selectedReferenceRutData !== item.referencia ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                // onClick={() => handleCheckboxChangeRutData(item.referencia, item.monto)}
+                              >
+                                {/* <div>
+                                  <p><strong>Monto:</strong> {item.monto}</p>
+                                  <p><strong>Fecha:</strong> {item.fecha}</p>
+                                  <p><strong>Referencia:</strong> {item.referencia}</p>
+                                  <p><strong>Rut:</strong> {item.rut_titular}</p>
+                                  <p><strong>Nombre:</strong> {item.nombre_titular}</p>
+                                </div>                   */}
+
+
+                              <div
+                                key={index}
+                                className={`mt-2 p-2 border-2 rounded-xl w-full flex flex-col ${
+                                  selectedReference === index
+                                    ? 'bg-customBackgroundGreen'
+                                    : 'border-gray-200 hover:border-gray-300'
+                                } ${selectedReference !== null && selectedReference !== index ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                // onClick={(event) => handleCheckboxChange(index, item.monto, item, event)}
+                              >
+                                {isMobile ? (
+                                  <div className="flex flex-col">
+                                    <div className="flex items-center">
+                                      <p className={item.monto >= 0 ? "text-customGreen font-medium text-sm flex items-center" : "text-red-500 font-medium text-sm flex items-center"}>
+                                        {item.monto >= 0 ? (
+                                          <>
+                                            <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                            <span className="text-sm font-medium text-customGreen ml-1">Abono</span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                            <span className="text-sm font-medium text-red-500 ml-1">Cargo</span>
+                                          </>
+                                        )}
+                                        <span className="ml-2">$ {formatCurrencyMonto(item.monto)}</span>
+                                      </p>
+                                    </div>
+
+                                    <div className="flex items-center">
+                                      <p className="text-xs text-gray-500 mr-2">Fecha:</p>
+                                      <p className="text-sm font-medium text-gray-900">{formatDate(item.fecha)}</p>
+                                    </div>
+                                    <div className="flex items-center">
+                                      <p className="text-xs text-gray-500 mr-2">Referencia:</p>
+                                      <p className="text-sm font-medium text-gray-900">{item.referencia}</p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div className="flex justify-between" onClick={() => handleCheckboxChangeRutData(item.referencia, item.monto)}>
+                                      <div className="flex flex-col items-start">
+                                        <p className={item.monto >= 0 ? "text-customGreen font-medium text-sm" : "text-red-500 font-medium text-sm"}>
+                                          $ {formatCurrencyMonto(item.monto)}
+                                        </p>
+                                        {item.monto >= 0 ? (
+                                          <div className="flex items-center">
+                                            <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen" />
+                                            <p className="text-sm font-medium text-customGreen ml-1">Abono</p>
+                                          </div>
+                                        ) : (
+                                          <div className="flex items-center">
+                                            <ArrowTrendingDownIcon className="w-4 h-4 text-red-500" />
+                                            <p className="text-sm font-medium text-red-500 ml-1">Cargo</p>
+                                          </div>
+                                        )}
+                                      </div>
+                                      <div className="flex flex-col items-start">
+                                        <p className="text-sm font-medium text-gray-900">{formatDate(item.fecha)}</p>
+                                        <p className="text-xs text-gray-500">Fecha de emisión</p>
+                                      </div>
+                                      <div className="flex flex-col items-start">
+                                        <p className="text-sm font-medium text-gray-900">{item.referencia}</p>
+                                        <p className="text-xs text-gray-500">Referencia</p>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+
+
+                              </div>
+                            ))
                           )}
                         </div>
                       ))
@@ -1115,11 +1237,11 @@ console.log('selectedDescripcion:', selectedDescripcion);
         </div>
       ),
     },
-    {
-      name: "anular",
-      label: "Anular Movimientos",
-      content: <div>Contenido de Anular Movimientos</div>,
-    },
+    // {
+    //   name: "anular",
+    //   label: "Anular Movimientos",
+    //   content: <div>Contenido de Anular Movimientos</div>,
+    // },
   ];
 
   const handleTabChange = (tabName) => {

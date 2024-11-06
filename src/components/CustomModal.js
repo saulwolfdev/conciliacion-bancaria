@@ -1,6 +1,7 @@
 'use client'
 
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 const CustomModal = ({ 
   isOpen, 
@@ -13,7 +14,8 @@ const CustomModal = ({
   confirmButtonText = 'Confirmar', 
   onCancel, 
   onConfirm, 
-  size = 'md' 
+  size = 'md',
+  showIcon = false 
 }) =>{
 
   const sizeClasses = {
@@ -48,7 +50,10 @@ const CustomModal = ({
               &times;
             </button>
 
-            <DialogTitle as="h2" className="text-xl font-bold mb-4 text-[#525252]">
+            <DialogTitle as="h2" className="text-2xl font-bold mb-4 text-[#525252] flex items-center justify-center">
+              {showIcon && (
+                <ExclamationTriangleIcon className="h-6 w-6 text-yellow-500 mr-2" />
+              )}
               {title}
             </DialogTitle>
 

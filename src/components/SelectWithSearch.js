@@ -37,7 +37,7 @@ const SelectWithSearch = ({ filteredCuentasCorrientes, onSelect }) => {
   }, []);
 
   return (
-    <div className="relative w-full max-w-sm mx-left mt-8" ref={dropdownRef}>
+    <div className="relative w-full max-w-sm mx-left mt-6" ref={dropdownRef}>
       <div
         className="border p-2 w-full flex items-center justify-between bg-white text-black cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}

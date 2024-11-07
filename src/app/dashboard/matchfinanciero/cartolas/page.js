@@ -1781,6 +1781,9 @@ const Cartolas = () => {
         showIcon={true}
       />
       <BreadCrumbs pages={pages} />
+      <div className="flex justify-start mt-6">
+        <p className="text-3xl font-bold text-[#5e5e5e]">Match Financiero</p>
+      </div>
       <SelectWithSearch dataListar={dataListar} accountNumber={accountNumber} />
       {tailwindIsMobile ? (
         <div className="card bg-white p-4 rounded shadow mt-4">

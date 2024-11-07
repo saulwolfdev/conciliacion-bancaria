@@ -227,7 +227,6 @@ console.log("dataDashboard nuevo URL:", dataDashboard)
 
   return (
     <div className="container md:w-1/1 md:px-16">   
-      <BreadCrumbs pages={pages} />   
       <AccountsModal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -236,7 +235,25 @@ console.log("dataDashboard nuevo URL:", dataDashboard)
         onLoad={handleLoadAccounts}
         lineOfCredit={lineCredit}
       />
-      <div className="max-w-7xl mx-auto px-4 mt-8">
+      <div>      
+      <BreadCrumbs pages={pages} />   
+     
+        <div className="flex justify-between items-center mb-6 mt-6">
+            <div className="flex justify-start">
+              <p className="text-3xl font-bold text-[#5e5e5e]">Bancos</p>
+            </div>
+          {dataDashboard && dataDashboard.length > 0 && (
+            <div className="flex justify-end">
+              <button
+                className="bg-customGreen text-white p-2 rounded h-full" 
+                onClick={() => setIsOpen(true)}
+              >
+                Nuevo Banco
+              </button>
+            </div>
+          )}
+        </div>          
+
         <div className="flex flex-col justify-between items-center mb-4 sm:flex-row"> 
           <div className="grid grid-cols-1 gap-4 flex-grow md:grid-cols-3 sm:grid-cols-1 mb-4">
             {stats.map((stat) => (
@@ -258,12 +275,12 @@ console.log("dataDashboard nuevo URL:", dataDashboard)
             ))}
           </div>
 
-          <button
+          {/* <button
             className="bg-customGreen text-white p-2 rounded h-full ml-4 sm:ml-4" 
             onClick={() => setIsOpen(true)}
           >
             Nuevo Banco
-          </button>
+          </button> */}
         </div> 
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">        

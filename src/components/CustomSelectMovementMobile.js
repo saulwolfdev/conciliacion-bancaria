@@ -3,7 +3,7 @@ import { useState, Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-const CustomSelectMovementMobile = ({ filteredRutData, handleCheckboxChange, formatCurrencyMonto, formatDate, isOptionSelected }) => {
+const CustomSelectMovementMobile = ({ filteredRutData, handleRutData, formatCurrencyMonto, formatDate, isOptionSelected }) => {
   const placeholder = { monto: '', fecha: '', referencia: '', label: 'Seleccionar...' };
   const [selected, setSelected] = useState(placeholder);
 
@@ -61,7 +61,7 @@ const CustomSelectMovementMobile = ({ filteredRutData, handleCheckboxChange, for
               <div key={index}>
                 <Listbox.Option
                   value={item}
-                  onClick={(event) => handleCheckboxChange(index, item.monto, item, event)}
+                  onClick={(event) => handleRutData(index, item.monto, item, event)}
                   className={({ active }) => `
                     relative cursor-default select-none py-2 pl-3 pr-9
                     ${active ? 'bg-customBackgroundGreen text-white' : 'text-gray-900'}

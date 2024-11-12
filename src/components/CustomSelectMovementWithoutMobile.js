@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-const CustomSelectMovementWithoutMobile = ({ filteredDescripcion, formatCurrencyMonto, isOptionSelected }) => {
-    const placeholder = { id: null, descripcion: 'Seleccionar...' }; 
+const CustomSelectMovementWithoutMobile = ({ handleDescripcionData ,filteredDescripcionData, formatCurrencyMonto, isOptionSelected }) => {
+    const placeholder = { id: null, label: 'Seleccionar...' }; 
     const [selected, setSelected] = useState(placeholder);
   
     const handleSelectionChange = (item) => {
@@ -22,7 +22,7 @@ const CustomSelectMovementWithoutMobile = ({ filteredDescripcion, formatCurrency
           <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-customGreen sm:text-sm sm:leading-6">
           <span className="inline-flex w-full truncate">
             <span className="truncate">
-              {selected.descripcion ? selected.descripcion : `$ ${formatCurrencyMonto(selected.monto)}`}
+              {selected.label ? selected.label : `$ ${formatCurrencyMonto(selected.monto)}`}
             </span>
             <span className="ml-2 truncate text-gray-500">
               {selected.fecha ? selected.fecha.split("-").reverse().join("/") : ''}
@@ -44,10 +44,11 @@ const CustomSelectMovementWithoutMobile = ({ filteredDescripcion, formatCurrency
             >
               {placeholder.descripcion}
             </ListboxOption>
-            {filteredDescripcion.map((item, index) => (
+            {filteredDescripcionData.map((item, index) => (
               <div key={item.id || index}>
                 <ListboxOption
                   value={item}
+                  onClick={(event) =>  handleDescripcionData(index, monto, item, event)}
                   className={({ active }) => `
                     relative cursor-default select-none py-2 pl-3 pr-9
                     ${active || selected.id === item.id ? 'bg-customBackgroundGreen text-white' : 'text-gray-900'}
@@ -64,7 +65,7 @@ const CustomSelectMovementWithoutMobile = ({ filteredDescripcion, formatCurrency
                     </span>
                   )}
                 </ListboxOption>
-                {index < filteredDescripcion.length - 1 && (
+                {index < filteredDescripcionData.length - 1 && (
                   <hr className="border-t border-gray-200 my-1" />
                 )}
               </div>

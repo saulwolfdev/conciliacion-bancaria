@@ -31,30 +31,23 @@ const Cartolas = () => {
   const [accountNumber, setAccountNumber] = useState(null);
   const [selectedRut, setSelectedRut] = useState(null);
   const [selectedDescripcion, setSelectedDescripcion] = useState(null);
-  const [selectedReference, setSelectedReference] = useState(null);
+  const [selectedReferenceRut, setSelectedReferenceRut] = useState(null);
+  const [selectedReferenceDescripcion, setSelectedReferenceDescripcion] = useState(null);
   const [filteredRutData, setFilteredRutData] = useState([]);
-  const [filteredDescripcion, setFilteredDescripcion] = useState([]);
-  const [cuentasCorrientesData, setCuentasCorrientesData] =
-    useState(cuentasCorrientes);
-  const [filteredCuentasCorrientes, setFilteredCuentasCorrientes] = useState(
-    []
-  );
-  const [selectFilteredCuentasCorrientes, setSelectFilteredCuentasCorrientes] =
-    useState([]);
-  const [filteredCuentasCorrientesByRut, setFilteredCuentasCorrientesByRut] =
-    useState([]);
-  const [selectedMontos, setSelectedMontos] = useState([]);
+  const [filteredDescripcionData, setFilteredDescripcionData] = useState([]);
+  const [cuentasCorrientesData, setCuentasCorrientesData] = useState(cuentasCorrientes);    
+  const [filteredCuentasCorrientesRut, setFilteredCuentasCorrientesRut] = useState([]);
+  const [selectFilteredCuentasCorrientes, setSelectFilteredCuentasCorrientes] =  useState([]);   
+  const [filteredCuentasCorrientesByRut, setFilteredCuentasCorrientesByRut] = useState([]);   
+  const [filteredCuentasCorrientesByDescripcion, setFilteredCuentasCorrientesByDescripcion] = useState([]);  
+  const [selectedMontosRut, setSelectedMontosRut] = useState([]);
+  const [selectedMontosDescripcion, setSelectedMontosDescripcion] = useState([]);
   const [selectedRutMonto, setSelectedRutMonto] = useState(null);
   const [showRut, setShowRut] = useState(true);
-  const [selectedReferenceRutData, setSelectedReferenceRutData] =
-    useState(null);
+  const [selectedReferenceRutData, setSelectedReferenceRutData] = useState(null);    
   const [selectedMontosRutData, setSelectedMontosRutData] = useState([]);
-  const [
-    selectedReferenceCuentasCorrientes,
-    setSelectedReferenceCuentasCorrientes,
-  ] = useState([]);
-  const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] =
-    useState([]);
+  const [selectedReferenceCuentasCorrientes, setSelectedReferenceCuentasCorrientes] = useState([]);
+  const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] = useState([]);
   const itemsPerPage = 15;
 
   const [expandedRut, setExpandedRut] = useState(null);
@@ -64,7 +57,8 @@ const Cartolas = () => {
   const [selectIsMobile, setSelectIsMobile] = useState(false);
   const [modalIsMobile, setModalIsMobile] = useState(false);
   const [tailwindIsMobile, setTailwindIsMobile] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItemRut, setSelectedItemRut] = useState(null);
+  const [selectedItemDescripcion, setSelectedItemDescripcion] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState({
@@ -106,11 +100,11 @@ const Cartolas = () => {
   };
 
   useEffect(() => {
-    const matchedCuentas = filteredCuentasCorrientes.filter((cuenta) =>
+    const matchedCuentas = filteredCuentasCorrientesRut.filter((cuenta) =>
       selectedReferenceCuentasCorrientes.includes(cuenta.referencia_his)
     );
     setFilteredMatchedCuentasCorrientes(matchedCuentas);
-  }, [selectedReferenceCuentasCorrientes, filteredCuentasCorrientes]);
+  }, [selectedReferenceCuentasCorrientes, filteredCuentasCorrientesRut]);
   console.log(
     "filteredMatchedCuentasCorrientes",
     filteredMatchedCuentasCorrientes
@@ -140,15 +134,21 @@ const Cartolas = () => {
   }, []);
 
   const formatCurrencyMonto = (amount) => {
-    return new Intl.NumberFormat("es-AR", {
+    const formattedAmount = new Intl.NumberFormat("es-CL", {
+      style: 'currency',
+      currency: 'CLP',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
+  
+    // Para eliminar el signo de moneda ($) en el resultado
+    return formattedAmount.replace(/[^\d,.-]/g, '').replace('-', '');
   };
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    date.setHours(0, 0, 0, 0); // Establece la hora a las 00:00:00
+    date.setHours(0, 0, 0, 0);
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
@@ -160,7 +160,7 @@ const Cartolas = () => {
       (acc, curr) => acc + curr,
       0
     );
-    const result = selectedMontos - sumAmounts;
+    const result = selectedMontosRut - sumAmounts;
     return result;
   };
 
@@ -254,7 +254,7 @@ const Cartolas = () => {
           item.glosa_detalle_compte_his?.toLowerCase().includes(lowercasedTerm)
         );
       });
-      setFilteredCuentasCorrientes(filtered);
+      setFilteredCuentasCorrientesRut(filtered);
     } else {
       console.error("filteredCuentasCorrientesByRut no es un array");
     }
@@ -262,14 +262,14 @@ const Cartolas = () => {
 
   const handleSelect = (selectedOption) => {
     if (selectedOption === "all") {
-      setFilteredCuentasCorrientes(filteredCuentasCorrientesByRut);
+      setFilteredCuentasCorrientesRut(filteredCuentasCorrientesByRut);
     } else if (typeof selectedOption === "string") {
       const filtered = filteredCuentasCorrientesByRut.filter(
         (item) =>
           item.glosa_detalle_compte_his?.toLowerCase() ===
           selectedOption.toLowerCase()
       );
-      setFilteredCuentasCorrientes(filtered);
+      setFilteredCuentasCorrientesRut(filtered);
     } else {
       console.error("selectedOption no es una cadena de texto");
     }
@@ -286,7 +286,7 @@ const Cartolas = () => {
   const handleDateChange = (dateRange) => {
     if (Array.isArray(filteredCuentasCorrientesByRut)) {
       if (!dateRange.startDate && !dateRange.endDate) {
-        setFilteredCuentasCorrientes(filteredCuentasCorrientesByRut);
+        setFilteredCuentasCorrientesRut(filteredCuentasCorrientesByRut);
       } else {
         const startDate = new Date(dateRange.startDate);
         startDate.setHours(0, 0, 0, 0);
@@ -298,7 +298,7 @@ const Cartolas = () => {
           return itemDate >= startDate && itemDate <= endDate;
         });
 
-        setFilteredCuentasCorrientes(filtered);
+        setFilteredCuentasCorrientesRut(filtered);
       }
     } else {
       console.error("filteredCuentasCorrientesByRut no es un array");
@@ -308,11 +308,11 @@ const Cartolas = () => {
   const handleDateReset = () => {
     // setDateRange({ startDate: null, endDate: null });
     setSelectedDateRange({ startDate: null, endDate: null });
-    setFilteredCuentasCorrientes(filteredCuentasCorrientesByRut);
+    setFilteredCuentasCorrientesRut(filteredCuentasCorrientesByRut);
   };
 
   const handleSearch = (filteredDatas) => {
-    setFilteredCuentasCorrientes(filteredDatas || filteredCuentasCorrientes);
+    setFilteredCuentasCorrientesRut(filteredDatas || filteredCuentasCorrientes);
   };
 
   const handleSearchChange = (data) => {
@@ -392,59 +392,67 @@ const Cartolas = () => {
             item.rut_titular === null &&
             item.nombre_titular === null
         )
-        .map((item) => [item.descripcion, { descripcion: item.descripcion, fecha: item.fecha, referencia: item.referencia }])
+        .map((item) => [item.descripcion, { descripcion: item.descripcion, fecha: item.fecha, referencia: item.referencia, monto: item.monto }])
     ).values()
   ); 
   
   const handleClickRut = (rut, monto) => {
     setSelectedRut(rut);
-    setSelectedRutMonto(monto);
+    // setSelectedRutMonto(monto);
 
     const filtered = dataListar.filter((item) => item.rut_titular === rut);
-    const filterCuentasCorrientes = Array.isArray(cuentasCorrientesData?.data)
+    const filterCuentasCorrientesRut = Array.isArray(cuentasCorrientesData?.data)
       ? cuentasCorrientesData.data.filter((item) => item.analisis === rut)
       : [];
 
     setFilteredRutData(filtered);
-    setFilteredCuentasCorrientes(filterCuentasCorrientes);
-    setSelectFilteredCuentasCorrientes(filterCuentasCorrientes);
-    setFilteredCuentasCorrientesByRut(filterCuentasCorrientes);
+    setFilteredCuentasCorrientesRut(filterCuentasCorrientesRut);
+    setSelectFilteredCuentasCorrientes(filterCuentasCorrientesRut);
+    setFilteredCuentasCorrientesByRut(filterCuentasCorrientesRut);
     setExpandedRut(expandedRut === rut ? null : rut);
-    setSelectedReference(null);
+    setSelectedReferenceRut(null);
     setIsClicked(false);
     setSelectedMontoCuentasCorrientes([]);
     setSelectedReferenceCuentasCorrientes([]);
-    setSelectedMontos([]);
+    setSelectedMontosRut([]);
     setSelectedOption("");
   };
 
   const handleToggleExpand = (rut) => {
     setExpandedRut(expandedRut === rut ? null : rut);
-    setSelectedReference(null);
-    setSelectedMontos([]);
+    setSelectedReferenceRut(null);
+    setSelectedMontosRut([]);
     setFilteredRutData([]);
   };
 
-  const handleClickDescripcion = (descripcion) => {
+  const handleClickDescripcion = (descripcion, fecha, monto) => {
     setSelectedDescripcion(descripcion);
     const filteredDescripcion = dataListar.filter(
       (item) => item.descripcion === descripcion
     );
-    setFilteredDescripcion(filteredDescripcion);
-    setFilteredCuentasCorrientes(cuentasCorrientes.data);
+
+    const filterCuentasCorrientesDescripcion = Array.isArray(cuentasCorrientesData?.data) 
+    ? cuentasCorrientesData.data.filter((item) => item.monto === monto) 
+    : [];
+
+    setFilteredDescripcionData(filteredDescripcion);
+    setFilteredCuentasCorrientesRut(cuentasCorrientes.data);
+    setFilteredCuentasCorrientesByDescripcion(filterCuentasCorrientesDescripcion)
+    setSelectedReferenceDescripcion(null);
+    setSelectedMontosDescripcion([]);
     setExpandedDescripcion(
       expandedDescripcion === descripcion ? null : descripcion
     );
   };
 
-  const handleCheckboxChange = (reference, monto, item, event) => {
+  const handleRutData = (index, monto, item, event) => {
     event.stopPropagation();
     setIsClicked(true);
-    setSelectedReference((prevSelected) =>
-      prevSelected === reference ? null : reference
+    setSelectedReferenceRut((prevSelected) =>
+      prevSelected === index ? null : index
     );
 
-    setSelectedMontos((prevSelectedMontos) => {
+    setSelectedMontosRut((prevSelectedMontos) => {
       if (prevSelectedMontos.includes(monto)) {
         return prevSelectedMontos.filter((m) => m !== monto);
       } else {
@@ -452,26 +460,31 @@ const Cartolas = () => {
       }
     });
 
-    setSelectedItem((prevSelectedItem) =>
-      prevSelectedItem?.reference === reference ? null : item
+    setSelectedItemRut((prevSelectedItem) =>
+      prevSelectedItem?.index === index ? null : item
     );
 
     setSelectedReferenceCuentasCorrientes([]);
     setSelectedMontoCuentasCorrientes([]);
   };
 
-  const handleCheckboxChangeRutData = (reference, monto) => {
-    setSelectedReferenceRutData((prevSelected) =>
-      prevSelected === reference ? null : reference
+  const handleDescripcionData = (index, monto, item, event) => {
+    event.stopPropagation();
+    setSelectedReferenceDescripcion((prevSelected) =>
+      prevSelected === index ? null : index
     );
 
-    setSelectedMontos((prevSelectedMontos) => {
+    setSelectedMontosDescripcion((prevSelectedMontos) => {
       if (prevSelectedMontos.includes(monto)) {
         return prevSelectedMontos.filter((m) => m !== monto);
       } else {
-        return [...prevSelectedMontos, monto];
+        return [monto];
       }
     });
+
+    setSelectedItemDescripcion((prevSelectedItem) =>
+      prevSelectedItem?.index === index ? null : item
+    );
   };
 
   const handleCheckboxChangeCuentasCorrientes = (reference, monto) => {
@@ -503,7 +516,7 @@ const Cartolas = () => {
 
   useEffect(() => {
     console.log("headlines:", headlines);
-    console.log("selectedMontos:", selectedMontos);
+    console.log("selectedMontosRut:", selectedMontosRut);
     console.log("selectedRutMonto:", selectedRutMonto);
     console.log(
       "selectedReferenceCuentasCorrientes:",
@@ -513,13 +526,13 @@ const Cartolas = () => {
       "selectedMontoCuentasCorrientes:",
       selectedMontoCuentasCorrientes
     );
-    console.log("filteredCuentasCorrientes:", filteredCuentasCorrientes);
+    console.log("filteredCuentasCorrientesRut:", filteredCuentasCorrientesRut);
 
     const totalMontoCuentasCorrientes = selectedMontoCuentasCorrientes.reduce(
       (acc, curr) => acc + curr,
       0
     );
-    const totalMonto = selectedMontos.reduce((acc, curr) => acc + curr, 0);
+    const totalMonto = selectedMontosRut.reduce((acc, curr) => acc + curr, 0);
 
     if (totalMonto === totalMontoCuentasCorrientes) {
       console.log("Montos coinciden:", totalMonto);
@@ -527,20 +540,29 @@ const Cartolas = () => {
       console.log("Montos no coinciden");
     }
   }, [
-    selectedMontos,
+    selectedMontosRut,
     selectedRutMonto,
     selectedReferenceCuentasCorrientes,
     selectedMontoCuentasCorrientes,
-    filteredCuentasCorrientes,
+    filteredCuentasCorrientesRut,
   ]);
 
-  console.log("filteredCuentasCorrientes", filteredCuentasCorrientes?.length);
+  console.log("filteredCuentasCorrientesRut", filteredCuentasCorrientesRut?.length);
   console.log("filteredCuentasCorrientesByRut", filteredCuentasCorrientesByRut);
-  console.log("filteredDescripcion:", filteredDescripcion);
+  console.log("filteredRutData:", filteredRutData); 
+  console.log("filteredDescripcionData:", filteredDescripcionData); 
   console.log("headlinesData:", headlinesData);
   console.log("headlines:", headlines);
   console.log("selectedDescripcion:", selectedDescripcion);
   console.log("expandedDescripcion:", expandedDescripcion);
+  console.log("selectedMontosRut:", selectedMontosRut);
+  console.log("selectedMontosDescripcion:", selectedMontosDescripcion);
+  console.log("selectedReferenceRut:", selectedReferenceRut);
+  console.log("selectedReferenceDescripcion:", selectedReferenceDescripcion);
+  console.log("cuentasCorrientesData:", cuentasCorrientesData); 
+  console.log("filteredCuentasCorrientesByDescripcion:", filteredCuentasCorrientesByDescripcion);
+  console.log("selectedItemRut:", selectedItemRut);
+  console.log("selectedItemDescripcion:", selectedItemDescripcion);
 
   const tabs = [
     {
@@ -761,26 +783,35 @@ const Cartolas = () => {
               >
                 {selectIsMobile ? (
                     <div className="mb-4 w-full">
-                      <label
-                        htmlFor="rutOption"
-                        className="block text-md font-medium leading-6 font-bold text-[#525252] mt-4"
-                      >
-                        Seleccion de Movimiento
-                      </label>
-                      <select
-                        id="rutOption"
-                        name="rutOption"
-                        value={showRut ? "conRut" : "sinRut"}
-                        onChange={(e) => {
-                          setShowRut(e.target.value === "conRut");
-                          setIsOptionSelected(0);
-                        }}
-                        className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-customGreen focus:border-customGreen sm:text-sm"
-                      >
-                        <option value="conRut">Con RUT</option>
-                        <option value="sinRut">Sin RUT</option>
-                      </select>
-                    </div>
+                    <label
+                      htmlFor="rutOption"
+                      className="block text-md font-medium leading-6 font-bold text-[#525252] mt-4"
+                    >
+                      Selección de Movimiento
+                    </label>
+                    <select
+                      id="rutOption"
+                      name="rutOption"
+                      value={showRut ? "conRut" : "sinRut"}
+                      onChange={(e) => {
+                        const isConRut = e.target.value === "conRut";
+                        setShowRut(isConRut);
+                        setIsOptionSelected(0);
+                  
+                        if (isConRut) {
+                          setSelectedReferenceDescripcion(null);
+                          setSelectedMontosDescripcion([]);
+                        } else {
+                          setSelectedReferenceRut(null);
+                          setSelectedMontosRut([]);
+                        }
+                      }}
+                      className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-customGreen focus:border-customGreen sm:text-sm"
+                    >
+                      <option value="conRut">Con RUT</option>
+                      <option value="sinRut">Sin RUT</option>
+                    </select>
+                  </div>                  
                   ) : (
                     <div className="mb-4">
                       <label className="cursor-pointer mr-4 ml-2">
@@ -789,7 +820,7 @@ const Cartolas = () => {
                           name="rutOption"
                           value="conRut"
                           checked={showRut}
-                          onChange={() => setShowRut(true)}
+                          onChange={() => { setShowRut(true); setSelectedReferenceDescripcion(null); setSelectedMontosDescripcion([])}}
                           className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                         />
                         Con RUT
@@ -800,7 +831,7 @@ const Cartolas = () => {
                           name="rutOption"
                           value="sinRut"
                           checked={!showRut}
-                          onChange={() => setShowRut(false)}
+                          onChange={() => { setShowRut(false); setSelectedReferenceRut(null); setSelectedMontosRut([])}}
                           className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                         />
                         Sin RUT
@@ -819,7 +850,7 @@ const Cartolas = () => {
                       />
                       <CustomSelectMovementMobile
                         filteredRutData={filteredRutData}
-                        handleCheckboxChange={handleCheckboxChange}
+                        handleRutData={handleRutData}
                         formatCurrencyMonto={formatCurrencyMonto}
                         formatDate={formatDate}
                         isOptionSelected={isOptionSelected}
@@ -834,7 +865,8 @@ const Cartolas = () => {
                         UnmatchedCount={UnmatchedCount} 
                        />
                       <CustomSelectMovementWithoutMobile 
-                        filteredDescripcion={filteredDescripcion} 
+                        filteredDescripcionData={filteredDescripcionData} 
+                        handleDescripcionData={handleDescripcionData}
                         formatCurrencyMonto={formatCurrencyMonto}
                         isOptionSelected={isOptionSelected}
                       />
@@ -911,23 +943,16 @@ const Cartolas = () => {
                                   <div
                                     key={index}
                                     className={`mt-2 p-2 border-2 rounded-xl w-full flex flex-col ${
-                                      selectedReference === index
+                                      selectedReferenceRut === index
                                         ? "bg-customBackgroundGreen"
                                         : "border-gray-200 hover:border-gray-300"
                                     } ${
-                                      selectedReference !== null &&
-                                      selectedReference !== index
+                                      selectedReferenceRut !== null &&
+                                      selectedReferenceRut !== index
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
                                     }`}
-                                    onClick={(event) =>
-                                      handleCheckboxChange(
-                                        index,
-                                        item.monto,
-                                        item,
-                                        event
-                                      )
-                                    }
+                                    onClick={(event) => handleRutData(index, item.monto, item, event)}
                                   >
                                     {isMobile ? (
                                       <div className="flex flex-col">
@@ -1029,27 +1054,22 @@ const Cartolas = () => {
                                     )}
                                   </div>
                                 ))
-                              : filteredDescripcion?.map((item, index) => (
+                              : filteredDescripcionData?.map((item, index) => (
                                   <div
                                     key={index}
                                     className={`mb-2 p-4 border-2 rounded-lg cursor-pointer w-full bg-white flex justify-between items-center ${
-                                      selectedReferenceRutData ===
-                                      item.referencia
+                                      selectedReferenceDescripcion ===
+                                     index
                                         ? "border-customGreen"
                                         : "border-gray-200 hover:border-gray-300"
                                     } ${
-                                      selectedReferenceRutData &&
-                                      selectedReferenceRutData !==
-                                        item.referencia
+                                      selectedReferenceDescripcion &&
+                                      selectedReferenceDescripcion !==
+                                       index
                                         ? "opacity-50 cursor-not-allowed"
                                         : ""
                                     }`}
-                                    onClick={() =>
-                                      handleCheckboxChangeRutData(
-                                        item.referencia,
-                                        item.monto
-                                      )
-                                    }
+                                    onClick={(event) =>  handleDescripcionData(index, monto, item, event)}
                                   >
                                     <div>
                                       <p>
@@ -1073,13 +1093,13 @@ const Cartolas = () => {
                                     <input
                                       type="checkbox"
                                       checked={
-                                        selectedReferenceRutData ===
+                                        selectedReferenceDescripcion ===
                                         item.referencia
                                       }
                                       className="form-checkbox text-customGreen"
                                       disabled={
-                                        selectedReferenceRutData &&
-                                        selectedReferenceRutData !==
+                                        selectedReferenceDescripcion &&
+                                        selectedReferenceDescripcion !==
                                           item.referencia
                                       }
                                     />
@@ -1091,7 +1111,7 @@ const Cartolas = () => {
                     </div>
                   ))
                 ) : (
-                  headlinesData?.map(({ descripcion, referencia }) => (
+                  headlinesData?.map(({ descripcion, referencia, fecha, monto }) => (
                     <div
                       key={descripcion}
                       className={`mb-2 p-3 border-2 rounded-xl cursor-pointer w-full bg-white ${
@@ -1108,7 +1128,7 @@ const Cartolas = () => {
                     >
                       <div
                         className="flex justify-between items-start w-full"
-                        onClick={() => handleClickDescripcion(descripcion)}
+                        onClick={() => handleClickDescripcion(descripcion, fecha, monto)}
                       >
                         <div>
                           <div className="flex items-center space-x-2">
@@ -1155,20 +1175,21 @@ const Cartolas = () => {
                         {UnmatchedCount[descripcion] || 0}
                       </p>
                       {expandedDescripcion === descripcion &&
-                        filteredDescripcion?.map((item, index) => (
+                        filteredDescripcionData?.map((item, index) => (
                           <div
                             key={index}
                             className={`mt-2 p-2 border-2 rounded-xl w-full flex flex-col ${
-                              selectedReference === index
+                              selectedReferenceDescripcion === index
                                 ? "bg-customBackgroundGreen"
                                 : "border-gray-200 hover:border-gray-300"
                             } ${
-                              selectedReference !== null &&
-                              selectedReference !== index
+                              selectedReferenceDescripcion !== null &&
+                              selectedReferenceDescripcion !== index
                                 ? "opacity-50 cursor-not-allowed"
                                 : ""
                             }`}
                             // onClick={(event) => handleCheckboxChange(index, item.monto, item, event)}
+                            onClick={(event) =>  handleDescripcionData(index, monto, item, event)}
                           >
                             {isMobile ? (
                               <div className="flex flex-col">
@@ -1222,12 +1243,7 @@ const Cartolas = () => {
                               <>
                                 <div
                                   className="flex justify-between"
-                                  onClick={() =>
-                                    handleCheckboxChangeRutData(
-                                      item.referencia,
-                                      item.monto
-                                    )
-                                  }
+                                  onClick={(event) =>  handleDescripcionData(index, monto, item, event)}
                                 >
                                   <div className="flex flex-col items-start">
                                     <p
@@ -1268,7 +1284,7 @@ const Cartolas = () => {
                                       {item.referencia}
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                      Referencia
+                                      Referencia test
                                     </p>
                                   </div>
                                 </div>
@@ -1303,15 +1319,15 @@ const Cartolas = () => {
                 <p className="text-xl mt-1 font-bold text-[#525252]">
                   Movimientos INET
                 </p>
-                {isClicked && selectedMontos > 0 && (
+                {isClicked && selectedMontosRut > 0 && (
                   <div className="w-full mx-auto bg-customBackgroundGray rounded-lg overflow-hidden p-4 mb-4 mt-4">
-                    {selectedItem && (
+                    {selectedItemRut && (
                       <div>
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center space-x-2">
                             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
                               <span className="font-medium leading-none text-white">
-                                {selectedItem.nombre_titular.substring(0, 2)}
+                                {selectedItemRut.nombre_titular.substring(0, 2)}
                               </span>
                             </span>
                             <div className="flex flex-col">
@@ -1320,10 +1336,10 @@ const Cartolas = () => {
                                   modalIsMobile ? "text-sm" : "text-md"
                                 }  font-bold text-[#525252]`}
                               >
-                                {selectedItem.nombre_titular}
+                                {selectedItemRut.nombre_titular}
                               </div>
                               <div className="text-sm text-[#939393]">
-                                {selectedItem.rut_titular}
+                                {selectedItemRut.rut_titular}
                               </div>
                             </div>
                           </div>
@@ -1332,17 +1348,17 @@ const Cartolas = () => {
                           <div className="flex flex-col items-start">
                             <div
                               className={
-                                selectedItem.monto >= 0
+                                selectedItemRut.monto >= 0
                                   ? `text-customGreen font-bold ${
                                       modalIsMobile ? "text-xs" : "text-md"
                                     }`
                                   : "text-red-500 font-bold text-md"
                               }
                             >
-                              $ {formatCurrencyMonto(selectedItem.monto)}
+                              $ {formatCurrencyMonto(selectedItemRut.monto)}
                             </div>
                             <div className="flex items-center mt-1">
-                              {selectedItem.monto >= 0 ? (
+                              {selectedItemRut.monto >= 0 ? (
                                 <>
                                   <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
                                   <p className="text-xs text-customGreen ml-1">
@@ -1365,7 +1381,7 @@ const Cartolas = () => {
                               {modalIsMobile ? "Emisión" : "Fecha de emisión"}
                             </div>
                             <div className="text-sm text-[#939393]">
-                              {formatDate(selectedItem.fecha)}
+                              {formatDate(selectedItemRut.fecha)}
                             </div>
                           </div>
                           <div className="text-left">
@@ -1373,7 +1389,7 @@ const Cartolas = () => {
                               Referencia
                             </div>
                             <div className="text-sm text-[#939393]">
-                              {selectedItem.referencia}
+                              {selectedItemRut.referencia}
                             </div>
                           </div>
                         </div>
@@ -1433,11 +1449,11 @@ const Cartolas = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {filteredCuentasCorrientes
+                      {filteredCuentasCorrientesRut
                         .sort(
                           (a, b) =>
-                            selectedMontos.includes(b.valor_moneda_nacional) -
-                            selectedMontos.includes(a.valor_moneda_nacional)
+                            selectedMontosRut.includes(b.valor_moneda_nacional) -
+                            selectedMontosRut.includes(a.valor_moneda_nacional)
                         )
                         .map((item, index) => (
                           <tr key={index} className="border-b">
@@ -1456,11 +1472,11 @@ const Cartolas = () => {
                                   )
                                 }
                                 className={`h-4 w-4 ml-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
-                                  selectedMontos.length === 0
+                                  selectedMontosRut.length === 0
                                     ? "text-gray-400 cursor-not-allowed opacity-40"
                                     : "text-customGreen"
                                 }`}
-                                disabled={selectedMontos.length === 0}
+                                disabled={selectedMontosRut.length === 0}
                               />
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
@@ -1490,7 +1506,7 @@ const Cartolas = () => {
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
                               {item.glosa_detalle_compte_his}
-                              {selectedMontos.includes(
+                              {selectedMontosRut.includes(
                                 item.valor_moneda_nacional
                               ) && (
                                 <span className="inline-flex items-center rounded-md bg-customBackgroundGreen px-2 py-1 text-xs font-medium text-customGreen ring-1 ring-inset ring-green-600/20 ml-8">
@@ -1500,7 +1516,7 @@ const Cartolas = () => {
                             </td>
                           </tr>
                         ))}
-                      {filteredCuentasCorrientes.length === 0 && (
+                      {filteredCuentasCorrientesRut.length === 0 && (
                         <tr>
                           <td
                             colSpan={6}
@@ -1597,27 +1613,27 @@ const Cartolas = () => {
             ? "Detalle del Match Completo"
             : "Detalle del Match Parcial"
         }
-        content=<div>
-          {selectedItem && (
+        content= <div>
+          {selectedItemRut && (
             <div className="flex flex-col p-3 border rounded-md shadow-sm bg-customHeaderGray">
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center space-x-2">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
                     <span className="font-medium leading-none text-white">
-                      {selectedItem.nombre_titular.substring(0, 2)}
+                      {selectedItemRut.nombre_titular.substring(0, 2)}
                     </span>
                   </span>
                   <div className="flex flex-col">
                     <div className="text-md font-bold text-[#525252] overflow-hidden text-ellipsis whitespace-nowrap">
                       {modalIsMobile
-                        ? selectedItem.nombre_titular
+                        ? selectedItemRut.nombre_titular
                             .split(" ")
                             .slice(0, 2)
                             .join(" ")
-                        : selectedItem.nombre_titular}
+                        : selectedItemRut.nombre_titular}
                     </div>
                     <div className="text-sm text-gray-500 text-left text-[#939393]">
-                      {selectedItem.rut_titular}
+                      {selectedItemRut.rut_titular}
                     </div>
                   </div>
                 </div>
@@ -1626,15 +1642,15 @@ const Cartolas = () => {
                 <div className="flex flex-col items-start">
                   <div
                     className={
-                      selectedItem.monto >= 0
+                      selectedItemRut.monto >= 0
                         ? "text-customGreen font-bold text-md"
                         : "text-red-500 font-bold text-md"
                     }
                   >
-                    $ {formatCurrencyMonto(selectedItem.monto)}
+                    $ {formatCurrencyMonto(selectedItemRut.monto)}
                   </div>
                   <div className="flex items-center mt-1">
-                    {selectedItem.monto >= 0 ? (
+                    {selectedItemRut.monto >= 0 ? (
                       <>
                         <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
                         <p className="text-xs text-customGreen ml-1">Abono</p>
@@ -1656,7 +1672,7 @@ const Cartolas = () => {
                     Fecha de emisión
                   </div>
                   <div className="text-sm text-gray-500 text-[#939393]">
-                    {formatDate(selectedItem.fecha)}
+                    {formatDate(selectedItemRut.fecha)}
                   </div>
                 </div>
                 {!modalIsMobile && (
@@ -1666,7 +1682,7 @@ const Cartolas = () => {
                         Referencia
                       </div>
                       <div className="text-sm text-gray-500 text-[#939393]">
-                        {selectedItem.referencia}
+                        {selectedItemRut.referencia}
                       </div>
                     </div>
                     <div className="text-left">
@@ -1839,7 +1855,7 @@ const Cartolas = () => {
       <div>{tabs.find((tab) => tab.name === activeTab)?.content}</div>
       {/* {selectedReferenceCuentasCorrientes.length > 0 && (
         <BottomSheet isOpen={isBottomSheetOpen} onClose={toggleBottomSheet}>
-          <p>Monto: {formatCurrencyMonto(selectedMontos)}</p>
+          <p>Monto: {formatCurrencyMonto(selectedMontosRut)}</p>
           {selectedMontoCuentasCorrientes.map((monto, index) => (
             <p key={index}>Monto INET: {formatCurrencyMonto(monto)}</p>
           ))}

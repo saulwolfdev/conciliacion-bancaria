@@ -41,7 +41,7 @@ const Cartolas = () => {
   const [filteredCuentasCorrientesByRut, setFilteredCuentasCorrientesByRut] = useState([]);   
   const [filteredCuentasCorrientesByDescripcion, setFilteredCuentasCorrientesByDescripcion] = useState([]);  
   const [selectedMontosRut, setSelectedMontosRut] = useState([]);
-  const [selectedMontosDescripcion, setSelectedMontosDescripcion] = useState([]);
+  const [selectedMontosDescripcion, setSelectedMontosDescripcion] = useState([]);  
   const [selectedRutMonto, setSelectedRutMonto] = useState(null);
   const [showRut, setShowRut] = useState(true);
   const [selectedReferenceRutData, setSelectedReferenceRutData] = useState(null);    
@@ -392,7 +392,11 @@ const Cartolas = () => {
             item.rut_titular === null &&
             item.nombre_titular === null
         )
-        .map((item) => [item.descripcion, { descripcion: item.descripcion, fecha: item.fecha, referencia: item.referencia, monto: item.monto }])
+        .map((item) => [item.descripcion, { 
+          descripcion: item.descripcion, 
+          fecha: item.fecha, 
+          referencia: item.referencia, 
+          monto: item.monto }])
     ).values()
   ); 
   
@@ -406,6 +410,7 @@ const Cartolas = () => {
       : [];
 
     setFilteredRutData(filtered);
+    setFilteredCuentasCorrientesByDescripcion([])
     setFilteredCuentasCorrientesRut(filterCuentasCorrientesRut);
     setSelectFilteredCuentasCorrientes(filterCuentasCorrientesRut);
     setFilteredCuentasCorrientesByRut(filterCuentasCorrientesRut);
@@ -418,12 +423,14 @@ const Cartolas = () => {
     setSelectedOption("");
   };
 
-  const handleToggleExpand = (rut) => {
-    setExpandedRut(expandedRut === rut ? null : rut);
-    setSelectedReferenceRut(null);
-    setSelectedMontosRut([]);
-    setFilteredRutData([]);
-  };
+  const handleButtonClick = () => {
+    if (expandedRut !== null) {
+      handleClickRut(expandedRut);
+    }
+    if (expandedDescripcion !== null) {
+      handleClickDescripcion(expandedDescripcion);
+    }    
+  };  
 
   const handleClickDescripcion = (descripcion, fecha, monto) => {
     setSelectedDescripcion(descripcion);
@@ -432,12 +439,14 @@ const Cartolas = () => {
     );
 
     const filterCuentasCorrientesDescripcion = Array.isArray(cuentasCorrientesData?.data) 
-    ? cuentasCorrientesData.data.filter((item) => item.monto === monto) 
+    ? cuentasCorrientesData.data.filter((item) => item.valor_moneda_nacional === monto) 
     : [];
 
     setFilteredDescripcionData(filteredDescripcion);
-    setFilteredCuentasCorrientesRut(cuentasCorrientes.data);
+    setFilteredCuentasCorrientesRut([]);
+    setFilteredCuentasCorrientesByRut([]);
     setFilteredCuentasCorrientesByDescripcion(filterCuentasCorrientesDescripcion)
+    setSelectFilteredCuentasCorrientes(filterCuentasCorrientesDescripcion)
     setSelectedReferenceDescripcion(null);
     setSelectedMontosDescripcion([]);
     setExpandedDescripcion(
@@ -470,6 +479,7 @@ const Cartolas = () => {
 
   const handleDescripcionData = (index, monto, item, event) => {
     event.stopPropagation();
+    setIsClicked(true);
     setSelectedReferenceDescripcion((prevSelected) =>
       prevSelected === index ? null : index
     );
@@ -563,7 +573,7 @@ const Cartolas = () => {
   console.log("filteredCuentasCorrientesByDescripcion:", filteredCuentasCorrientesByDescripcion);
   console.log("selectedItemRut:", selectedItemRut);
   console.log("selectedItemDescripcion:", selectedItemDescripcion);
-
+ 
   const tabs = [
     {
       name: "movimientos",
@@ -801,9 +811,11 @@ const Cartolas = () => {
                         if (isConRut) {
                           setSelectedReferenceDescripcion(null);
                           setSelectedMontosDescripcion([]);
+                          setSelectFilteredCuentasCorrientes([]);
                         } else {
                           setSelectedReferenceRut(null);
                           setSelectedMontosRut([]);
+                          setSelectFilteredCuentasCorrientes([]);
                         }
                       }}
                       className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-customGreen focus:border-customGreen sm:text-sm"
@@ -814,13 +826,13 @@ const Cartolas = () => {
                   </div>                  
                   ) : (
                     <div className="mb-4">
-                      <label className="cursor-pointer mr-4 ml-2">
+                      <label className="cursor-pointer mr-4 ml-2" >
                         <input
                           type="radio"
                           name="rutOption"
                           value="conRut"
                           checked={showRut}
-                          onChange={() => { setShowRut(true); setSelectedReferenceDescripcion(null); setSelectedMontosDescripcion([])}}
+                          onChange={() => { setShowRut(true); setSelectedReferenceDescripcion(null); setSelectedMontosDescripcion([]); setSelectFilteredCuentasCorrientes([]); setFilteredCuentasCorrientesByDescripcion([]); handleButtonClick(); setIsClicked(false);}}
                           className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                         />
                         Con RUT
@@ -831,7 +843,7 @@ const Cartolas = () => {
                           name="rutOption"
                           value="sinRut"
                           checked={!showRut}
-                          onChange={() => { setShowRut(false); setSelectedReferenceRut(null); setSelectedMontosRut([])}}
+                          onChange={() => { setShowRut(false); setSelectedReferenceRut(null); setSelectedMontosRut([]); setSelectFilteredCuentasCorrientes([]); setFilteredCuentasCorrientesByRut([]); handleButtonClick(); setFilteredCuentasCorrientesRut([]) }}
                           className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                         />
                         Sin RUT
@@ -1319,6 +1331,12 @@ const Cartolas = () => {
                 <p className="text-xl mt-1 font-bold text-[#525252]">
                   Movimientos INET
                 </p>
+                {selectedItemDescripcion &&(<div>{selectedItemDescripcion.descripcion}</div>)}
+                {isClicked && selectedMontosDescripcion > 0 && (
+                  <div className="w-full mx-auto bg-customBackgroundGray rounded-lg overflow-hidden p-4 mb-4 mt-4">
+                    {selectedItemDescripcion &&(<div>{selectedItemDescripcion.descripcion}</div>)}
+                  </div>
+                    )}
                 {isClicked && selectedMontosRut > 0 && (
                   <div className="w-full mx-auto bg-customBackgroundGray rounded-lg overflow-hidden p-4 mb-4 mt-4">
                     {selectedItemRut && (
@@ -1448,85 +1466,152 @@ const Cartolas = () => {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {filteredCuentasCorrientesRut
-                        .sort(
-                          (a, b) =>
-                            selectedMontosRut.includes(b.valor_moneda_nacional) -
-                            selectedMontosRut.includes(a.valor_moneda_nacional)
-                        )
-                        .map((item, index) => (
-                          <tr key={index} className="border-b">
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm sm:pl-0">
-                              <input
-                                id={`checkbox-${index}`}
-                                name={`checkbox-${index}`}
-                                type="checkbox"
-                                checked={selectedReferenceCuentasCorrientes.includes(
-                                  item.referencia_his
-                                )}
-                                onChange={() =>
-                                  handleCheckboxChangeCuentasCorrientes(
-                                    item.referencia_his,
-                                    item.valor_moneda_nacional
-                                  )
-                                }
-                                className={`h-4 w-4 ml-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
-                                  selectedMontosRut.length === 0
-                                    ? "text-gray-400 cursor-not-allowed opacity-40"
-                                    : "text-customGreen"
+                    {filteredCuentasCorrientesRut.length > 0 && (
+                      <tbody className="divide-y divide-gray-200">
+                        {filteredCuentasCorrientesRut
+                          .sort(
+                            (a, b) =>
+                              selectedMontosRut.includes(b.valor_moneda_nacional) -
+                              selectedMontosRut.includes(a.valor_moneda_nacional)
+                          )
+                          .map((item, index) => (
+                            <tr key={index} className="border-b">
+                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm sm:pl-0">
+                                <input
+                                  id={`checkbox-${index}`}
+                                  name={`checkbox-${index}`}
+                                  type="checkbox"
+                                  checked={selectedReferenceCuentasCorrientes.includes(
+                                    item.referencia_his
+                                  )}
+                                  onChange={() =>
+                                    handleCheckboxChangeCuentasCorrientes(
+                                      item.referencia_his,
+                                      item.valor_moneda_nacional
+                                    )
+                                  }
+                                  className={`h-4 w-4 ml-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
+                                    selectedMontosRut.length === 0
+                                      ? "text-gray-400 cursor-not-allowed opacity-40"
+                                      : "text-customGreen"
+                                  }`}
+                                  disabled={selectedMontosRut.length === 0}
+                                />
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
+                                {item.codigo_plan_de_cuentas}
+                              </td>
+                              <td
+                                className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${
+                                  item.sentido_cta_vs_valor === 1 ? "text-customGreen" : "text-red-500"
                                 }`}
-                                disabled={selectedMontosRut.length === 0}
-                              />
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
-                              {item.codigo_plan_de_cuentas}
-                            </td>
+                              >
+                                {item.sentido_cta_vs_valor === 1 && (
+                                  <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />
+                                )}
+                                {item.sentido_cta_vs_valor === 2 && (
+                                  <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />
+                                )}
+                                {" $"} {formatCurrencyMonto(item.valor_moneda_nacional)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
+                                {formatDate(item.fecha_comprobante_his)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
+                                {item.referencia_his}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
+                                {item.glosa_detalle_compte_his}
+                                {selectedMontosRut.includes(item.valor_moneda_nacional) && (
+                                  <span className="inline-flex items-center rounded-md bg-customBackgroundGreen px-2 py-1 text-xs font-medium text-customGreen ring-1 ring-inset ring-green-600/20 ml-8">
+                                    Coincidencia
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        {filteredCuentasCorrientesRut.length === 0 && (
+                          <tr>
                             <td
-                              className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${
-                                item.sentido_cta_vs_valor === 1
-                                  ? "text-customGreen"
-                                  : "text-red-500"
-                              }`}
+                              colSpan={6}
+                              className="px-6 py-4 text-center text-gray-500 bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                             >
-                              {item.sentido_cta_vs_valor === 1 && (
-                                <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />
-                              )}
-                              {item.sentido_cta_vs_valor === 2 && (
-                                <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />
-                              )}
-                              {" $"}{" "}
-                              {formatCurrencyMonto(item.valor_moneda_nacional)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
-                              {formatDate(item.fecha_comprobante_his)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
-                              {item.referencia_his}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
-                              {item.glosa_detalle_compte_his}
-                              {selectedMontosRut.includes(
-                                item.valor_moneda_nacional
-                              ) && (
-                                <span className="inline-flex items-center rounded-md bg-customBackgroundGreen px-2 py-1 text-xs font-medium text-customGreen ring-1 ring-inset ring-green-600/20 ml-8">
-                                  Coincidencia
-                                </span>
-                              )}
+                              No se encontraron resultados.
                             </td>
                           </tr>
-                        ))}
-                      {filteredCuentasCorrientesRut.length === 0 && (
-                        <tr>
-                          <td
-                            colSpan={6}
-                            className="px-6 py-4 text-center text-gray-500 bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                          >
-                            No se encontraron resultados.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
+                        )}
+                      </tbody>
+                    )}
+
+                    {filteredCuentasCorrientesByDescripcion.length > 0 && (
+                      <tbody className="divide-y divide-gray-200">
+                        {filteredCuentasCorrientesByDescripcion
+                          .sort((a, b) =>
+                            selectedMontosRut.includes(b.valor_moneda_nacional) - selectedMontosRut.includes(a.valor_moneda_nacional)
+                          )
+                          .map((item, index) => (
+                            <tr key={index} className="border-b">
+                              <td className="whitespace-nowrap py-4 pl-4 pr-3 text-center text-sm sm:pl-0">
+                                <input
+                                  id={`checkbox-${index}`}
+                                  name={`checkbox-${index}`}
+                                  type="checkbox"
+                                  checked={selectedReferenceCuentasCorrientes.includes(item.referencia_his)}
+                                  onChange={() =>
+                                    handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)
+                                  }
+                                  className={`h-4 w-4 ml-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
+                                    selectedMontosRut.length === 0
+                                      ? "text-gray-400 cursor-not-allowed opacity-40"
+                                      : "text-customGreen"
+                                  }`}
+                                  disabled={selectedMontosRut.length === 0}
+                                />
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
+                                {item.codigo_plan_de_cuentas}
+                              </td>
+                              <td className={`whitespace-nowrap px-3 py-4 text-sm font-bold ${
+                                  item.sentido_cta_vs_valor === 1 ? "text-customGreen" : "text-red-500"
+                                }`}
+                              >
+                                {item.sentido_cta_vs_valor === 1 && (
+                                  <ArrowTrendingUpIcon className="w-4 h-4 text-customGreen inline-block ml-1" />
+                                )}
+                                {item.sentido_cta_vs_valor === 2 && (
+                                  <ArrowTrendingDownIcon className="w-4 h-4 text-red-500 inline-block ml-1" />
+                                )}
+                                {" $"} {formatCurrencyMonto(item.valor_moneda_nacional)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
+                                {formatDate(item.fecha_comprobante_his)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
+                                {item.referencia_his}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-[#939393]">
+                                {item.glosa_detalle_compte_his}
+                                {selectedMontosRut.includes(item.valor_moneda_nacional) && (
+                                  <span className="inline-flex items-center rounded-md bg-customBackgroundGreen px-2 py-1 text-xs font-medium text-customGreen ring-1 ring-inset ring-green-600/20 ml-8">
+                                    Coincidencia
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        {filteredCuentasCorrientesByDescripcion.length === 0 && (
+                          <tr>
+                            <td
+                              colSpan={6}
+                              className="px-6 py-4 text-center text-gray-500 bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                              No se encontraron resultados.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    )}
+
                   </table>
                 </div>
                 <div className="bg-customBackgroundGray p-4 flex justify-end rounded-b-lg">

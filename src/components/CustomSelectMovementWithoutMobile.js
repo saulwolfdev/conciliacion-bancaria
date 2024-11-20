@@ -48,7 +48,7 @@ const CustomSelectMovementWithoutMobile = ({ handleDescripcionData ,filteredDesc
               <div key={item.id || index}>
                 <ListboxOption
                   value={item}
-                  onClick={(event) =>  handleDescripcionData(index, monto, item, event)}
+                  onClick={(event) =>  handleDescripcionData(index, item.monto, item, event)}
                   className={({ active }) => `
                     relative cursor-default select-none py-2 pl-3 pr-9
                     ${active || selected.id === item.id ? 'bg-customBackgroundGreen text-white' : 'text-gray-900'}

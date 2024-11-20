@@ -48,8 +48,7 @@ const Cartolas = () => {
   const [selectedMontosRutData, setSelectedMontosRutData] = useState([]);
   const [selectedReferenceCuentasCorrientes, setSelectedReferenceCuentasCorrientes] = useState([]);
   const [selectedMontoCuentasCorrientes, setSelectedMontoCuentasCorrientes] = useState([]);
-  const itemsPerPage = 15;
-
+  
   const [expandedRut, setExpandedRut] = useState(null);
   const [expandedDescripcion, setExpandedDescripcion] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -61,18 +60,13 @@ const Cartolas = () => {
   const [selectedItemDescripcion, setSelectedItemDescripcion] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
-  const [selectedDateRange, setSelectedDateRange] = useState({
-    startDate: null,
-    endDate: null,
-  });
-  const [
-    filteredMatchedCuentasCorrientes,
-    setFilteredMatchedCuentasCorrientes,
-  ] = useState([]);
+  const [selectedDateRange, setSelectedDateRange] = useState({startDate: null, endDate: null});
+  const [filteredMatchedCuentasCorrientes, setFilteredMatchedCuentasCorrientes] = useState([]);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalComfirmOpen, setIsModalComfirmOpen] = useState(false);
   const [isOptionSelected, setIsOptionSelected] = useState(0);
+  const itemsPerPage = 15;
   const maxVisiblePages = 5;
 
   const openModal = () => setModalOpen(true);
@@ -100,15 +94,21 @@ const Cartolas = () => {
   };
 
   useEffect(() => {
-    const matchedCuentas = filteredCuentasCorrientesRut.filter((cuenta) =>
-      selectedReferenceCuentasCorrientes.includes(cuenta.referencia_his)
-    );
+    let matchedCuentas = [];
+  
+    if (filteredCuentasCorrientesByRut.length > 0) {
+      matchedCuentas = filteredCuentasCorrientesByRut.filter((cuenta) =>
+        selectedReferenceCuentasCorrientes.includes(cuenta.referencia_his)
+      );
+    } else if (filteredCuentasCorrientesByDescripcion.length > 0) {
+      matchedCuentas = filteredCuentasCorrientesByDescripcion.filter((cuenta) =>
+        selectedReferenceCuentasCorrientes.includes(cuenta.referencia_his)
+      );
+    }
+  
     setFilteredMatchedCuentasCorrientes(matchedCuentas);
-  }, [selectedReferenceCuentasCorrientes, filteredCuentasCorrientesRut]);
-  console.log(
-    "filteredMatchedCuentasCorrientes",
-    filteredMatchedCuentasCorrientes
-  );
+  }, [selectedReferenceCuentasCorrientes, filteredCuentasCorrientesByRut, filteredCuentasCorrientesByDescripcion]);
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -160,9 +160,20 @@ const Cartolas = () => {
       (acc, curr) => acc + curr,
       0
     );
-    const result = selectedMontosRut - sumAmounts;
+
+    let baseAmount;
+    if (selectedMontosRut && selectedMontosRut.length > 0) {
+      baseAmount = selectedMontosRut;
+    } else if (selectedMontosDescripcion && selectedMontosDescripcion.length > 0) {
+      baseAmount = selectedMontosDescripcion;
+    } else {
+      baseAmount = 0;
+    }
+  
+    const result = baseAmount - sumAmounts;
     return result;
   };
+  
 
   const resultado = calculateResult();
   const resultadoFormateado = formatCurrencyMonto(resultado);
@@ -275,13 +286,16 @@ const Cartolas = () => {
     }
   };
 
-  const uniqueOptions = [
-    ...new Set(
-      filteredCuentasCorrientesByRut.map(
-        (item) => item.glosa_detalle_compte_his
-      )
-    ),
-  ];
+const uniqueOptionsRut = filteredCuentasCorrientesByRut.length > 0 ? 
+  filteredCuentasCorrientesByRut.map((item) => item.glosa_detalle_compte_his) : [];
+
+const uniqueOptionsDescripcion = filteredCuentasCorrientesByDescripcion.length > 0 ? 
+  filteredCuentasCorrientesByDescripcion.map((item) => item.glosa_detalle_compte_his) : [];
+
+const uniqueOptions = [
+  ...new Set([...uniqueOptionsRut, ...uniqueOptionsDescripcion])
+];
+
 
   const handleDateChange = (dateRange) => {
     if (Array.isArray(filteredCuentasCorrientesByRut)) {
@@ -432,6 +446,15 @@ const Cartolas = () => {
     }    
   };  
 
+  useEffect(() => {
+    if (!showRut) {
+      setFilteredCuentasCorrientesByRut([]);
+      setFilteredCuentasCorrientesRut([])
+      setSelectFilteredCuentasCorrientes([])
+    }
+  }, [showRut]);
+  
+
   const handleClickDescripcion = (descripcion, fecha, monto) => {
     setSelectedDescripcion(descripcion);
     const filteredDescripcion = dataListar.filter(
@@ -445,10 +468,12 @@ const Cartolas = () => {
     setFilteredDescripcionData(filteredDescripcion);
     setFilteredCuentasCorrientesRut([]);
     setFilteredCuentasCorrientesByRut([]);
+    setSelectedItemRut(null);
     setFilteredCuentasCorrientesByDescripcion(filterCuentasCorrientesDescripcion)
     setSelectFilteredCuentasCorrientes(filterCuentasCorrientesDescripcion)
     setSelectedReferenceDescripcion(null);
     setSelectedMontosDescripcion([]);
+    setSelectedReferenceCuentasCorrientes([])
     setExpandedDescripcion(
       expandedDescripcion === descripcion ? null : descripcion
     );
@@ -573,6 +598,9 @@ const Cartolas = () => {
   console.log("filteredCuentasCorrientesByDescripcion:", filteredCuentasCorrientesByDescripcion);
   console.log("selectedItemRut:", selectedItemRut);
   console.log("selectedItemDescripcion:", selectedItemDescripcion);
+  console.log("selectedReferenceCuentasCorrientes:", selectedReferenceCuentasCorrientes); 
+  console.log("filteredMatchedCuentasCorrientes:", filteredMatchedCuentasCorrientes);
+  // Array []
  
   const tabs = [
     {
@@ -792,7 +820,7 @@ const Cartolas = () => {
                 style={{ width: isMobile ? "100%" : "100%" }}
               >
                 {selectIsMobile ? (
-                    <div className="mb-4 w-full">
+                  <div className="mb-4 w-full">
                     <label
                       htmlFor="rutOption"
                       className="block text-md font-medium leading-6 font-bold text-[#525252] mt-4"
@@ -811,10 +839,12 @@ const Cartolas = () => {
                         if (isConRut) {
                           setSelectedReferenceDescripcion(null);
                           setSelectedMontosDescripcion([]);
+                          setSelectedReferenceCuentasCorrientes([]);
                           setSelectFilteredCuentasCorrientes([]);
                         } else {
                           setSelectedReferenceRut(null);
                           setSelectedMontosRut([]);
+                          setSelectedReferenceCuentasCorrientes([]);
                           setSelectFilteredCuentasCorrientes([]);
                         }
                       }}
@@ -832,7 +862,7 @@ const Cartolas = () => {
                           name="rutOption"
                           value="conRut"
                           checked={showRut}
-                          onChange={() => { setShowRut(true); setSelectedReferenceDescripcion(null); setSelectedMontosDescripcion([]); setSelectFilteredCuentasCorrientes([]); setFilteredCuentasCorrientesByDescripcion([]); handleButtonClick(); setIsClicked(false);}}
+                          onChange={() => { setShowRut(true); handleButtonClick(); setSelectedReferenceCuentasCorrientes([])}}
                           className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                         />
                         Con RUT
@@ -843,7 +873,7 @@ const Cartolas = () => {
                           name="rutOption"
                           value="sinRut"
                           checked={!showRut}
-                          onChange={() => { setShowRut(false); setSelectedReferenceRut(null); setSelectedMontosRut([]); setSelectFilteredCuentasCorrientes([]); setFilteredCuentasCorrientesByRut([]); handleButtonClick(); setFilteredCuentasCorrientesRut([]) }}
+                          onChange={() => { setShowRut(false); handleButtonClick(); setSelectedReferenceCuentasCorrientes([])}}
                           className="h-4 w-4 border-customGreen text-customGreen focus:ring-customGreen cursor-pointer mr-2"
                         />
                         Sin RUT
@@ -1296,7 +1326,7 @@ const Cartolas = () => {
                                       {item.referencia}
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                      Referencia test
+                                      Referencia
                                     </p>
                                   </div>
                                 </div>
@@ -1330,11 +1360,85 @@ const Cartolas = () => {
               <div className="bg-white rounded-lg p-4">
                 <p className="text-xl mt-1 font-bold text-[#525252]">
                   Movimientos INET
-                </p>
-                {selectedItemDescripcion &&(<div>{selectedItemDescripcion.descripcion}</div>)}
-                {isClicked && selectedMontosDescripcion > 0 && (
+                </p>                
+                {isClicked && selectedMontosDescripcion.length > 0 && (
                   <div className="w-full mx-auto bg-customBackgroundGray rounded-lg overflow-hidden p-4 mb-4 mt-4">
-                    {selectedItemDescripcion &&(<div>{selectedItemDescripcion.descripcion}</div>)}
+                    {selectedItemDescripcion &&(
+                      <div>
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-center space-x-2">
+                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
+                              <span className="font-medium leading-none text-white">
+                                {selectedItemDescripcion.descripcion.substring(0, 2)}
+                              </span>
+                            </span>
+                            <div className="flex flex-col">
+                              <div
+                                className={`${
+                                  modalIsMobile ? "text-sm" : "text-md"
+                                }  font-bold text-[#525252]`}
+                              >
+                                {selectedItemDescripcion.descripcion}
+                              </div>
+                              <div className="text-sm text-[#939393]">
+                                Referencia: {selectedItemDescripcion.referencia}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between gap-4 items-center">
+                          <div className="flex flex-col items-start">
+                            <div
+                              className={
+                                selectedItemDescripcion.monto >= 0
+                                  ? `text-customGreen font-bold ${
+                                      modalIsMobile ? "text-xs" : "text-md"
+                                    }`
+                                  : "text-red-500 font-bold text-md"
+                              }
+                            >
+                              $ {formatCurrencyMonto(selectedItemDescripcion.monto)}
+                            </div>
+                            <div className="flex items-center mt-1">
+                              {selectedItemDescripcion.monto >= 0 ? (
+                                <>
+                                  <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
+                                  <p className="text-xs text-customGreen ml-1">
+                                    Abono
+                                  </p>
+                                </>
+                              ) : (
+                                <>
+                                  <ArrowTrendingDownIcon className="w-3 h-3 text-red-500" />
+                                  <p className="text-xs text-red-500 ml-1">
+                                    Cargo
+                                  </p>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-left">
+                            <div className="text-sm font-bold text-[#525252]">
+                              {" "}
+                              {modalIsMobile ? "Emisión" : "Fecha de emisión"}
+                            </div>
+                            <div className="text-sm text-[#939393]">
+                              {formatDate(selectedItemDescripcion.fecha)}
+                            </div>
+                          </div>
+                          <div className="text-left">
+                            <div className="text-sm font-bold text-[#525252]">
+                              Referencia
+                            </div>
+                            <div className="text-sm text-[#939393]">
+                              {selectedItemDescripcion.referencia}
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      )}
                   </div>
                     )}
                 {isClicked && selectedMontosRut > 0 && (
@@ -1357,7 +1461,7 @@ const Cartolas = () => {
                                 {selectedItemRut.nombre_titular}
                               </div>
                               <div className="text-sm text-[#939393]">
-                                {selectedItemRut.rut_titular}
+                               RUT: {selectedItemRut.rut_titular}
                               </div>
                             </div>
                           </div>
@@ -1496,6 +1600,7 @@ const Cartolas = () => {
                                       : "text-customGreen"
                                   }`}
                                   disabled={selectedMontosRut.length === 0}
+                                  title={selectedMontosRut.length === 0 ? "Primero selecciona un Movimiento" : ""}
                                 />
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
@@ -1547,7 +1652,7 @@ const Cartolas = () => {
                       <tbody className="divide-y divide-gray-200">
                         {filteredCuentasCorrientesByDescripcion
                           .sort((a, b) =>
-                            selectedMontosRut.includes(b.valor_moneda_nacional) - selectedMontosRut.includes(a.valor_moneda_nacional)
+                            selectedMontosDescripcion.includes(b.valor_moneda_nacional) - selectedMontosDescripcion.includes(a.valor_moneda_nacional)
                           )
                           .map((item, index) => (
                             <tr key={index} className="border-b">
@@ -1561,11 +1666,12 @@ const Cartolas = () => {
                                     handleCheckboxChangeCuentasCorrientes(item.referencia_his, item.valor_moneda_nacional)
                                   }
                                   className={`h-4 w-4 ml-4 rounded border-gray-300 text-customGreen focus:ring-customGreen cursor-pointer ${
-                                    selectedMontosRut.length === 0
+                                    selectedMontosDescripcion.length === 0
                                       ? "text-gray-400 cursor-not-allowed opacity-40"
                                       : "text-customGreen"
                                   }`}
-                                  disabled={selectedMontosRut.length === 0}
+                                  disabled={selectedMontosDescripcion.length === 0}
+                                  title={selectedMontosDescripcion.length === 0 ? "Primero selecciona un Movimiento" : ""}
                                 />
                               </td>
                               <td className="whitespace-nowrap px-3 py-4 text-sm font-medium text-[#939393]">
@@ -1698,27 +1804,27 @@ const Cartolas = () => {
             ? "Detalle del Match Completo"
             : "Detalle del Match Parcial"
         }
-        content= <div>
-          {selectedItemRut && (
+        content= {<div>
+          {(selectedItemRut || selectedItemDescripcion) && (
             <div className="flex flex-col p-3 border rounded-md shadow-sm bg-customHeaderGray">
               <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center space-x-2">
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-customGreen">
                     <span className="font-medium leading-none text-white">
-                      {selectedItemRut.nombre_titular.substring(0, 2)}
+                      {(selectedItemRut ? selectedItemRut.nombre_titular : selectedItemDescripcion.descripcion).substring(0, 2)}
                     </span>
                   </span>
                   <div className="flex flex-col">
                     <div className="text-md font-bold text-[#525252] overflow-hidden text-ellipsis whitespace-nowrap">
                       {modalIsMobile
-                        ? selectedItemRut.nombre_titular
+                        ? (selectedItemRut ? selectedItemRut.nombre_titular : selectedItemDescripcion.descripcion)
                             .split(" ")
                             .slice(0, 2)
                             .join(" ")
-                        : selectedItemRut.nombre_titular}
+                        : (selectedItemRut ? selectedItemRut.nombre_titular : selectedItemDescripcion.descripcion)}
                     </div>
                     <div className="text-sm text-gray-500 text-left text-[#939393]">
-                      {selectedItemRut.rut_titular}
+                      {selectedItemRut ? selectedItemRut.rut_titular : selectedItemDescripcion.rut_titular}
                     </div>
                   </div>
                 </div>
@@ -1727,15 +1833,15 @@ const Cartolas = () => {
                 <div className="flex flex-col items-start">
                   <div
                     className={
-                      selectedItemRut.monto >= 0
+                      (selectedItemRut ? selectedItemRut.monto : selectedItemDescripcion.monto) >= 0
                         ? "text-customGreen font-bold text-md"
                         : "text-red-500 font-bold text-md"
                     }
                   >
-                    $ {formatCurrencyMonto(selectedItemRut.monto)}
+                    $ {formatCurrencyMonto(selectedItemRut ? selectedItemRut.monto : selectedItemDescripcion.monto)}
                   </div>
                   <div className="flex items-center mt-1">
-                    {selectedItemRut.monto >= 0 ? (
+                    {(selectedItemRut ? selectedItemRut.monto : selectedItemDescripcion.monto) >= 0 ? (
                       <>
                         <ArrowTrendingUpIcon className="w-3 h-3 text-customGreen" />
                         <p className="text-xs text-customGreen ml-1">Abono</p>
@@ -1749,15 +1855,11 @@ const Cartolas = () => {
                   </div>
                 </div>
                 <div className="text-left">
-                  <div
-                    className={`${
-                      modalIsMobile ? "text-xs" : "text-sm"
-                    } font-bold text-[#525252]`}
-                  >
+                  <div className={`${modalIsMobile ? "text-xs" : "text-sm"} font-bold text-[#525252]`}>
                     Fecha de emisión
                   </div>
                   <div className="text-sm text-gray-500 text-[#939393]">
-                    {formatDate(selectedItemRut.fecha)}
+                    {formatDate(selectedItemRut ? selectedItemRut.fecha : selectedItemDescripcion.fecha)}
                   </div>
                 </div>
                 {!modalIsMobile && (
@@ -1767,7 +1869,7 @@ const Cartolas = () => {
                         Referencia
                       </div>
                       <div className="text-sm text-gray-500 text-[#939393]">
-                        {selectedItemRut.referencia}
+                        {selectedItemRut ? selectedItemRut.referencia : selectedItemDescripcion.referencia}
                       </div>
                     </div>
                     <div className="text-left">
@@ -1783,6 +1885,7 @@ const Cartolas = () => {
               </div>
             </div>
           )}
+
           {filteredMatchedCuentasCorrientes.map((item, index) => (
             <div
               key={index}
@@ -1821,7 +1924,7 @@ const Cartolas = () => {
                       modalIsMobile ? "text-xs" : "text-sm"
                     } font-bold text-[#525252]`}
                   >
-                    Fecha de comprobante
+                    Fecha comprobante
                   </div>
                   <div className="text-sm text-gray-500 text-[#939393]">
                     {formatDate(item.fecha_comprobante_his)}
@@ -1850,7 +1953,7 @@ const Cartolas = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div>}
         showCancelButton={true}
         showConfirmButton={true}
         cancelButtonText="Cancelar"

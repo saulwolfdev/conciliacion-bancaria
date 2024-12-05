@@ -1,0 +1,62 @@
+# Dependency directories
+node_modules/
+
+# Next.js build output
+/.next/
+out/
+
+# Compiled output
+/build/
+/dist/
+/.nuxt/
+/nuxt/
+
+# Local environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+/.idea
+/.vscode
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Jest test coverage
+/coverage/
+
+# npm debug log
+npm-debug.log*
+
+# Yarn log files
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+#amplify-do-not-edit-begin
+amplify/
+build/
+dist/
+node_modules/
+aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplifyconfiguration.dart
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig
+.secret-*
+**.sample
+#amplify-do-not-edit-end
